@@ -21,29 +21,14 @@ in
     ./nvidia.nix
     ./gpu-acceleration.nix
     ./patch-runner.nix
+    ./kernel
   ];
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = config.system.nixos.release;
   services.xserver.videoDrivers = [
    (if cgpu.vendor == "amd" then "amdgpu"
-     else if cgpu.vendor == "intel" || cgpu.gpu.vendor == "nvidia" then cgpu.vendor else "auto") ];
-
-  time.timeZone = "Europe/Paris";
-  i18n.defaultLocale = "fr_FR.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "fr_FR.UTF-8";
-    LC_IDENTIFICATION = "fr_FR.UTF-8";
-    LC_MEASUREMENT = "fr_FR.UTF-8";
-    LC_MONETARY = "fr_FR.UTF-8";
-    LC_NAME = "fr_FR.UTF-8";
-    LC_NUMERIC = "fr_FR.UTF-8";
-    LC_PAPER = "fr_FR.UTF-8";
-    LC_TELEPHONE = "fr_FR.UTF-8";
-    LC_TIME = "fr_FR.UTF-8";
-  };
-
-  console.keyMap = "fr";
+     else if cgpu.vendor == "intel" || cgpu.vendor == "nvidia" then cgpu.vendor else "auto") ];
 
   programs.nix-ld = {
       enable = lib.mkDefault true;
@@ -53,16 +38,6 @@ in
         glib # libglib
       ];
     };
-
-  services.devmon.enable = true;
-  services.gvfs.enable = true;
-  services.udisks2 = {
-    enable = true;
-    mountOnMedia = true;
-  };
-  systemd.tmpfiles.rules = [
-    "d /media 0755 root root -"
-  ];
 
   documentation.nixos.enable = false;
 

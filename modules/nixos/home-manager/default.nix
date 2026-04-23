@@ -1,4 +1,4 @@
-{ config, inputs-modulix-os, pkgs, lib, self, ... }:
+{ config, inputs, pkgs, pkgs-unstable, lib, self, ... }:
 let
   cfg = config.mx.programs.home-manager;
 in
@@ -13,7 +13,8 @@ in
             description = "Path to the Home Manager configuration file";
           };
           homeModule = lib.mkOption {
-            type = lib.types.str;
+            type = lib.types.nullOr lib.types.str;
+            default = null;
             description = "Name of the home module in self.homeModules";
           };
         };
@@ -29,17 +30,19 @@ in
       useUserPackages = true;
       extraSpecialArgs = {
         qhorgues-config = self;
-        modulix-os-pkgs-unstable = import inputs-modulix-os.nixpkgs-unstable {
+        modulix-os-pkgs-unstable = import inputs.nixpkgs-unstable {
           system = pkgs.stdenv.hostPlatform.system;
           config.allowUnfree = true;
         };
-        inputs-modulix-os = inputs-modulix-os;
+        inputs-modulix-os = inputs;
+        pkgs-unstable = pkgs-unstable;
       };
-      users = lib.mapAttrs (_: userCfg: {
+      users = lib.mapAttrs (username: userCfg: {
         imports = [
           userCfg.configPath
-          self.homeModules.${userCfg.homeModule}
-        ];
+        ] ++ lib.optional (userCfg.homeModule != null) self.homeModules.${userCfg.homeModule};
+        home.username = lib.mkDefault username;
+        home.homeDirectory = lib.mkDefault "/home/${username}";
       }) cfg.users;
     };
   };

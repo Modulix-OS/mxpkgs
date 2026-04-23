@@ -20,10 +20,10 @@ in {
     };
 
     environment.sessionVariables = lib.mkMerge [
-      (lib.mkIf (cfg.vendor == "intel" && cfg.intelGeneration == "modern") {
+      (lib.mkIf (cfg.vendor == "intel" && cfg.generation == "modern") {
         LIBVA_DRIVER_NAME = "iHD";
       })
-      (lib.mkIf (cfg.vendor == "intel" && cfg.intelGeneration == "legacy") {
+      (lib.mkIf (cfg.vendor == "intel" && cfg.generation == "legacy") {
         LIBVA_DRIVER_NAME = "i965";
       })
       (lib.mkIf (cfg.vendor == "nvidia") {

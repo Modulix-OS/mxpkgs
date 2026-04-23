@@ -6,6 +6,11 @@ in
 {
   options.mx.programs.zed-editor = {
     enable = lib.mkEnableOption "Use Zed Editor";
+    ollamaNumberToken = lib.mkOption {
+      type = lib.types.int;
+      default = 50000;
+      description = "The number token for Ollama";
+    };
   };
   config = lib.mkIf cfg.enable {
     programs.zed-editor = {
@@ -20,9 +25,9 @@ in
                 api_url = "http://localhost:11434";
                 available_models = [
                     {
-                        name = "qwen3.5:9b";
-                        display_name = "qwen3.5:9b";
-                        max_tokens = 50000;
+                        name = "gemma4:e2b";
+                        display_name = "gemma4:e2b";
+                        max_tokens = cfg.ollamaNumberToken;
                         supports_tools = true;
                     }
                 ];
@@ -85,9 +90,9 @@ in
           };
         };
         lsp = {
-          clangd = {
+          clangd = lib.mkIf config.mx.programs.dev.cpp {
               binary = {
-                  path = "${pkgs.clang-tools}/bin/clangd";
+                path = "${pkgs.clang-tools}/bin/clangd";
                   arguments = [
                       "--compile-commands-dir=build"
                   ];

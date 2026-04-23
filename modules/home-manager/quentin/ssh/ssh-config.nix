@@ -54,9 +54,23 @@ in
         };
         "rpi-horgues" = {
           hostname = "91.168.167.51";
-          port = 1317;
+          port = 16000;
           user = "quentin";
           identityFile = "~/.ssh/id_ed25519";
+        };
+        "rpi-horgues-proxy" = {
+          hostname = "91.168.167.51";
+          port = 16000;
+          user = "quentin";
+          identityFile = "~/.ssh/id_ed25519";
+          proxyJump = "repaircafetours";
+          localForwards = [
+            {
+              bind.port = 5174;
+              host.address = "localhost";
+              host.port = 5173;
+            }
+          ];
         };
       };
     };

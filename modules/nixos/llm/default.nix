@@ -47,13 +47,14 @@ in
         pkgs-unstable.ollama-rocm
       else if config.mx.hardware.gpu.computing == "intel" then
         pkgs-unstable.ollama-vulkan
-      else if config.mx.hardware.gpu.computing == "cpu" then pkgs-unstable.ollama-cpu
-      else pkgs-unstable.ollama
+      else if config.mx.hardware.gpu.computing == "cpu" then
+        pkgs-unstable.ollama-cpu
+      else
+        pkgs-unstable.ollama
       );
       loadModels = [
-        "qwen3.5:9b"
+        "gemma4:e2b"
       ];
-      acceleration = config.mx.hardware.gpu.computing; # use cuda if nvidia, rocm if amd, and cpu only otherwise
     };
   };
 }

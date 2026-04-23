@@ -4,8 +4,7 @@ let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
   lsfg-vk = pkgs.callPackage ../../../pkgs/lsfg-vk.nix { };
-  # lsfg-vk-ui = pkgs.callPackage ../../../pkgs/lsfg-vk-ui.nix { };
-  #
+  lsfg-vk-ui = pkgs.callPackage ../../../pkgs/lsfg-vk-ui.nix { };
   conf_service = config.mx.services;
 
   mx-game = import ../../../pkgs/mx-game.nix {
@@ -21,6 +20,17 @@ let
     vmEnable = conf_service.vm.enable;
     fwFanCtrl = config.mx.hardware.framework-fan-ctrl.enable;
   };
+
+  mkFhsDesktop = pkg: desktopFile: bin:
+    pkg.overrideAttrs (old: {
+      postInstall = (old.postInstall or "") + ''
+        sed -i 's|Exec=${bin}|Exec=${pkgs.steam}/bin/steam-run ${pkg}/bin/${bin}|g' \
+          $out/share/applications/${desktopFile}
+      '';
+    });
+
+  lsfg-vk-ui-fhs = mkFhsDesktop lsfg-vk-ui "gay.pancake.lsfg-vk-ui.desktop" "lsfg-vk-ui";
+
 in
 {
 
@@ -44,6 +54,14 @@ in
       default = [];
       description = "Users for gamemode permissions should be enabled.";
     };
+
+    heroic.enable = lib.mkEnableOption "Install heroic";
+    lutris.enable = lib.mkEnableOption "Install lutris";
+    umu.enable = lib.mkEnableOption "Install UMU";
+
+    latest-unstable-mesa-driver.enable = lib.mkEnableOption "Enable latest unstable Mesa driver";
+
+    cachyos-kernel.enable = lib.mkEnableOption "Enable optimized gaming CachyOS kernel";
   };
 
   config = lib.mkIf cfg.enable {
@@ -71,8 +89,11 @@ in
         remotePlay.openFirewall = false;
         dedicatedServer.openFirewall = false;
         localNetworkGameTransfers.openFirewall = true;
-        extraPackages = []
-        ++ lib.optional config.mx.programs.games.lsfg.enable lsfg-vk;
+        extraPackages = [ ]
+        ++ lib.optionals cfg.lsfg.enable [
+          lsfg-vk
+          lsfg-vk-ui-fhs
+        ];
         extraCompatPackages = [
           pkgs-unstable.proton-ge-bin
         ];
@@ -82,6 +103,7 @@ in
             MANGOHUD = true;
             PROTON_ENABLE_WAYLAND=true;
             OBS_VKCAPTURE = config.mx.programs.obs-studio.enable;
+            PROTON_PRIORITY_HIGH = true;
             # PROTON_NO_D3D12=true;
 
             PROTON_FSR4_UPGRADE = cgpu.vendor == "amd"
@@ -121,19 +143,22 @@ in
         MANGOHUD_CONFIG = "control=mangohud,gpu_list=0,hud_no_margin,legacy_layout=false,horizontal,round_corners=0,background_alpha=0,background_color=000000,font_size=24,text_color=FFFFFF,position=top-center,toggle_hud=Shift_R+F12,no_display,table_columns=1,gpu_text=GPU,gpu_stats,gpu_temp,gpu_power,gpu_color=2E9762,cpu_text=CPU,cpu_stats,cpu_temp,cpu_power,cpu_color=2E97CB,vram,vram_color=AD64C1,ram,ram_color=C26693,battery,battery_color=00FF00,fps,gpu_name,wine,wine_color=EB5B5B,fps_limit_method=late,toggle_fps_limit=Shift_R+F1,fps_limit=0\\,165\\,60\\,30,time";
       };
     };
-    environment.systemPackages = with pkgs; [
-      mangohud
-      adwsteamgtk
-      vkbasalt
+    environment.systemPackages = [
+      pkgs.mangohud
+      pkgs.adwsteamgtk
+      pkgs.vkbasalt
       pkgs-unstable.goverlay
       mx-game
-    ];
+    ] ++ lib.optional cfg.lsfg.enable lsfg-vk-ui-fhs
+    ++ lib.optional cfg.heroic.enable pkgs-unstable.heroic
+    ++ lib.optional cfg.lutris.enable pkgs-unstable.lutris
+    ++ lib.optional cfg.umu.enable pkgs-unstable.umu;
     hardware = {
         graphics = {
           enable = true;
           enable32Bit = true;
-          package = pkgs.mesa;
-          package32 = pkgs.pkgsi686Linux.mesa;
+          package = if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.mesa else pkgs.mesa;
+          package32 = if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.pkgsi686Linux.mesa else pkgs.pkgsi686Linux.mesa;
         };
     };
 
@@ -152,26 +177,8 @@ in
       fi
     '';
 
-    nixpkgs.overlays = [
-      (self: super: {
-        linuxPackages = super.linuxPackages // {
-          kernel = super.linuxPackages.kernel.override {
-            structuredExtraConfig = with lib.kernel; {
-              HZ_1000 = yes;
-              HZ = 1000;
-              PREEMPT_FULL = yes;
-              IOSCHED_BFQ = yes;
-              DEFAULT_BFQ = yes;
-              DEFAULT_IOSCHED = "bfq";
-              V4L2_LOOPBACK = module;
-              HID = yes;
-            };
-          };
-        };
-      })
-    ];
     boot = {
-      kernelPackages = pkgs.linuxPackages_6_19;
+      kernelPackages = if cfg.cachyos-kernel.enable then pkgs.cachyosKernels.linuxPackages-cachyos-latest else pkgs.linuxPackages_zen;
       tmp.cleanOnBoot = true;
       kernel.sysctl = {
         "kernel.split_lock_mitigate" = 0;
@@ -187,6 +194,12 @@ in
         "kernel.kexec_load_disabled" = 1;
       };
     };
+
+    nix.settings.substituters = []
+    ++ lib.optionals cfg.cachyos-kernel.enable [ "https://attic.xuyh0120.win/lantian" ];
+
+    nix.settings.trusted-public-keys = []
+     ++ lib.optionals cfg.cachyos-kernel.enable [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
 
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {

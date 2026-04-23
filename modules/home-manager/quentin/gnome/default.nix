@@ -1,5 +1,13 @@
 { pkgs, lib, config, osConfig, ... }:
+
+let
+  modulix-os-icon = pkgs.callPackage ../../../../pkgs/modulix-icon.nix {};
+  cfg = config.mx.desktop-environment.gnome;
+in
 {
+  options.mx.desktop-environment.gnome = {
+    connection = lib.mkEnableOption "Enable connection";
+  };
   config = lib.mkIf osConfig.mx.gnome.enable {
     home.packages = with pkgs; [
         # Base gnome app
@@ -23,13 +31,15 @@
         gnomeExtensions.caffeine
         gnomeExtensions.places-status-indicator
         gnomeExtensions.quick-settings-audio-panel
+        # gnomeExtensions.desktop-icons-ng-ding
         # gnomeExtensions.tiling-shell
         # Icons
-        papirus-icon-theme
+        modulix-os-icon
         # (import ../../../pkgs/winteros-icons.nix {inherit pkgs;})
     ]
     ++ lib.optional osConfig.mx.hardware.framework-fan-ctrl.enable pkgs.gnomeExtensions.framework-fan-control
-    ++ lib.optional osConfig.mx.gnome.gsconnect pkgs.gnomeExtensions.gsconnect;
+    ++ lib.optional osConfig.mx.gnome.gsconnect pkgs.gnomeExtensions.gsconnect
+    ++ lib.optional cfg.connection pkgs.gnome-connections;
     dconf = {
         enable = true;
         settings = {
@@ -43,6 +53,7 @@
               caffeine.extensionUuid
               places-status-indicator.extensionUuid
               quick-settings-audio-panel.extensionUuid
+              # desktop-icons-ng-ding.extensionUuid
               # tiling-shell.extensionUuid
             ]
             ++ lib.optional osConfig.mx.hardware.framework-fan-ctrl.enable       pkgs.gnomeExtensions.framework-fan-control.extensionUuid
@@ -56,7 +67,7 @@
             ];
         };
         "org/gnome/desktop/interface" = {
-            icon-theme = "Papirus"; # "WinterOS-icons";
+            icon-theme = "Modulix-OS"; # "WinterOS-icons";
             show-battery-percentage = true;
             toolbar-style = "text";
             gtk-theme = "Adwaita";
@@ -141,10 +152,10 @@
             ];
         };
         "org/gnome/desktop/wm/keybindings" = {
-          switch-applications = ["<Alt>Tab"];
-          switch-applications-backward = ["<Shift><Alt>Tab"];
-          switch-windows = ["<Super>Tab"];
-          switch-windows-backward = ["<Shift><Super>Tab"];
+          switch-applications = ["<Super>Tab"];
+          switch-applications-backward = ["<Shift><Super>Tab"];
+          switch-windows = ["<Alt>Tab"];
+          switch-windows-backward = ["<Shift><Alt>Tab"];
         };
         "org/gnome/Console" = {
             theme = "auto";
@@ -169,7 +180,12 @@
                 (lib.gvariant.mkTuple["xkb" "fr+oss"])
             ];
         };
+        "org/gnome/baobab/preferences" = {
+          excluded-uris = [
+            "file:///nix/store"
+          ];
         };
+      };
     };
     home.file.".local/share/wallpaper/clair-obscur.jpg".source = ./clair-obscur.jpg;
     home.file.".local/share/wallpaper/maelle_kill_simon.png".source = ./maelle_kill_simon.png;

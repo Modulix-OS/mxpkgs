@@ -18,6 +18,7 @@ in
         description = "GNOME text scaling for GDM";
       };
       gsconnect = lib.mkEnableOption "Enable GSConnect";
+      remote-desktop = lib.mkEnableOption "Enable GNOME remote desktop";
     };
 
     imports = [
@@ -136,11 +137,13 @@ in
       }
     )
     (
-      lib.mkIf (cfg.enable && cfg.gsconnect) {
-        networking.firewall = rec {
-          allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-          allowedUDPPortRanges = allowedTCPPortRanges;
+      lib.mkIf (cfg.enable && cfg.remote-desktop) {
+        services.gnome.gnome-remote-desktop.enable = true;
+        systemd.services.gnome-remote-desktop = {
+          wantedBy = [ "graphical.target" ];
         };
+        networking.firewall.allowedTCPPorts = [ 3389 ];
+        networking.firewall.allowedUDPPorts = [ 3389 ];
       }
     )
   ];
