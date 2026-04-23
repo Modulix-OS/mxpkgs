@@ -20,6 +20,7 @@ in
     ./gpu-computing.nix
     ./nvidia.nix
     ./gpu-acceleration.nix
+    ./patch-runner.nix
   ];
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
