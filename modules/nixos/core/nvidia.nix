@@ -119,7 +119,7 @@ in
 
 
         boot.blacklistedKernelModules = ["nouveau" "nova_core"];
-      };
+      }
     )
     (
       lib.mkIf (isLaptop && nvidia && cfg.disable) {
