@@ -4,6 +4,7 @@ let
   cfg = config.mx.hardware.gpu.nvidia;
 
   nvidia = config.mx.hardware.gpu.vendor == "nvidia";
+  isLaptop = config.mx.hardware.laptop;
 
   legacy-390 = config.mx.hardware.gpu.generation ==  "fermi";
   legacy-470 = config.mx.hardware.gpu.generation == "kepler";
@@ -58,11 +59,27 @@ in
   };
 
   config = lib.mkMerge [
+    (lib.mkIf nvidia {
+      assertions = [
+        {
+          assertion = !(cfg.intelBusId != null && cfg.amdBusId != null);
+          message = "mx.hardware.gpu.nvidia: intelBusId and amdBusId cannot both be set";
+        }
+        {
+          assertion = (isLaptop && !cfg.disable && cfg.nvidiaBusId != null) -> (cfg.intelBusId != null || cfg.amdBusId != null);
+          message = "mx.hardware.gpu.nvidia: nvidiaBusId requires intelBusId or amdBusId for PRIME";
+        }
+        {
+          assertion = cfg.disable -> isLaptop;
+          message = "mx.hardware.gpu.nvidia: disable option only works on a laptop (mx.hardware.laptop must be true)";
+        }
+      ];
+    })
     (
       lib.mkIf (nvidia && !cfg.disable) {
         # Force LTS kernel with old nvidia GPU
         boot.kernelPackages = lib.mkIf legacyDriver (lib.mkForce pkgs.linuxPackages); # Recommended with legacy drivers
-        config.mx.programs.games.cachyos-kernel.enable = lib.mkIf legacyDriver (lib.mkForce false);
+        mx.programs.games.cachyos-kernel.enable = lib.mkIf legacyDriver (lib.mkForce false);
 
         boot.initrd.kernelModules = []
         ++ lib.optional (cfg.intelBusId != null) "i915"
@@ -87,17 +104,17 @@ in
             nvidiaBusId = lib.optionalString (cfg.nvidiaBusId != null) cfg.nvidiaBusId;
             amdgpuBusId = lib.optionalString (cfg.amdBusId != null) cfg.amdBusId;
           };
-          dynamicBoost.enable = config.mx.hardware.laptop;
-          powerManagement.enable = true;
+          dynamicBoost.enable = isLaptop && !legacyDriver;
+          powerManagement.enable = lib.mkDefault true;
           powerManagement.finegrained = !legacyDriver && cfg.experimental-power-management;
-        }
+        };
 
-        systemd.services.nvidia-suspend.enable = true;
-        systemd.services.nvidia-resume.enable = true;
-        systemd.services.nvidia-hibernate.enable = true;
+        systemd.services.nvidia-suspend.enable = lib.mkDefault true;
+        systemd.services.nvidia-resume.enable = lib.mkDefault true;
+        systemd.services.nvidia-hibernate.enable = lib.mkDefault true;
 
         environment.variables = {
-          __GL_SHADER_DISK_CACHE_SIZE = "12000000000";
+          __GL_SHADER_DISK_CACHE_SIZE = (if config.mx.programs.games.enable then "12000000000" else "2000000000");
         };
 
 
@@ -105,7 +122,7 @@ in
       };
     )
     (
-      lib.mkIf (mx.hardware.laptop && nvidia && cfg.disable) {
+      lib.mkIf (isLaptop && nvidia && cfg.disable) {
         boot.extraModprobeConfig = ''
            blacklist nouveau
            options nouveau modeset=0
