@@ -2,14 +2,14 @@
 
 let
   cfg = config.mx.services.llm;
-  # open-webui-shortcut = pkgs.makeDesktopItem {
-  #   name = "Open WebUI";
-  #   desktopName = "IA local";
-  #   exec = "${pkgs.xdg-utils}/bin/xdg-open http://localhost:8080";
-  #   icon = "wechat";
-  #   comment = "Acceder a l'ia locale";
-  #   categories = [ "Utility" ];
-  # };
+  open-webui-shortcut = port: pkgs.makeDesktopItem {
+    name = "Open WebUI";
+    desktopName = "IA local";
+    exec = "${pkgs.xdg-utils}/bin/xdg-open http://localhost:${port}";
+    icon = "wechat";
+    comment = "Acceder a l'ia locale";
+    categories = [ "Utility" ];
+  };
 in
 {
   options.mx.services.llm = {
@@ -27,9 +27,9 @@ in
     mx.hardware.gpu.enable-computing = true;
 
     environment.systemPackages = [
-      # open-webui-shortcut
       pkgs.newelle
-    ];
+    ]
+    ++ lib.optional cfg.open-webui.enable (open-webui-shortcut cfg.open-webui.port);
 
 
     services.open-webui = {
@@ -53,7 +53,7 @@ in
         pkgs-unstable.ollama
       );
       loadModels = [
-        "gemma4:e2b"
+        "gemma4:e4b"
       ];
     };
   };

@@ -7,12 +7,17 @@
 
 let
   cfg = config.mx.services.printing;
-  all_users = builtins.attrNames config.users.users;
-  normal_users = builtins.filter (user: config.users.users.${user}.isNormalUser) all_users;
+  normalUser = import ../../../lib/normal-user.nix { inherit config; };
 in
 {
   options.mx.services.printing = {
     enable = lib.mkEnableOption "Enable printer services";
+
+    users = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = normalUser;
+      description = "List of normal users who can access printer services";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -76,7 +81,9 @@ in
 
     programs.system-config-printer.enable = true;
 
-    users.groups.scanner.members = normal_users;
-    users.groups.lp.members = normal_users;
+    users.users = builtins.listToAttrs (map (user: {
+      name = user;
+      value.extraGroups = [ "scanner" "lp" ];
+    }) cfg.users);
   };
 }

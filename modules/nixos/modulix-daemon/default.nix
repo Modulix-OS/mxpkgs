@@ -5,7 +5,11 @@ let
 in
 {
   options.mx.services.modulix-daemon = {
-    enable = lib.mkEnableOption "Modulix OS package management daemon";
+    enable = lib.mkOption {
+      type        = lib.types.bool;
+      default     = true;
+      description = "Enable the Modulix OS daemon";
+    };
 
     package = lib.mkOption {
       type        = lib.types.package;
@@ -15,7 +19,7 @@ in
 
   config = lib.mkIf cfg.enable {
     systemd.services.modulix-daemon = {
-      description = "Modulix OS package management daemon";
+      description = "Modulix OS daemon";
       after       = [ "dbus.service" "polkit.service" ];
       requires    = [ "dbus.service" ];
       wantedBy    = [ "multi-user.target" ];

@@ -2,6 +2,7 @@
 
 let
   cfg = config.mx.core.network;
+  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
 in
 {
   options.mx.core.network = {
@@ -11,6 +12,11 @@ in
       description = "Enable networking fonctionnality";
     };
     security-mode = lib.mkEnableOption "Enable advanced networking security settings";
+    users = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = normalUsers;
+      description = "Users for whom arduino device permissions should be enabled.";
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -18,6 +24,11 @@ in
       {
         networking.networkmanager.enable = lib.mkDefault true;
         networking.firewall.enable = lib.mkForce true;
+
+        users.users = builtins.listToAttrs (map (user: {
+          name = user;
+          value.extraGroups = [ "networkmanager" ];
+        }) cfg.users);
       }
       (
         lib.mkIf cfg.security-mode {

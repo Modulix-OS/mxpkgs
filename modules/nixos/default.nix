@@ -7,10 +7,8 @@
     ./lxqt
     ./docker
     ./games
-    ./main-user
     ./lamp
     ./modeling
-    ./postgresql
     ./team-viewer
     ./remote-desktop
     ./llm
@@ -18,7 +16,7 @@
     ./printing
     ./arduino
     ./obs-studio
-    ./modulix-dev
+    ./modulix-daemon
     ./home-manager
   ];
 }

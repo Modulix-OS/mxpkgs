@@ -4,13 +4,14 @@ with lib;
 
 let
   cfg = config.mx.services.vm;
+  normalUser = import ../../../lib/normal-user.nix { inherit config; };
 in {
   options.mx.services.vm = {
     enable = lib.mkEnableOption "Enable Virtual Machine service";
     allArchitectures = lib.mkEnableOption "Enable all architectures emulation support";
     users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = normalUser;
       description = "Users for whom virtualization permissions should be enabled.";
     };
   };

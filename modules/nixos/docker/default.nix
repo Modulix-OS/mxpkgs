@@ -2,6 +2,7 @@
 
 let
   cfg = config.mx.services.docker;
+  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
 in
 {
   options.mx.services.docker = {
@@ -9,7 +10,7 @@ in
 
     users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = normalUsers;
       description = "Users can run and setup docker";
     };
   };

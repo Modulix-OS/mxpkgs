@@ -7,6 +7,8 @@ let
   lsfg-vk-ui = pkgs.callPackage ../../../pkgs/lsfg-vk-ui.nix { };
   conf_service = config.mx.services;
 
+  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
+
   mx-game = import ../../../pkgs/mx-game.nix {
     lib = lib;
     pkgs = pkgs;
@@ -51,7 +53,7 @@ in
 
     gamemode.users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = normalUsers;
       description = "Users for gamemode permissions should be enabled.";
     };
 
