@@ -42,7 +42,8 @@ in
     force-fsr4-for-rdna3 = lib.mkEnableOption "Force FSR4 on AMD 7000 series";
 
     lsfg = {
-      enable = lib.mkEnableOption "Enable Losseless Scaling (required Lossless scaling app on Steam)";
+      enable = lib.mkEnableOption "Install Losseless Scaling (required Lossless scaling app on Steam) but not enable by default";
+      activate_on_all_games = lib.mkEnableOption "Activate Lossless Scaling on all games by default";
 
       steam_library_for_lossless_scaling = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
@@ -105,7 +106,6 @@ in
             MANGOHUD = true;
             PROTON_ENABLE_WAYLAND=true;
             OBS_VKCAPTURE = config.mx.programs.obs-studio.enable;
-            PROTON_PRIORITY_HIGH = true;
             # PROTON_NO_D3D12=true;
 
             PROTON_FSR4_UPGRADE = cgpu.vendor == "amd"
@@ -122,8 +122,11 @@ in
           } //
           (if config.mx.programs.games.lsfg.enable == true then {
             VK_LAYER_PATH= "${lsfg-vk}/share/vulkan/explicit_layer.d";
-            ENABLE_LFSG=1;
             LSFG_LEGACY=1;
+          } else {})
+          //
+          (if config.mx.programs.games.lsfg.enable == true && config.mx.programs.games.lsfg.activate_on_all_games == true then {
+            ENABLE_LFSG=1;
             LFSG_MULTIPLIER=2;
           } else {})
           // (if config.mx.programs.games.lsfg.enable == true
