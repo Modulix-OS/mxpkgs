@@ -81,6 +81,8 @@ in
     latest-unstable-mesa-driver.enable = lib.mkEnableOption "Enable latest unstable Mesa driver";
 
     cachyos-kernel.enable = lib.mkEnableOption "Enable optimized gaming CachyOS kernel";
+
+    enableHDR = lib.mkEnableOption "Enable HDR on games";
   };
 
   config = lib.mkIf cfg.enable {
@@ -101,7 +103,6 @@ in
           };
         };
       };
-      gamemode.enable = true;
       steam = {
         enable = true;
         gamescopeSession = {
@@ -140,9 +141,9 @@ in
           extraEnv = {
             TZ = ":/etc/localtime";
             MANGOHUD = true;
-            PROTON_ENABLE_WAYLAND=true;
             OBS_VKCAPTURE = config.mx.programs.obs-studio.enable;
             # PROTON_NO_D3D12=true;
+            PROTON_PRIORITY_HIGH=true;
 
             PROTON_FSR4_UPGRADE = cgpu.vendor == "amd"
                                   && cgpu.generation == "rdna4";
@@ -155,6 +156,11 @@ in
             PROTON_XESS_UPGRADE = cgpu.vendor == "intel"
                                   || (cgpu.vendor == "amd"
                                       && cgpu.generation != "rdna4");
+
+            PROTON_ENABLE_WAYLAND = cgpu.vendor == "amd" || cfg.enableHDR;
+            PROTON_ENABLE_HDR = cfg.enableHDR;
+            DXVK_HDR = cfg.enableHDR;
+            ENABLE_HDR_WSI = cfg.enableHDR;
           } //
           (if config.mx.programs.games.lsfg.enable == true then {
             VK_LAYER_PATH= "${lsfg-vk}/share/vulkan/explicit_layer.d";
