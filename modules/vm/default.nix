@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.mx.services.vm;
-  normalUser = import ../../../lib/normal-user.nix { inherit config; };
+  normalUser = import ../../lib/normal-user.nix { inherit config; };
 in {
   options.mx.services.vm = {
     enable = lib.mkEnableOption "Enable Virtual Machine service";

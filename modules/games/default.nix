@@ -3,13 +3,13 @@
 let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
-  lsfg-vk = pkgs.callPackage ../../../pkgs/lsfg-vk.nix { };
-  lsfg-vk-ui = pkgs.callPackage ../../../pkgs/lsfg-vk-ui.nix { };
+  lsfg-vk = pkgs.callPackage ../../pkgs/lsfg-vk.nix { };
+  lsfg-vk-ui = pkgs.callPackage ../../pkgs/lsfg-vk-ui.nix { };
   conf_service = config.mx.services;
 
-  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
+  normalUsers = import ../../lib/normal-user.nix { inherit config; };
 
-  mx-game = import ../../../pkgs/mx-game.nix {
+  mx-game = import ../../pkgs/mx-game.nix {
     lib = lib;
     pkgs = pkgs;
     dockerEnable = conf_service.docker.enable;

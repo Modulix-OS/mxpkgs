@@ -2,7 +2,7 @@
 
 let
   cfg = config.mx.services.lamp;
-  phpmyadmin = import ../../../pkgs/phpmyadmin.nix {inherit lib pkgs;};
+  phpmyadmin = import ../../pkgs/phpmyadmin.nix {inherit lib pkgs;};
 in
 {
   options.mx.services.lamp = {

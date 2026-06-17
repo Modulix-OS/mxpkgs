@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.mx.programs.arduino;
-  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
+  normalUsers = import ../../lib/normal-user.nix { inherit config; };
 in {
   options.mx.programs.arduino = {
     enable = lib.mkEnableOption "Enable Arduino dev tools";

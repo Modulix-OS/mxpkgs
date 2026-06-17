@@ -2,7 +2,7 @@
 
 let
   cfg = config.mx.services.docker;
-  normalUsers = import ../../../lib/normal-user.nix { inherit config; };
+  normalUsers = import ../../lib/normal-user.nix { inherit config; };
 in
 {
   options.mx.services.docker = {
