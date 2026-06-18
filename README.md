@@ -62,13 +62,11 @@ After installation reboot imediatly in bios setup
 {
   imports = [
     # List kardware modules (eg: inputs.nixos-hardware.nixosModules.<module_name>)
-  
-    ../../modules/nixos/core # Core module
-    ../../modules/nixos/fonts # Extra font module
-    ../../modules/nixos/gnome # Import gnome module
-    ../../modules/nixos/home-manager # Import home-manager module
 
-    # Import other system module (eg: ../../module/nixos/<module_name>.nix) 
+    ../../modulixos # Core system (boot, kernel, desktop, fonts, home-manager, …)
+    ../../modules   # Optional programs & services
+
+    # Everything below is then toggled through the mx.* options.
   ];
 
   networking.hostName = "<host name>";
@@ -86,11 +84,6 @@ After installation reboot imediatly in bios setup
         # for NVIDIA: pascal, turing, ada-lovelace, blackwell, ...
       };
     };
-    main-user = {
-      enable = true; # Enable main user with full admin access
-      userName = "<user_name>"; # Username of the main user
-      userFullName = "<Full Name>"; # Full name of the main user
-    };
     gnome = {
       # This is apply in gdm only  
       scaling = 2; # Scaling factor for the display
@@ -101,7 +94,14 @@ After installation reboot imediatly in bios setup
       users = [ "<user_name>" ];
     };
   };
-  
+
+  # Declare your user account directly (the main-user module was removed).
+  users.users."<user_name>" = {
+    isNormalUser = true;
+    description = "<Full Name>";
+    extraGroups = [ "wheel" "networkmanager" ];
+  };
+
   # Add settings for home manager
   home-manager = {
     extraSpecialArgs = {
@@ -115,7 +115,7 @@ After installation reboot imediatly in bios setup
 }
   ```
 
-  All hardware module available can be found in the [nixos-hardware](https://github.com/NixOS/nixos-hardware) repository and for system module, in folder `modules/nixos`
+  All hardware module available can be found in the [nixos-hardware](https://github.com/NixOS/nixos-hardware) repository and for system module, in folder `modulixos`
 
 ### 6. Setup home manager
 
@@ -126,8 +126,8 @@ After installation reboot imediatly in bios setup
   { system-version, ... }:
   {
     imports = [
-      ../../modules/home-manager
-      # Import other modules here like ../../modules/home-manager/firefox
+      ../../modulixos/home-manager
+      # Import other modules here like ../../modulixos/home-manager/firefox
     ];
   
     mx = {

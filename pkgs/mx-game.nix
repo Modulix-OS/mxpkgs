@@ -2,11 +2,11 @@
   lib,
   pkgs,
   dockerEnable ? false,
-  ollamaEnable ? false,
+  llmEnable ? false,
   open-webuiEnable ? false,
   lampEnable ? false,
   postgresEnable ? false,
-  printingEnable ? false,
+  printerEnable ? false,
   teamviewerEnable ? false,
   vmEnable ? false,
   fwFanCtrl ? false,
@@ -14,11 +14,11 @@
 let
   serviceMap = {
     docker     = lib.optionals dockerEnable     [ "docker.service" "docker.socket" ];
-    ollama     = lib.optionals ollamaEnable     [ "ollama.service" ];
+    llm     = lib.optionals llmEnable     [ "llama-cpp.service" ];
     open-webui = lib.optionals open-webuiEnable [ "open-webui.service" ];
     lamp       = lib.optionals lampEnable       [ "httpd.service" "mysql.service" ];
     postgres   = lib.optionals postgresEnable   [ "postgresql.service" ];
-    printing   = lib.optionals printingEnable   [ "cups.service" "cups.socket" ];
+    printer   = lib.optionals printerEnable   [ "cups.service" "cups.socket" ];
     teamviewer = lib.optionals teamviewerEnable [ "teamviewerd.service" ];
     vm         = lib.optionals vmEnable         [ "libvirtd.service" "libvirtd.socket" "virtlogd.service" "virtlogd.socket" ];
   };
@@ -84,7 +84,7 @@ pkgs.writeShellScriptBin "mx-games" ''
     ${fanBeforeCmd}
 
     echo "==> Running: $*"
-    "$@" &
+    "gamemoderun $@" &
     child_pid=$!
     set +e
     wait "$child_pid"

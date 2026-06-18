@@ -1,0 +1,7 @@
+{ ... }:
+{
+  imports = [
+    ./blender
+    ./bambu-studio
+  ];
+}

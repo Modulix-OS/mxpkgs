@@ -1,9 +1,9 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
-        url = "github:nix-community/home-manager/release-25.11";
+        url = "github:nix-community/home-manager/release-26.05";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     firefox-addons = {
@@ -43,9 +43,9 @@
         inherit system;
         specialArgs = defaults // specialArgs;
         modules = [
-          inputs.agenix.nixosModules.default
           inputs.home-manager.nixosModules.default
-          ./modules/nixos
+          ./modulixos
+          ./modules
         ] ++ modules;
       };
   in
@@ -54,7 +54,7 @@
     nixosModules = {
       modulix-os =
         { ... }: {
-          imports = [ ./modules/nixos ];
+          imports = [ ./modulixos ./modules ];
           _module.args = {
             inputs = inputs;
             secretsPath = ./secrets;
@@ -62,7 +62,7 @@
         };
       home-manager = inputs.home-manager.nixosModules.default;
     };
-    homeModules.quentin = ./modules/home-manager/quentin;
+    homeModules.quentin = ./modulixos/home-manager/quentin;
 
     packages = forAllSystems (system:
       let
@@ -75,6 +75,7 @@
         nix-clean = import ./pkgs/nix-clean.nix { inherit pkgs; };
         nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
         kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
+        modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
       }
     );
   };

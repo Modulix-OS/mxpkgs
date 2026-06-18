@@ -1,43 +1,31 @@
-{ pkgs, ... }:
+{ pkgs, config, lib, ... }:
 
 let
+  cfg = config.mx.fonts;
   cooper-black = import ./cooper-black.nix { inherit pkgs; };
-  mx-use-system-font = pkgs.writeShellScriptBin "mx-use-system-font" ''
-    mkdir -p ~/.local/share/fonts
-    for dir in /nix/store/*/share/fonts/*; do
-      [ -d "$dir" ] || continue
-      cp -r $dir/* ~/.local/share/fonts/ 1>/dev/null 2>/dev/null
-    done
-    chmod 644 ~/.local/share/fonts/* 1>/dev/null 2>/dev/null
-  '';
 in
 {
-  environment.systemPackages = [
-    mx-use-system-font
-  ];
-  fonts.packages = with pkgs; [
-    cooper-black
-    dejavu_fonts
-    merriweather
-    freefont_ttf
-    gyre-fonts # TrueType substitutes for standard PostScript fonts
-    liberation_ttf
-    unifont
-    noto-fonts
-    noto-fonts-color-emoji
-    nerd-fonts._0xproto
-    nerd-fonts.droid-sans-mono
-    noto-fonts-cjk-sans
-    fira-code
-    fira-code-symbols
-    dina-font
-    roboto
-    lato
-    league-spartan
-    montserrat
-    source-sans-pro
-    raleway
-    oswald
-    poppins
-  ];
+  options.mx.fonts = {
+    enable = lib.mkEnableOption "Enable advanced/creative fonts (pulled in by creative modules)";
+  };
+
+  config = lib.mkIf cfg.enable {
+    fonts.packages = with pkgs; [
+      cooper-black
+      merriweather
+      nerd-fonts._0xproto
+      nerd-fonts.droid-sans-mono
+      fira-code
+      fira-code-symbols
+      dina-font
+      roboto
+      lato
+      league-spartan
+      montserrat
+      source-sans-pro
+      raleway
+      oswald
+      poppins
+    ];
+  };
 }

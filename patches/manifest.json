@@ -1,0 +1,10 @@
+{
+  "latest": 1,
+  "patches": [
+    {
+      "id": 1,
+      "file": "0001-example.sh",
+      "sha256": "2f9973ccf9020b5f7b62a843d49af608e94697a985a480bd554f09a2633fca08"
+    }
+  ]
+}
