@@ -1,26 +1,134 @@
 name: Update Flake Lock
 
+# Daily `nix flake update` proposed as a PR on the fixed branch `flake-update`,
+# validated by `nix flake check`, and auto-merged ~1 week after it was opened.
+# Only `flake.lock` is ever merged.
+#
+# `master` is protected (PR + 1 approval required). A bot cannot approve its own
+# PR, so the scheduled merge bypasses the approval with `gh pr merge --admin`;
+# the real safety gate is the green `nix flake check` + the 7-day soak, both
+# enforced in the merge step below.
+#
+# All git/gh auth uses the fine-grained PAT `FLAKE_BOT_TOKEN`
+# (repo Contents: RW + Pull requests: RW). The PAT's user must be in the
+# branch-protection bypass allowlist for `--admin` to succeed.
+
 on:
   schedule:
     - cron: "0 2 * * *"
   workflow_dispatch:
+  pull_request:
+    branches: [master]
+    paths: ["flake.lock"]
+
+concurrency:
+  # Per-PR for checks; a single shared "maintenance" lane for schedule/dispatch
+  # so merge/propose never run concurrently with themselves.
+  group: flake-update-${{ github.event.pull_request.number || 'maintenance' }}
+  cancel-in-progress: false
+
+env:
+  FLAKE_BRANCH: flake-update
 
 jobs:
-  update-flake:
+  # Validation gate: runs on every PR that changes flake.lock (incl. the bot's).
+  # Publishes a status check named "check" that the merge step requires.
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate flake
+        # Narrow this if it is too heavy on the runner, e.g.
+        #   nix flake check --no-build
+        # or build only the system you ship:
+        #   nix build .#nixosConfigurations.<host>.config.system.build.toplevel
+        run: nix flake check
+
+  # Merge the open flake-update PR once it is >7 days old, its check is green,
+  # and it touches only flake.lock. Runs first so `propose` sees a fresh master.
+  merge:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.FLAKE_BOT_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge aged flake.lock PR (>7d, green check, flake.lock only)
+        env:
+          GH_TOKEN: ${{ secrets.FLAKE_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          CUTOFF=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          PR=$(gh pr list \
+                 --state open \
+                 --head "$FLAKE_BRANCH" \
+                 --json number,createdAt \
+                 --jq "[ .[] | select(.createdAt < \"$CUTOFF\") ] | .[0].number // empty")
+
+          if [ -z "$PR" ]; then
+            echo "No flake-update PR older than 7 days. Nothing to merge."
+            exit 0
+          fi
+
+          # Gate 1: validation must be green.
+          CONCL=$(gh pr view "$PR" --json statusCheckRollup \
+                    --jq '[.statusCheckRollup[]? | select(.name? == "check")] | last | .conclusion // "PENDING"')
+          if [ "$CONCL" != "SUCCESS" ]; then
+            echo "flake check not green for PR #$PR (conclusion=$CONCL); not merging."
+            exit 0
+          fi
+
+          # Gate 2: refuse to merge anything that touches more than flake.lock.
+          FILES=$(gh pr view "$PR" --json files --jq '[.files[].path] | join(",")')
+          if [ "$FILES" != "flake.lock" ]; then
+            echo "PR #$PR touches more than flake.lock ($FILES); aborting."
+            exit 1
+          fi
+
+          echo "Merging PR #$PR (check=green, age>7d, flake.lock only)"
+          gh pr merge "$PR" \
+            --squash \
+            --delete-branch \
+            --admin \
+            --subject "chore: update flake.lock"
+
+  # Open the next PR if the lock changed and no flake-update PR is currently open.
+  propose:
+    if: github.event_name != 'pull_request'
+    needs: merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.FLAKE_BOT_TOKEN }}
 
       - uses: cachix/install-nix-action@v31
         with:
-          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          github_access_token: ${{ secrets.FLAKE_BOT_TOKEN }}
 
       - name: Configure Git
         run: |
@@ -28,154 +136,46 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Update flake.lock
-        run: |
-          nix flake update
+        run: nix flake update
 
-      - name: Check for changes
-        id: check_changes
+      - name: Open PR if lock changed and none open
+        env:
+          GH_TOKEN: ${{ secrets.FLAKE_BOT_TOKEN }}
         run: |
+          set -euo pipefail
+
           if git diff --quiet flake.lock; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create update branch
-        if: steps.check_changes.outputs.changed == 'true'
-        run: |
-          BRANCH_NAME="flake-update-$(date +%Y%m%d-%H%M%S)"
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-          git checkout -b "$BRANCH_NAME"
-          git add flake.lock
-          git commit -m "chore: update flake.lock"
-          git push origin "$BRANCH_NAME"
-
-      - name: Create or verify labels
-        if: steps.check_changes.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh label create "dependencies" --description "Pull requests that update a dependency file" --color "0366d6" || true
-          gh label create "automated" --description "Automated pull requests" --color "34d058" || true
-
-      - name: Create Pull Request
-        if: steps.check_changes.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh pr create \
-            --title "Automatic flake.lock update" \
-            --body "This PR automatically updates flake.lock.
-
-          **Auto-merge scheduled in 3 days**
-
-          This PR will be automatically merged after a 3-day review period.
-
-          Review the changes and close this PR if you don't want to apply this update." \
-            --base master \
-            --head "$BRANCH_NAME" \
-            --label "dependencies,automated"
-
-      - name: Close outdated flake-update PRs
-        if: steps.check_changes.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Ferme toutes les PRs flake-update ouvertes sauf celle qu'on vient de créer
-          gh pr list \
-            --state open \
-            --label "automated" \
-            --json number,headRefName,title,author \
-            --jq "
-              .[]
-              | select(.headRefName | startswith(\"flake-update-\"))
-              | select(.headRefName != \"$BRANCH_NAME\")
-              | select(.title | startswith(\"Automatic flake.lock update\"))
-              | select(.author.login == \"app/github-actions\")
-              | .number
-            " | while read -r OLD_PR; do
-              echo "Closing outdated PR #$OLD_PR (superseded by new flake.lock update)"
-              gh pr close "$OLD_PR" \
-                --comment "Superseded by a newer flake.lock update PR. Closing automatically." \
-                --delete-branch
-            done
-
-  auto-merge:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Find oldest PR to merge (> 3 days) and close the rest
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          CUTOFF_DATE=$(date -u -d '72 hours ago' +%Y-%m-%dT%H:%M:%SZ)
-
-          # Récupère tous les PRs éligibles triés du plus ancien au plus récent
-          ELIGIBLE_PRS=$(gh pr list \
-            --state open \
-            --label "automated" \
-            --json number,createdAt,headRefName,title,author \
-            --jq "
-              [ .[]
-                | select(.createdAt < \"$CUTOFF_DATE\")
-                | select(.headRefName | startswith(\"flake-update-\"))
-                | select(.title | startswith(\"Automatic flake.lock update\"))
-                | select(.author.login == \"app/github-actions\")
-              ]
-              | sort_by(.createdAt)
-              | .[].number
-            ")
-
-          if [ -z "$ELIGIBLE_PRS" ]; then
-            echo "No eligible PR found."
+            echo "flake.lock unchanged. Nothing to propose."
             exit 0
           fi
 
-          # Le premier est le plus ancien : on le merge
-          PR_NUMBER=$(echo "$ELIGIBLE_PRS" | head -n1)
-          # Les suivants sont obsolètes : on les ferme
-          OUTDATED_PRS=$(echo "$ELIGIBLE_PRS" | tail -n +2)
-
-          echo "Processing PR #$PR_NUMBER (oldest flake.lock update older than 3 days)"
-
-          CHANGED_FILES=$(gh pr view "$PR_NUMBER" --json files --jq '.files[].path')
-          if ! echo "$CHANGED_FILES" | grep -q "^flake.lock$"; then
-            echo "⚠️  PR #$PR_NUMBER has unexpected file changes, skipping for safety"
-            echo "Changed files: $CHANGED_FILES"
-            exit 1
+          # One PR at a time: if one is already open, leave it to age toward merge.
+          EXISTING=$(gh pr list \
+                       --state open \
+                       --head "$FLAKE_BRANCH" \
+                       --json number \
+                       --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "PR #$EXISTING already open for $FLAKE_BRANCH; skipping."
+            exit 0
           fi
 
-          BRANCH_NAME=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
+          # Producer guarantee: only flake.lock can ever enter the branch.
+          git checkout -B "$FLAKE_BRANCH"
+          git add flake.lock
+          git commit -m "chore: update flake.lock"
+          git push --force origin "$FLAKE_BRANCH"
 
-          git fetch origin
-          git checkout origin/master
-          git checkout "origin/$BRANCH_NAME" -- flake.lock
-          git commit -m "chore: update flake.lock [automated]"
-          git push origin HEAD:master
+          gh label create "dependencies" \
+            --description "Pull requests that update a dependency file" \
+            --color "0366d6" || true
+          gh label create "automated" \
+            --description "Automated pull requests" \
+            --color "34d058" || true
 
-          gh pr close "$PR_NUMBER" \
-            --comment "Merged manually via force-overwrite." \
-            --delete-branch
-
-          # Ferme les PRs éligibles plus récentes qui sont désormais obsolètes
-          if [ -n "$OUTDATED_PRS" ]; then
-            echo "$OUTDATED_PRS" | while read -r OLD_PR; do
-              echo "Closing outdated PR #$OLD_PR (superseded by merged PR #$PR_NUMBER)"
-              gh pr close "$OLD_PR" \
-                --comment "Superseded by merged PR #$PR_NUMBER. Closing automatically." \
-                --delete-branch
-            done
-          fi
+          gh pr create \
+            --base master \
+            --head "$FLAKE_BRANCH" \
+            --title "Automatic flake.lock update" \
+            --body "Automated \`nix flake update\`, validated by \`nix flake check\`. Auto-merged ~1 week after opening once the check is green (only \`flake.lock\` is merged). Close this PR to reject the update." \
+            --label "dependencies,automated"
