@@ -81,3 +81,48 @@ A modular NixOS configuration framework managed with Flakes, designed to be impo
     ├── gpu-eval.nix
     └── vm-common.nix
 ```
+
+## Patch system (remote hotfixes)
+
+`mx.services.patch-runner` applies hotfix scripts hosted in this repo's
+`patches/` directory **between full `nixos-rebuild` runs**. A systemd timer
+periodically fetches `patches/manifest.json`, and runs every patch whose `id`
+is newer than the last one applied (state in `/var/lib/patch-runner/version`).
+
+Security model:
+
+- **Transport**: HTTPS to `raw.githubusercontent.com`.
+- **Integrity**: each patch's `sha256` is listed in the manifest and verified
+  before execution (fail-closed — a mismatch aborts and does not advance state).
+- **Authenticity**: optional `minisign` signature of the manifest, verified
+  against a public key **pinned in the Nix config**. The `sha256` alone does not
+  protect against a malicious manifest (whoever pushes the patch also pushes the
+  hash); the signature does. **Set `publicKey` for any serious use.**
+
+Enable on a host:
+
+```nix
+mx.services.patch-runner = {
+  enable    = true;
+  publicKey = "RW...";        # minisign public key (omit to disable signature check — not recommended)
+  ref       = "main";         # pin a commit instead of a branch for immutability
+  interval  = "daily";        # systemd OnCalendar
+};
+```
+
+### Authoring a patch
+
+1. Add `patches/NNNN-description.sh` (zero-padded, strictly increasing id, never
+   renumber or rewrite a published patch). Make it **idempotent** — it may be
+   retried after a partial run.
+2. Regenerate the manifest:
+   ```bash
+   nix shell nixpkgs#jq -c bash scripts/gen-manifest.sh
+   ```
+3. Sign it (required if hosts pin a `publicKey`):
+   ```bash
+   minisign -Sm patches/manifest.json   # produces patches/manifest.json.minisig
+   ```
+4. Commit the patch, `manifest.json`, and `manifest.json.minisig` together.
+
+The `patches-manifest` CI workflow fails the PR if `manifest.json` is stale.

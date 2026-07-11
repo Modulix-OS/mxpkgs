@@ -1,0 +1,44 @@
+name: Patches manifest
+
+# Ensures patches/manifest.json stays in sync with the patch files.
+# This job only *verifies* (it never commits) so it cannot invalidate the
+# detached minisign signature, which must be produced locally before pushing.
+
+on:
+  pull_request:
+    paths:
+      - "patches/**"
+  push:
+    paths:
+      - "patches/**"
+  workflow_dispatch:
+
+jobs:
+  verify-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Regenerate manifest and diff
+        run: |
+          cp patches/manifest.json /tmp/manifest.committed.json
+          nix shell nixpkgs#jq -c bash scripts/gen-manifest.sh
+          if ! diff -u /tmp/manifest.committed.json patches/manifest.json; then
+            echo "::error::patches/manifest.json is out of date."
+            echo "Run 'nix shell nixpkgs#jq -c bash scripts/gen-manifest.sh' and re-sign before committing."
+            exit 1
+          fi
+          echo "manifest is up to date"
+
+      - name: Verify signature (if present)
+        run: |
+          if [ -f patches/manifest.json.minisig ]; then
+            echo "manifest.json.minisig present — verify it locally against your pinned key"
+          else
+            echo "::warning::no manifest.json.minisig committed; unsigned manifests are unsafe in production"
+          fi

@@ -42,7 +42,7 @@ let
           echo "patch-runner: signature required but missing, aborting" >&2
           exit 1
         fi
-        minisign -V -p <(printf '%s\n' "$PUBKEY") \
+        minisign -V -P "$PUBKEY" \
           -m "$tmp/manifest.json" -x "$tmp/manifest.json.minisig"
       fi
 
