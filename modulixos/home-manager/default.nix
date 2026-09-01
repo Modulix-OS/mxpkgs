@@ -12,11 +12,6 @@ in
             type = lib.types.path;
             description = "Path to the Home Manager configuration file";
           };
-          homeModule = lib.mkOption {
-            type = lib.types.nullOr lib.types.str;
-            default = null;
-            description = "Name of the home module in self.homeModules";
-          };
         };
       });
       default = {};
@@ -36,7 +31,7 @@ in
       users = lib.mapAttrs (username: userCfg: {
         imports = [
           userCfg.configPath
-        ] ++ lib.optional (userCfg.homeModule != null) self.homeModules.${userCfg.homeModule};
+        ];
         home.username = lib.mkDefault username;
         home.homeDirectory = lib.mkDefault "/home/${username}";
       }) cfg.users;
