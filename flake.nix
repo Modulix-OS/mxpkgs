@@ -14,6 +14,11 @@
       url = "github:qhorgues/CO-E33-Save-Editor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Rust crate providing `mx-init`, the ModulixOS configuration generator.
+    modulix-core-utils = {
+      url = "github:Modulix-OS/modulix-core-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
   };
 
@@ -57,12 +62,10 @@
           imports = [ ./modulixos ./modules ];
           _module.args = {
             inputs = inputs;
-            secretsPath = ./secrets;
           };
         };
       home-manager = inputs.home-manager.nixosModules.default;
     };
-    homeModules.quentin = ./modulixos/home-manager/quentin;
 
     packages = forAllSystems (system:
       let
@@ -76,6 +79,9 @@
         nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
         kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
+      } // nixpkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+        # ModulixOS configuration generator (Linux only).
+        mx-init = inputs.modulix-core-utils.packages.${system}.mx-init;
       }
     );
   };
