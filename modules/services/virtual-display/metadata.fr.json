@@ -1,0 +1,4 @@
+{
+  "description": "Écrans virtuels générés à partir d'un firmware EDID, avec les commandes pour basculer une session dessus et restaurer la disposition précédente.",
+  "keyword": ["écran", "virtuel", "edid", "affichage", "sans écran"]
+}

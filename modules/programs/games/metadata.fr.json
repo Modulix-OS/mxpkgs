@@ -1,0 +1,4 @@
+{
+  "description": "Active la prise en charge du jeu Modulix : installe les lanceurs Steam, Lutris, Heroic et UMU et applique des réglages de jeu partagés (gamescope, gamemode, mangohud, ajustements noyau/polkit).",
+  "keyword": ["jeu", "jeux", "jouer", "lanceur"]
+}

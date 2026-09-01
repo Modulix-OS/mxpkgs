@@ -1,0 +1,4 @@
+{
+  "description": "Autorise l'accès au bureau à distance de cette machine afin que sa session graphique soit accessible depuis un autre appareil.",
+  "keyword": ["distant", "bureau", "rdp", "vnc", "écran"]
+}

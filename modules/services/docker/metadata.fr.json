@@ -1,0 +1,4 @@
+{
+  "description": "Active l'environnement d'exécution de conteneurs Docker et son interface en ligne de commande, pour construire et exécuter des conteneurs et des piles Compose sur cette machine.",
+  "keyword": ["conteneur", "docker", "compose", "oci"]
+}

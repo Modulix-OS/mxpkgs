@@ -1,0 +1,104 @@
+{
+  "programs.games": {
+    "path": "programs/games",
+    "name": "Gaming",
+    "summary": "Steam, Lutris, Heroic and UMU with shared gaming tuning",
+    "keyword": ["game", "gaming", "play"],
+    "modules": [
+      "programs.games.steam",
+      "programs.games.lutris",
+      "programs.games.heroic",
+      "programs.games.umu"
+    ]
+  },
+  "programs.games.steam": {
+    "path": "programs/games/steam",
+    "flathub_id": "com.valvesoftware.Steam",
+    "nix_info": "steam"
+  },
+  "programs.games.lutris": {
+    "path": "programs/games/lutris",
+    "flathub_id": "net.lutris.Lutris",
+    "nix_info": "lutris"
+  },
+  "programs.games.heroic": {
+    "path": "programs/games/heroic",
+    "flathub_id": "com.heroicgameslauncher.hgl",
+    "nix_info": "heroic"
+  },
+  "programs.games.umu": {
+    "path": "programs/games/umu",
+    "name": "UMU Launcher",
+    "summary": "Unified launcher for running Windows games through Proton",
+    "keyword": ["proton", "wine", "launcher", "umu"],
+    "nix_info": "umu-launcher"
+  },
+  "programs.creativity.blender": {
+    "path": "programs/creativity/blender",
+    "flathub_id": "org.blender.Blender",
+    "nix_info": "blender"
+  },
+  "programs.creativity.bambu-studio": {
+    "path": "programs/creativity/bambu-studio",
+    "flathub_id": "com.bambulab.BambuStudio",
+    "nix_info": "bambu-studio"
+  },
+  "programs.dev.arduino": {
+    "path": "programs/dev/arduino",
+    "flathub_id": "cc.arduino.IDE2",
+    "nix_info": "arduino-ide"
+  },
+  "programs.studio.obs-studio": {
+    "path": "programs/studio/obs-studio",
+    "flathub_id": "com.obsproject.Studio",
+    "nix_info": "obs-studio",
+    "plugins": "obs-studio-plugins"
+  },
+  "programs.team-viewer": {
+    "path": "programs/utilities/team-viewer",
+    "flathub_id": "com.teamviewer.TeamViewer",
+    "nix_info": "teamviewer"
+  },
+  "services.docker": {
+    "path": "services/docker",
+    "name": "Docker",
+    "summary": "Docker container runtime",
+    "keyword": ["container", "docker", "compose"]
+  },
+  "services.lamp": {
+    "path": "services/lamp",
+    "name": "LAMP stack",
+    "summary": "Apache, MySQL, PHP and phpMyAdmin web stack",
+    "keyword": ["web", "apache", "mysql", "php", "phpmyadmin"]
+  },
+  "services.llm": {
+    "path": "services/llm",
+    "name": "Local AI",
+    "summary": "Local large-language-model runtime with Open WebUI",
+    "keyword": ["ai", "llm", "ollama", "open-webui", "chat"]
+  },
+  "services.printer": {
+    "path": "services/printing",
+    "name": "Printing",
+    "summary": "CUPS printing support",
+    "keyword": ["print", "printer", "cups"]
+  },
+  "services.remote-desktop": {
+    "path": "services/remote-desktop",
+    "name": "Remote Desktop",
+    "summary": "Remote desktop access to this machine",
+    "keyword": ["remote", "desktop", "rdp", "vnc"]
+  },
+  "services.vm": {
+    "path": "services/vm",
+    "name": "Virtual Machines",
+    "summary": "libvirt/QEMU virtualization support",
+    "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm"]
+  },
+  "services.virtual-display": {
+    "path": "services/virtual-display",
+    "name": "Virtual Displays",
+    "summary": "Virtual screens backed by generated EDID firmware",
+    "keyword": ["display", "virtual", "edid", "screen", "headless"]
+  }
+}

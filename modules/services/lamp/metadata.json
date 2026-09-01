@@ -1,0 +1,4 @@
+{
+  "description": "A local LAMP web stack: Apache HTTP server, MySQL/MariaDB, PHP and phpMyAdmin, ready for web development.",
+  "keyword": ["web", "apache", "mysql", "php", "phpmyadmin", "lamp"]
+}

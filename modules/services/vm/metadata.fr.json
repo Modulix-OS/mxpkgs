@@ -1,0 +1,4 @@
+{
+  "description": "Prise en charge des machines virtuelles basée sur libvirt et QEMU/KVM, avec les outils pour créer et gérer des invités.",
+  "keyword": ["vm", "virtuel", "qemu", "libvirt", "kvm"]
+}

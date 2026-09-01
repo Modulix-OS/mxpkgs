@@ -1,0 +1,4 @@
+{
+  "description": "Virtual displays backed by generated EDID firmware, with commands to switch a session onto them and restore the previous layout.",
+  "keyword": ["display", "virtual", "edid", "screen", "headless"]
+}

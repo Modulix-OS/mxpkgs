@@ -1,0 +1,4 @@
+{
+  "description": "Virtual-machine support based on libvirt and QEMU/KVM, with the tooling to create and manage guests.",
+  "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm"]
+}

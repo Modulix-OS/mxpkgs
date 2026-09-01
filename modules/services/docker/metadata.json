@@ -1,0 +1,4 @@
+{
+  "description": "Enable the Docker container runtime and its CLI, so containers and Compose stacks can be built and run on this machine.",
+  "keyword": ["container", "docker", "compose", "oci"]
+}

@@ -1,0 +1,47 @@
+{
+  "programs.games": {
+    "name": "Jeux",
+    "summary": "Steam, Lutris, Heroic et UMU avec des réglages de jeu partagés",
+    "keyword": ["jeu", "jeux", "jouer"]
+  },
+  "programs.games.umu": {
+    "name": "Lanceur UMU",
+    "summary": "Lanceur unifié pour exécuter des jeux Windows via Proton",
+    "keyword": ["proton", "wine", "lanceur", "umu"]
+  },
+  "services.docker": {
+    "name": "Docker",
+    "summary": "Environnement d'exécution de conteneurs Docker",
+    "keyword": ["conteneur", "docker", "compose"]
+  },
+  "services.lamp": {
+    "name": "Pile LAMP",
+    "summary": "Pile web Apache, MySQL, PHP et phpMyAdmin",
+    "keyword": ["web", "apache", "mysql", "php", "phpmyadmin"]
+  },
+  "services.llm": {
+    "name": "IA locale",
+    "summary": "Exécution locale de grands modèles de langage avec Open WebUI",
+    "keyword": ["ia", "llm", "ollama", "open-webui", "discussion"]
+  },
+  "services.printer": {
+    "name": "Impression",
+    "summary": "Prise en charge de l'impression via CUPS",
+    "keyword": ["imprimer", "imprimante", "cups"]
+  },
+  "services.remote-desktop": {
+    "name": "Bureau à distance",
+    "summary": "Accès au bureau à distance de cette machine",
+    "keyword": ["distant", "bureau", "rdp", "vnc"]
+  },
+  "services.vm": {
+    "name": "Machines virtuelles",
+    "summary": "Prise en charge de la virtualisation libvirt/QEMU",
+    "keyword": ["vm", "virtuel", "qemu", "libvirt", "kvm"]
+  },
+  "services.virtual-display": {
+    "name": "Écrans virtuels",
+    "summary": "Écrans virtuels générés à partir d'un firmware EDID",
+    "keyword": ["écran", "virtuel", "edid", "affichage", "sans écran"]
+  }
+}

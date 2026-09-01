@@ -1,0 +1,4 @@
+{
+  "description": "Enable CUPS printing support so local and network printers can be discovered and used.",
+  "keyword": ["print", "printer", "cups", "scan"]
+}

@@ -1,0 +1,4 @@
+{
+  "description": "Allow remote desktop access to this machine so its graphical session can be reached from another device.",
+  "keyword": ["remote", "desktop", "rdp", "vnc", "screen"]
+}

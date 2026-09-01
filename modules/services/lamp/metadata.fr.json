@@ -1,0 +1,4 @@
+{
+  "description": "Une pile web LAMP locale : serveur HTTP Apache, MySQL/MariaDB, PHP et phpMyAdmin, prête pour le développement web.",
+  "keyword": ["web", "apache", "mysql", "php", "phpmyadmin", "lamp"]
+}
