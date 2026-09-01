@@ -16,6 +16,21 @@ let
 
   lsfg-vk-ui-fhs = mkFhsDesktop lsfg-vk-ui "gay.pancake.lsfg-vk-ui.desktop" "lsfg-vk-ui";
 
+  steamAppsDir = "$HOME/.local/share/Steam/steamapps";
+
+  steamPrefixDir = "$HOME/.local/share/Steam/compatdata";
+
+  steamBinds = lib.optionals (cfg.shared_steam_dir != null) [
+    {
+      src = cfg.shared_steam_dir;
+      dst = steamAppsDir;
+    }
+    {
+      src = steamPrefixDir;
+      dst = "${steamAppsDir}/compatdata";
+    }
+  ];
+
 in
 {
   options.mx.programs.games = {
@@ -84,6 +99,15 @@ in
         lsfg-vk-ui-fhs
       ];
       package = pkgs.steam.override {
+        extraPreBwrapCmds = lib.optionalString (cfg.shared_steam_dir != null) ''
+          mkdir -p "${steamAppsDir}" "${steamPrefixDir}"
+          # Mount point for the prefixes, inside the shared tree: it has to exist
+          # there, since the stacked bind is resolved after the first one.
+          [ -d "${cfg.shared_steam_dir}" ] && mkdir -p "${cfg.shared_steam_dir}/compatdata"
+        '';
+
+        extraBwrapArgs = map (b: ''--bind "${b.src}" "${b.dst}"'') steamBinds;
+
         extraEnv = {
           TZ = ":/etc/localtime";
           MANGOHUD = true;

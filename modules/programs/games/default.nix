@@ -178,6 +178,23 @@ in
       description = "Folder with games shared for all gamers user";
     };
 
+    shared_steam_dir = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "/mnt/Games/SteamLibrary";
+      description = ''
+        Directory on the shared disk holding the Steam data common to every gamer.
+        Inside the Steam wrapper, `<dir>/common` is bind-mounted onto
+        `~/.local/share/Steam/steamapps/common`, so the installed games are shared,
+        and `<dir>/work/<user>/{downloading,temp,shadercache}` onto their
+        counterparts, so downloads are staged on the same filesystem as the games
+        and land with a rename instead of a copy across partitions.
+
+        Everything else stays in each user home, Proton prefixes first: Wine
+        refuses a prefix it does not own.
+      '';
+    };
+
     latest-unstable-mesa-driver.enable = lib.mkEnableOption "Enable latest unstable Mesa driver";
 
     enableHDR = lib.mkEnableOption "Enable HDR on games";
@@ -250,7 +267,38 @@ in
       ${user}.extraGroups = [ "gamemode" ];
     }) cfg.users);
 
-    systemd.tmpfiles.rules = map (p: "d ${p} 0770 root gamers -") cfg.game_lib_dirs;
+    systemd.tmpfiles.rules =
+      let
+        acl = lib.concatStringsSep "," [
+          "user::rwX"
+          "group::rwX"
+          "group:gamers:rwX"
+          "mask::rwX"
+          "other::---"
+          "default:user::rwx"
+          "default:group::rwx"
+          "default:group:gamers:rwx"
+          "default:mask::rwx"
+          "default:other::---"
+        ];
+
+        mkRules = owner: p: [
+          "d ${p} 2770 ${owner} gamers -"
+          "a+ ${p} - - - - ${acl}"
+        ];
+        mkRecursiveRules = p: [
+          "Z ${p} ~2770 root gamers -"
+          "A+ ${p} - - - - ${acl}"
+        ];
+      in
+      lib.concatMap (mkRules "root") cfg.game_lib_dirs
+      ++ lib.optionals (cfg.shared_steam_dir != null) (
+        mkRules "root" cfg.shared_steam_dir
+        ++ lib.concatMap (mkRules "-") [
+          "${cfg.shared_steam_dir}/common"
+        ]
+        ++ mkRecursiveRules cfg.shared_steam_dir
+      );
 
     services.udev.extraRules = ''
       ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
