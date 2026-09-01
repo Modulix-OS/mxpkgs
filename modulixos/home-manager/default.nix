@@ -29,7 +29,7 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        qhorgues-config = self;
+        modulixos-config = self;
         pkgs-unstable = pkgs-unstable;
         inputs = inputs;
       };
