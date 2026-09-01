@@ -3,7 +3,6 @@
 let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
-  conf_service = config.mx.services;
 
   proton-cachyos = pkgs.callPackage ../../../pkgs/proton-cachyos.nix { };
   protonCompatTools = pkgs.linkFarm "mx-proton-compat-tools" [
@@ -13,18 +12,142 @@ let
 
   normalUsers = import ../../../lib/normal-user.nix { inherit config; };
 
+  gameServices = import ../../../lib/mx-game-services.nix { inherit lib config; };
+
   mx-game = import ../../../pkgs/mx-game.nix {
-    lib = lib;
-    pkgs = pkgs;
-    dockerEnable = conf_service.docker.enable;
-    llmEnable = conf_service.llm.enable;
-    open-webuiEnable = conf_service.llm.open-webui.enable;
-    lampEnable = conf_service.lamp.enable;
-    printingEnable = conf_service.printer.enable;
-    teamviewerEnable = config.mx.programs.team-viewer.enable;
-    vmEnable = conf_service.vm.enable;
+    inherit lib pkgs;
+    services = gameServices.enabledUnits;
     fwFanCtrl = config.mx.hardware.framework-fan-ctrl.enable;
+    desktop = config.mx.desktop;
+    enableHDR = cfg.enableHDR;
+    obsCapture = config.mx.programs.studio.obs-studio.enable;
   };
+
+  mangohudStyleBase = ''
+    legacy_layout=0
+    round_corners=0
+    background_color=000000
+    font_size=24
+    text_color=FFFFFF
+    gpu_text=GPU
+    cpu_text=CPU
+    gpu_color=2E9762
+    cpu_color=2E97CB
+    vram_color=AD64C1
+    ram_color=C26693
+    battery_color=00FF00
+    engine_color=EB5B5B
+    wine_color=EB5B5B
+    frametime_color=00FF00
+  '';
+
+  mangohudStyleBar = ''
+    ${mangohudStyleBase}
+    horizontal
+    hud_no_margin
+    table_columns=1
+    position=top-center
+    background_alpha=0
+  '';
+
+  mangohudStylePanel = ''
+    ${mangohudStyleBase}
+    position=top-left
+    background_alpha=0.4
+  '';
+
+  mangohudElementsFps = ''
+    fps
+    time
+  '';
+
+  mangohudElementsBasic = ''
+    gpu_stats
+    cpu_stats
+    vram
+    ram
+    battery
+    fps
+    frame_timing
+    time
+  '';
+
+  mangohudElementsDetailed = ''
+    gpu_stats
+    gpu_temp
+    gpu_core_clock
+    gpu_mem_clock
+    gpu_power
+    cpu_stats
+    cpu_temp
+    cpu_mhz
+    cpu_power
+    vram
+    ram
+    battery
+    fps
+    frametime
+    frame_timing
+    time
+  '';
+
+  mangohudElementsFull = ''
+    gpu_name
+    gpu_stats
+    gpu_temp
+    gpu_junction_temp
+    gpu_mem_temp
+    gpu_core_clock
+    gpu_mem_clock
+    gpu_power
+    gpu_fan
+    gpu_voltage
+    cpu_stats
+    cpu_temp
+    cpu_mhz
+    cpu_power
+    core_load
+    core_bars
+    core_type
+    vram
+    ram
+    swap
+    procmem
+    io_read
+    io_write
+    battery
+    fps
+    frametime
+    fps_metrics=avg,0.01
+    frame_timing
+    throttling_status
+    resolution
+    refresh_rate
+    vulkan_driver
+    engine_version
+    arch
+    wine
+    time
+  '';
+
+  mangohudPresets = pkgs.writeText "mangohud-presets.conf" ''
+    [preset 1]
+    ${mangohudStyleBar}
+    ${mangohudElementsFps}
+
+    [preset 2]
+    ${mangohudStyleBar}
+    ${mangohudElementsBasic}
+
+    [preset 3]
+    ${mangohudStylePanel}
+    ${mangohudElementsDetailed}
+
+    [preset 4]
+    ${mangohudStylePanel}
+    ${mangohudElementsFull}
+  '';
+
 
 in
 {
@@ -43,10 +166,16 @@ in
       description = "Whether shared gaming config is active (auto: any launcher enabled).";
     };
 
-    gamemode.users = lib.mkOption {
+    users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = normalUsers;
-      description = "Users for gamemode permissions should be enabled.";
+      default = [];
+      description = "Users added to the 'gamers' group.";
+    };
+
+    game_lib_dirs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = "Folder with games shared for all gamers user";
     };
 
     latest-unstable-mesa-driver.enable = lib.mkEnableOption "Enable latest unstable Mesa driver";
@@ -60,8 +189,7 @@ in
         enable = true;
         package = pkgs.gamescope;
 
-        # HOT FIX: TODO CHANGE WHEN WORK'S
-        capSysNice = false;
+        capSysNice = true;
       };
       gamemode = {
         enable = true;
@@ -75,18 +203,29 @@ in
       };
     };
 
-    users.groups.gamemode.members = cfg.gamemode.users;
-
     environment = {
       sessionVariables = {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${protonCompatTools}:\${HOME}/.steam/root/compatibilitytools.d";
 
-        MANGOHUD_CONFIG = "control=mangohud,gpu_list=0,hud_no_margin,legacy_layout=false,horizontal,round_corners=0,background_alpha=0,background_color=000000,font_size=24,text_color=FFFFFF,position=top-center,toggle_hud=Shift_R+F12,no_display,table_columns=1,gpu_text=GPU,gpu_stats,gpu_temp,gpu_power,gpu_color=2E9762,cpu_text=CPU,cpu_stats,cpu_temp,cpu_power,cpu_color=2E97CB,vram,vram_color=AD64C1,ram,ram_color=C26693,battery,battery_color=00FF00,fps,gpu_name,wine,wine_color=EB5B5B,fps_limit_method=late,toggle_fps_limit=Shift_R+F1,fps_limit=0\\,165\\,60\\,30,time";
+        MANGOHUD_PRESETSFILE = "/etc/MangoHud/presets.conf";
+        MANGOHUD_CONFIG = lib.concatStringsSep "," [
+          "control=mangohud"
+          "gpu_list=0"
+          "preset=0\\,1\\,2\\,3\\,4"
+          "toggle_preset=Shift_R+F10"
+          "toggle_hud=Shift_R+F12"
+          "toggle_hud_position=Shift_R+F11"
+          "toggle_fps_limit=Shift_L+F1"
+          "fps_limit_method=late"
+          "fps_limit=0\\,165\\,60\\,30"
+        ];
 
         MESA_SHADER_CACHE_MAX_SIZE= lib.mkIf (cgpu.vendor == "amd") "12G";
         __GL_SHADER_DISK_CACHE_SIZE= lib.mkIf (cgpu.vendor == "nvidia") "12000000000";
 
       };
+
+      etc."MangoHud/presets.conf".source = mangohudPresets;
     };
     environment.systemPackages = [
       pkgs.mangohud
@@ -102,6 +241,16 @@ in
           package32 = if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.pkgsi686Linux.mesa else pkgs.pkgsi686Linux.mesa;
         };
     };
+
+    users.groups = {
+      gamers.members = cfg.users;
+    };
+
+    users.users = lib.mkMerge (map (user: {
+      ${user}.extraGroups = [ "gamemode" ];
+    }) cfg.users);
+
+    systemd.tmpfiles.rules = map (p: "d ${p} 0770 root gamers -") cfg.game_lib_dirs;
 
     services.udev.extraRules = ''
       ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
@@ -138,18 +287,7 @@ in
 
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {
-        var allowedUnits = [
-          "docker.service", "docker.socket",
-          "ollama.service",
-          "llama-cpp.service",
-          "open-webui.service",
-          "httpd.service", "mysql.service",
-          "postgresql.service",
-          "cups.service", "cups.socket",
-          "teamviewerd.service",
-          "libvirtd.service", "libvirtd.socket",
-          "virtlogd.service", "virtlogd.socket"
-        ];
+        var allowedUnits = ${builtins.toJSON gameServices.enabledUnits};
 
         if (action.id === "org.freedesktop.systemd1.manage-units" &&
             subject.isInGroup("wheel") &&
