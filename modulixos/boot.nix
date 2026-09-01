@@ -16,21 +16,35 @@ in
       description = "Enable secure boot";
     };
   };
-  config = {
-    boot = lib.mkMerge [
-      (
-        lib.mkIf cfg.enable {
-          loader.limine = {
-            enable = true;
-            maxGenerations = 10;
-            secureBoot.enable = cfg.secureBoot.enable;
-            extraConfig = "timeout: 1\nquiet: yes\nremember_last_entry: yes";
+  config = lib.mkMerge [
+    (
+      lib.mkIf cfg.enable {
+        boot.loader.limine = {
+          enable = true;
+          maxGenerations = 10;
+          secureBoot = {
+            enable = cfg.secureBoot.enable;
+            autoGenerateKeys = cfg.secureBoot.enable;
+            autoEnrollKeys = {
+              enable = cfg.secureBoot.enable;
+              extraArgs = [
+                "--microsoft"
+                "--firmware-builtin"
+              ];
+            };
           };
+          extraConfig = ''
+            timeout: 1
+            quiet: yes
+            remember_last_entry: no
+          '';
+        };
 
-          loader.efi.canTouchEfiVariables = lib.mkDefault true;
-        }
-      )
-      {
+        boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+      }
+    )
+    {
+      boot = {
         kernelPackages = lib.mkDefault pkgs.linuxPackages;
         initrd.verbose = false;
         tmp.useTmpfs = lib.mkDefault true;
@@ -41,8 +55,15 @@ in
         ];
 
         initrd.systemd.enable = lib.mkDefault true;
-        plymouth.enable = lib.mkDefault true;
-      }
-    ];
-  };
+        plymouth.enable = lib.mkDefault (!config.mx.mode.server.enable);
+
+        initrd.systemd.tpm2.enable = true;
+        initrd.systemd.services.systemd-udev-settle.enable = lib.mkForce false;
+      };
+
+      # Fastest boot
+      systemd.network.wait-online.enable = false;
+      systemd.services.systemd-udev-settle.enable = lib.mkForce false;
+    }
+  ];
 }
