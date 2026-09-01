@@ -61,14 +61,14 @@
       igpu-launch = { pkgs, igpuId, igpuNumber }:
         pkgs.callPackage ./lib/igpu-launch.nix { inherit igpuId igpuNumber; };
 
-      mkNixUpdate = { pkgs, flake_path, flake_config }:
-        import ./pkgs/nix-update.nix {
+      mkMxUpdate = { pkgs, flake_path, flake_config }:
+        import ./pkgs/mx-update.nix {
           inherit pkgs flake_path flake_config;
-          nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
+          mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
         };
 
-      mkNixCleanBoot = { pkgs, flake_path, flake_config }:
-        import ./pkgs/nix-clean-boot.nix { inherit pkgs flake_path flake_config; };
+      mkMxCleanBoot = { pkgs, flake_path, flake_config }:
+        import ./pkgs/mx-clean-boot.nix { inherit pkgs flake_path flake_config; };
     };
 
     nixosModules = {
@@ -89,8 +89,8 @@
       {
         clean-dir = import ./pkgs/clean-dir.nix { inherit pkgs; };
         lsfg-vk = pkgs.callPackage ./pkgs/lsfg-vk.nix {};
-        nix-clean = import ./pkgs/nix-clean.nix { inherit pkgs; };
-        nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
+        mx-clean = import ./pkgs/mx-clean.nix { inherit pkgs; };
+        mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
         kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };

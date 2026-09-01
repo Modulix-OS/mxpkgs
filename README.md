@@ -65,9 +65,9 @@ A modular NixOS configuration framework managed with Flakes, designed to be impo
 │   ├── kiwix.nix
 │   ├── lsfg-vk.nix
 │   ├── modulix-icon.nix
+│   ├── mx-clean.nix
 │   ├── mx-game.nix
-│   ├── nix-clean.nix
-│   ├── nix-update.nix
+│   ├── mx-update.nix
 │   ├── phpmyadmin.nix
 │   ├── proton-cachyos.nix
 │   └── ...
