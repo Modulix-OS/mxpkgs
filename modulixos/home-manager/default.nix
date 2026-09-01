@@ -34,6 +34,7 @@ in
         ];
         home.username = lib.mkDefault username;
         home.homeDirectory = lib.mkDefault "/home/${username}";
+        home.stateVersion = config.system.stateVersion;
       }) cfg.users;
     };
   };
