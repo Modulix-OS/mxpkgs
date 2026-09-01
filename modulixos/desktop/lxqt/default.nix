@@ -11,6 +11,8 @@ in
       windowManager.openbox.enable = false;
     };
 
+    # Automatic mounting device (moved out of modulixos/filesystem.nix)
+    services.devmon.enable = true;
 
     environment.lxqt.excludePackages = with pkgs.lxqt; [
         ### CORE 1
