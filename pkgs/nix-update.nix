@@ -8,48 +8,55 @@ pkgs.writeShellScriptBin "nix-update" ''
     YELLOW='\033[1;33m'
     NC='\033[0m' # No Color
 
-    if ! ${pkgs.git}/bin/git rev-parse --git-dir > /dev/null 2>&1; then
-        echo -e "$RED Error: This directory is not a git repository $NC"
-        exit 1
-    fi
+    LOCK_BACKUP=$(${pkgs.coreutils}/bin/mktemp)
+    trap '${pkgs.coreutils}/bin/rm -f "$LOCK_BACKUP"' EXIT
 
-    CURRENT_COMMIT=$(${pkgs.git}/bin/git rev-parse HEAD)
-
-    PULL_OUTPUT=$(LANG=C ${pkgs.git}/bin/git pull 2>&1)
-    PULL_EXIT_CODE=$?
-    if echo "$PULL_OUTPUT" | grep -qi "conflict"; then
-        echo -e "$RED Conflic detected in pull $NC"
-        echo -e "$YELLOW Cancel pull $NC"
-
-        ${pkgs.git}/bin/git merge --abort 2>&1
-
-        if [ "$(${pkgs.git}/bin/git rev-parse HEAD)" = "$CURRENT_COMMIT" ]; then
-            echo -e "$GREEN Pull aborted successfully. Repository restored to previous state.$NC"
-        else
-            echo -e "$RED Warning: Repository might not be in the expected state. $NC"
+    hash_lock() {
+        if [ -f flake.lock ]; then
+            ${pkgs.coreutils}/bin/sha256sum flake.lock | ${pkgs.coreutils}/bin/cut -d' ' -f1
         fi
-        exit 2
+    }
+
+    restore_lock() {
+        if [ -s "$LOCK_BACKUP" ]; then
+            ${pkgs.coreutils}/bin/cp "$LOCK_BACKUP" flake.lock
+            echo -e "$YELLOW flake.lock restored $NC"
+        fi
+    }
+
+    if [ -f flake.lock ]; then
+        ${pkgs.coreutils}/bin/cp flake.lock "$LOCK_BACKUP"
     fi
 
-    if echo "$PULL_OUTPUT" | grep -qi "Already up to date\|Already up-to-date\|Déjà à jour"; then
+    OLD_HASH=$(hash_lock)
+
+    ${pkgs.nix}/bin/nix flake update --flake "${flake_path}"
+    UPDATE_EXIT_CODE=$?
+
+    if [ $UPDATE_EXIT_CODE -ne 0 ]; then
+        echo -e "$RED Flake update failed $NC"
+        restore_lock
+        exit $UPDATE_EXIT_CODE
+    fi
+
+    NEW_HASH=$(hash_lock)
+
+    if [ "$OLD_HASH" = "$NEW_HASH" ]; then
         echo -e "$GREEN OS already up to date.$NC"
         exit 0
     fi
 
-    if [ $PULL_EXIT_CODE -eq 0 ]; then
-        echo -e "$GREEN Starting update... $NC"
+    echo -e "$GREEN Starting update... $NC"
 
-        sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "${flake_path}#${flake_config}"
-        COMMAND_EXIT_CODE=$?
+    sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "${flake_path}#${flake_config}"
+    COMMAND_EXIT_CODE=$?
 
-        if [ $COMMAND_EXIT_CODE -eq 0 ]; then
-            echo -e "$GREEN Update finish successfully!$NC"
-            ${nix-latest-update}/bin/nix-latest-update
-        else
-            echo -e "$RED Update failed$NC"
-            exit $COMMAND_EXIT_CODE
-        fi
+    if [ $COMMAND_EXIT_CODE -eq 0 ]; then
+        echo -e "$GREEN Update finish successfully!$NC"
+        ${nix-latest-update}/bin/nix-latest-update
     else
-        exit $PULL_EXIT_CODE
+        echo -e "$RED Update failed$NC"
+        restore_lock
+        exit $COMMAND_EXIT_CODE
     fi
 ''
