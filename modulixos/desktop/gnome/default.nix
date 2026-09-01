@@ -3,6 +3,7 @@
 let
   deEnabled = config.mx.desktop == "gnome";
   cfg = config.mx.gnome;
+  gnome-rounded-blur = pkgs.callPackage ../../../pkgs/gnome-rounded-blur.nix { };
 in
 {
     options.mx.gnome = {
@@ -23,6 +24,7 @@ in
       };
       gsconnect = lib.mkEnableOption "Enable GSConnect";
       remote-desktop = lib.mkEnableOption "Enable GNOME remote desktop";
+      rounded-blur = lib.mkEnableOption "gnome-rounded-blur";
     };
 
     imports = [
@@ -36,6 +38,7 @@ in
           services = {
             displayManager.gdm.enable = true;
             desktopManager.gnome = {
+              sessionPath = lib.optional cfg.rounded-blur gnome-rounded-blur;
               enable = true;
             };
           };
