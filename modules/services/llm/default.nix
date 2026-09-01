@@ -21,16 +21,24 @@ let
       hf-repo = lib.mkOption { type = lib.types.str; description = "HuggingFace repo"; };
       hf-file = lib.mkOption { type = lib.types.str; description = "GGUF filename"; };
       alias = lib.mkOption { type = lib.types.str; description = "Model alias"; };
-      ctx-size = lib.mkOption { type = lib.types.str; default = "8192"; };
-      temp = lib.mkOption { type = lib.types.str; default = "0.7"; };
-      top-p = lib.mkOption { type = lib.types.str; default = "0.95"; };
-      min-p = lib.mkOption { type = lib.types.str; default = "0.01"; };
-      top-k = lib.mkOption { type = lib.types.str; default = "40"; };
-      jinja = lib.mkOption { type = lib.types.str; default = "on"; };
-      load-on-startup = lib.mkOption { type = lib.types.str; default = "false"; };
-      stop-timeout = lib.mkOption { type = lib.types.str; default = "60"; };
+      ctx-size = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      temp = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      top-p = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      min-p = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      top-k = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      jinja = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      load-on-startup = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      stop-timeout = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
+      presence-penalty = lib.mkOption { type = lib.types.nullOr lib.types.str; default = null; };
     };
   };
+
+  modelsPresetIni =
+    pkgs.writeText "llama-models.ini" (
+      lib.generators.toINI { } (
+        lib.mapAttrs (_: lib.filterAttrs (_: v: v != null)) cfg.modelsPreset
+      )
+    );
 in
 {
   options.mx.services.llm = {
@@ -48,9 +56,29 @@ in
       description = "Port for llama-cpp server";
     };
 
+    ramOverflow = {
+      enable = lib.mkEnableOption "GPU/RAM automatic layer overflow via llama.cpp -fit";
+
+      marginMiB = lib.mkOption {
+        type = lib.types.str;
+        default = "1024";
+        description = "Free VRAM margin per device left by -fit (--fit-target)";
+      };
+
+      minCtx = lib.mkOption {
+        type = lib.types.str;
+        default = "4096";
+        description = "Floor context size -fit is allowed to shrink to (--fit-ctx)";
+      };
+    };
+
     extraFlags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ "-ngl" "99" "--parallel" "4" "-fa" "on" ];
+      default =
+        if cfg.ramOverflow.enable then
+          [ "--parallel" "4" "-fa" "on" "-fit" "on" "--fit-target" cfg.ramOverflow.marginMiB "--fit-ctx" cfg.ramOverflow.minCtx ]
+        else
+          [ "-ngl" "99" "--parallel" "4" "-fa" "on" ];
       description = "Extra flags passed to llama-cpp";
     };
 
@@ -125,13 +153,14 @@ in
       package = cfg.llamaCppPackage;
       host = cfg.host;
       port = cfg.port;
-      extraFlags = cfg.extraFlags;
-      modelsPreset = cfg.modelsPreset;
+      extraFlags =
+        cfg.extraFlags
+        ++ lib.optionals (cfg.modelsPreset != { }) [ "--models-preset" "${modelsPresetIni}" ];
     };
 
     systemd.services.llama-cpp = {
       serviceConfig = {
-        EnvironmentFile = cfg.huggingfaceTokenFile;
+        EnvironmentFile = lib.mkIf (cfg.huggingfaceTokenFile != null) cfg.huggingfaceTokenFile;
       };
     };
   };
