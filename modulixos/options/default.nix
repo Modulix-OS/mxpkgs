@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware.nix
+    ./hardware-cpu.nix
     ./hardware-gpu.nix
     ./framework.nix
   ];
