@@ -95,6 +95,12 @@
     "summary": "Remote desktop access to this machine",
     "keyword": ["remote", "desktop", "rdp", "vnc"]
   },
+  "services.remote-login": {
+    "path": "services/remote-login",
+    "name": "Remote login",
+    "summary": "SSH driven login and Wake-on-LAN for the streaming session",
+    "keyword": ["remote", "ssh", "login", "wake-on-lan"]
+  },
   "services.vm": {
     "path": "services/vm",
     "name": "Virtual Machines",

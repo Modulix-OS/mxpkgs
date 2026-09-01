@@ -39,6 +39,11 @@
     "summary": "Accès au bureau à distance de cette machine",
     "keyword": ["distant", "bureau", "rdp", "vnc"]
   },
+  "services.remote-login": {
+    "name": "Connexion à distance",
+    "summary": "Connexion pilotée par SSH et Wake-on-LAN pour la session de streaming",
+    "keyword": ["distant", "ssh", "connexion", "wake-on-lan"]
+  },
   "services.vm": {
     "name": "Machines virtuelles",
     "summary": "Prise en charge de la virtualisation libvirt/QEMU",

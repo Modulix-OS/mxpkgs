@@ -1,0 +1,4 @@
+{
+  "description": "Ouvre ou déverrouille la session de streaming via SSH, pour qu'un client distant puisse réveiller la machine et accéder à son bureau sans personne devant.",
+  "keyword": ["distant", "ssh", "connexion", "wake-on-lan", "streaming"]
+}

@@ -5,6 +5,7 @@
     ./flatpak
     ./printing
     ./remote-desktop
+    ./remote-login
     ./vm
     ./virtual-display
     ./lamp
