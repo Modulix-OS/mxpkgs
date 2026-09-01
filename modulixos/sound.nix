@@ -1,11 +1,7 @@
-{ lib, config, options, pkgs, ... }:
+{ lib, config, ... }:
 
 let
   cfg = config.mx.core.sound;
-
-  # Introduce in 26.05
-  hasExtraLadspaPackages =
-    options.services.pipewire ? extraLadspaPackages;
 in
 {
   options.mx.core.sound = {
@@ -51,11 +47,5 @@ in
         };
       };
     }
-    (if hasExtraLadspaPackages then {
-      services.pipewire.extraLadspaPackages = [ pkgs.rnnoise-plugin.ladspa ];
-    } else {
-      systemd.user.services.pipewire.environment.LADSPA_PATH =
-        "${pkgs.rnnoise-plugin.ladspa}/lib/ladspa";
-    })
   ]);
 }
