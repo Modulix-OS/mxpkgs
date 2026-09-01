@@ -138,21 +138,21 @@ in
     ];
 
     services.open-webui = {
-      package = cfg.open-webui.package;
+      package = lib.mkMxDefault cfg.open-webui.package;
       enable = cfg.open-webui.enable;
-      port = cfg.open-webui.port;
+      port = lib.mkMxDefault cfg.open-webui.port;
       environment = {
-        OLLAMA_BASE_URL = "";
-        OPENAI_API_BASE_URL = "http://${cfg.host}:${toString cfg.port}/v1";
-        OPENAI_API_KEY = "none";
+        OLLAMA_BASE_URL = lib.mkMxDefault "";
+        OPENAI_API_BASE_URL = lib.mkMxDefault "http://${cfg.host}:${toString cfg.port}/v1";
+        OPENAI_API_KEY = lib.mkMxDefault "none";
       } // cfg.open-webui.extraEnvironment;
     };
 
     services.llama-cpp = {
       enable = true;
-      package = cfg.llamaCppPackage;
-      host = cfg.host;
-      port = cfg.port;
+      package = lib.mkMxDefault cfg.llamaCppPackage;
+      host = lib.mkMxDefault cfg.host;
+      port = lib.mkMxDefault cfg.port;
       extraFlags =
         cfg.extraFlags
         ++ lib.optionals (cfg.modelsPreset != { }) [ "--models-preset" "${modelsPresetIni}" ];
@@ -160,7 +160,7 @@ in
 
     systemd.services.llama-cpp = {
       serviceConfig = {
-        EnvironmentFile = lib.mkIf (cfg.huggingfaceTokenFile != null) cfg.huggingfaceTokenFile;
+        EnvironmentFile = lib.mkIf (cfg.huggingfaceTokenFile != null) (lib.mkMxDefault cfg.huggingfaceTokenFile);
       };
     };
   };

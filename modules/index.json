@@ -14,17 +14,26 @@
   "programs.games.steam": {
     "path": "programs/games/steam",
     "flathub_id": "com.valvesoftware.Steam",
-    "nix_info": "steam"
+    "nix_info": "steam",
+    "name": "Steam",
+    "summary": "Valve game store and launcher, tuned for Proton, gamescope and FSR/DLSS upgrades",
+    "keyword": ["steam", "valve", "game", "proton", "gamescope"]
   },
   "programs.games.lutris": {
     "path": "programs/games/lutris",
     "flathub_id": "net.lutris.Lutris",
-    "nix_info": "lutris"
+    "nix_info": "lutris",
+    "name": "Lutris",
+    "summary": "Open game manager for installing and launching games from many sources",
+    "keyword": ["lutris", "game", "launcher", "wine"]
   },
   "programs.games.heroic": {
     "path": "programs/games/heroic",
     "flathub_id": "com.heroicgameslauncher.hgl",
-    "nix_info": "heroic"
+    "nix_info": "heroic",
+    "name": "Heroic Games Launcher",
+    "summary": "Launcher for Epic Games Store and GOG titles",
+    "keyword": ["heroic", "epic", "gog", "game", "launcher"]
   },
   "programs.games.umu": {
     "path": "programs/games/umu",
@@ -36,28 +45,43 @@
   "programs.creativity.blender": {
     "path": "programs/creativity/blender",
     "flathub_id": "org.blender.Blender",
-    "nix_info": "blender"
+    "nix_info": "blender",
+    "name": "Blender",
+    "summary": "3D creation suite, auto-tuned for GPU compute (CUDA/HIP) and pulling in creative fonts",
+    "keyword": ["blender", "3d", "modeling", "render", "animation"]
   },
   "programs.creativity.bambu-studio": {
     "path": "programs/creativity/bambu-studio",
     "flathub_id": "com.bambulab.BambuStudio",
-    "nix_info": "bambu-studio"
+    "nix_info": "bambu-studio",
+    "name": "Bambu Studio",
+    "summary": "Slicer for Bambu Lab 3D printers",
+    "keyword": ["bambu", "3d printing", "slicer", "print"]
   },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",
     "flathub_id": "cc.arduino.IDE2",
-    "nix_info": "arduino-ide"
+    "nix_info": "arduino-ide",
+    "name": "Arduino",
+    "summary": "Arduino IDE, CLI and language server, with board access via dialout/uucp groups",
+    "keyword": ["arduino", "microcontroller", "embedded", "dev"]
   },
   "programs.studio.obs-studio": {
     "path": "programs/studio/obs-studio",
     "flathub_id": "com.obsproject.Studio",
     "nix_info": "obs-studio",
-    "plugins": "obs-studio-plugins"
+    "plugins": "obs-studio-plugins",
+    "name": "OBS Studio",
+    "summary": "Streaming and recording studio with virtual camera and GPU capture/VA-API plugins",
+    "keyword": ["obs", "stream", "record", "capture", "camera"]
   },
   "programs.team-viewer": {
     "path": "programs/utilities/team-viewer",
     "flathub_id": "com.teamviewer.TeamViewer",
-    "nix_info": "teamviewer"
+    "nix_info": "teamviewer",
+    "name": "TeamViewer",
+    "summary": "Remote support and remote access to this machine",
+    "keyword": ["teamviewer", "remote", "support", "access"]
   },
   "services.docker": {
     "path": "services/docker",
@@ -112,5 +136,11 @@
     "name": "Virtual Displays",
     "summary": "Virtual screens backed by generated EDID firmware",
     "keyword": ["display", "virtual", "edid", "screen", "headless"]
+  },
+  "fonts": {
+    "path": "fonts",
+    "name": "Extra Fonts",
+    "summary": "Extra display and monospace font families for creative work",
+    "keyword": ["font", "typography", "nerd-fonts", "monospace"]
   }
 }

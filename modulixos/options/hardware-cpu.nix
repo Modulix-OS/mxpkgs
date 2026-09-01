@@ -17,7 +17,7 @@ in
   };
 
   config = {
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault (cfg.vendor == "intel");
-    hardware.cpu.amd.updateMicrocode = lib.mkDefault (cfg.vendor == "amd");
+    hardware.cpu.intel.updateMicrocode = lib.mkMxDefault (cfg.vendor == "intel");
+    hardware.cpu.amd.updateMicrocode = lib.mkMxDefault (cfg.vendor == "amd");
   };
 }

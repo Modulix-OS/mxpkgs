@@ -28,15 +28,15 @@
     ./home-manager
     ./fonts
   ];
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = lib.mkMxDefault true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = config.system.nixos.release;
+  system.stateVersion = lib.mkMxDefault config.system.nixos.release;
 
 
 
   documentation.nixos.enable = false;
 
   hardware.fw-fanctrl.enable = config.mx.hardware.framework-fan-ctrl.enable;
-  hardware.enableRedistributableFirmware = true;
-  hardware.enableAllFirmware = true;
+  hardware.enableRedistributableFirmware = lib.mkMxDefault true;
+  hardware.enableAllFirmware = lib.mkMxDefault true;
 }

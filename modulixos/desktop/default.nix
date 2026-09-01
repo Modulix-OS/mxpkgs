@@ -34,8 +34,8 @@ in
         xterm
       ];
       xkb = {
-        layout = lib.mkDefault "fr";
-        variant = "";
+        layout = lib.mkMxDefault "fr";
+        variant = lib.mkMxDefault "";
       };
     };
 

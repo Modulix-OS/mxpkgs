@@ -82,23 +82,23 @@ in
         ]
         ++ lib.optional cfg.enableHDR "--hdr-enabled";
         env = {
-          TZ = ":/etc/localtime";
-          ENABLE_GAMESCOPE_WSI = "1";
-          DXVK_HDR             = "1";
-          WLR_RENDERER         = "vulkan";
-          XKB_DEFAULT_LAYOUT   = config.services.xserver.xkb.layout;
-          XKB_DEFAULT_VARIANT  = config.services.xserver.xkb.variant;
+          TZ = lib.mkMxDefault ":/etc/localtime";
+          ENABLE_GAMESCOPE_WSI = lib.mkMxDefault "1";
+          DXVK_HDR             = lib.mkMxDefault "1";
+          WLR_RENDERER         = lib.mkMxDefault "vulkan";
+          XKB_DEFAULT_LAYOUT   = lib.mkMxDefault config.services.xserver.xkb.layout;
+          XKB_DEFAULT_VARIANT  = lib.mkMxDefault config.services.xserver.xkb.variant;
         };
       };
-      remotePlay.openFirewall = false;
-      dedicatedServer.openFirewall = false;
-      localNetworkGameTransfers.openFirewall = true;
+      remotePlay.openFirewall = lib.mkMxDefault false;
+      dedicatedServer.openFirewall = lib.mkMxDefault false;
+      localNetworkGameTransfers.openFirewall = lib.mkMxDefault true;
       extraPackages = [ ]
       ++ lib.optionals cfg.lsfg.enable [
         lsfg-vk
         lsfg-vk-ui-fhs
       ];
-      package = pkgs.steam.override {
+      package = lib.mkMxDefault (pkgs.steam.override {
         extraPreBwrapCmds = lib.optionalString (cfg.shared_steam_dir != null) ''
           mkdir -p "${steamAppsDir}" "${steamPrefixDir}"
           # Mount point for the prefixes, inside the shared tree: it has to exist
@@ -142,7 +142,7 @@ in
           && cfg.lsfg.steam_library_for_lossless_scaling != null then {
           LSFG_DLL_PATH="${cfg.lsfg.steam_library_for_lossless_scaling}/steamapps/common/Lossless Scaling/Lossless.dll";
         } else {});
-      };
+      });
     };
 
     environment.systemPackages = [

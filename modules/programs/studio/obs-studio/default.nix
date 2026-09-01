@@ -16,8 +16,8 @@ in
     mx.fonts.enable = true;
     programs.obs-studio = {
       enable = true;
-      enableVirtualCamera = true;
-      package = (
+      enableVirtualCamera = lib.mkMxDefault true;
+      package = lib.mkMxDefault (
         if cgpu.vendor != "nvidia" then
           pkgs.obs-studio
         else

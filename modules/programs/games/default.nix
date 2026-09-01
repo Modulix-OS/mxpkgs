@@ -204,17 +204,17 @@ in
     programs = {
       gamescope = {
         enable = true;
-        package = pkgs.gamescope;
+        package = lib.mkMxDefault pkgs.gamescope;
 
-        capSysNice = true;
+        capSysNice = lib.mkMxDefault true;
       };
       gamemode = {
         enable = true;
         settings = {
-          general.renice = 10;
+          general.renice = lib.mkMxDefault 10;
           gpu = {
-            amd_performance_level = lib.mkIf (cgpu.vendor == "amd") "high";
-            nv_powermizer_mode = lib.mkIf (cgpu.vendor == "nvidia") 1;
+            amd_performance_level = lib.mkIf (cgpu.vendor == "amd") (lib.mkMxDefault "high");
+            nv_powermizer_mode = lib.mkIf (cgpu.vendor == "nvidia") (lib.mkMxDefault 1);
           };
         };
       };
@@ -253,9 +253,9 @@ in
     hardware = {
         graphics = {
           enable = true;
-          enable32Bit = true;
-          package = if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.mesa else pkgs.mesa;
-          package32 = if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.pkgsi686Linux.mesa else pkgs.pkgsi686Linux.mesa;
+          enable32Bit = lib.mkMxDefault true;
+          package = lib.mkMxDefault (if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.mesa else pkgs.mesa);
+          package32 = lib.mkMxDefault (if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.pkgsi686Linux.mesa else pkgs.pkgsi686Linux.mesa);
         };
     };
 
@@ -317,19 +317,19 @@ in
 
     boot = {
       kernelPackages = pkgs.linuxPackages_zen;
-      tmp.cleanOnBoot = true;
+      tmp.cleanOnBoot = lib.mkMxDefault true;
       kernel.sysctl = {
-        "kernel.split_lock_mitigate" = 0;
-        "vm.vfs_cache_pressure" = 50;
-        "vm.dirty_bytes" = 268435456;
-        "vm.max_map_count" = 16777216;
-        "vm.dirty_background_bytes" = 67108864;
-        "vm.dirty_writeback_centisecs" = 1500;
-        "kernel.nmi_watchdog" = 0;
-        "kernel.unprivileged_userns_clone" = 1;
-        "kernel.printk" = "3 3 3 3";
-        "kernel.kptr_restrict" = 2;
-        "kernel.kexec_load_disabled" = 1;
+        "kernel.split_lock_mitigate" = lib.mkMxDefault 0;
+        "vm.vfs_cache_pressure" = lib.mkMxDefault 50;
+        "vm.dirty_bytes" = lib.mkMxDefault 268435456;
+        "vm.max_map_count" = lib.mkMxDefault 16777216;
+        "vm.dirty_background_bytes" = lib.mkMxDefault 67108864;
+        "vm.dirty_writeback_centisecs" = lib.mkMxDefault 1500;
+        "kernel.nmi_watchdog" = lib.mkMxDefault 0;
+        "kernel.unprivileged_userns_clone" = lib.mkMxDefault 1;
+        "kernel.printk" = lib.mkMxDefault "3 3 3 3";
+        "kernel.kptr_restrict" = lib.mkMxDefault 2;
+        "kernel.kexec_load_disabled" = lib.mkMxDefault 1;
       };
     };
 

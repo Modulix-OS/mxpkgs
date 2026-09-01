@@ -48,7 +48,7 @@
       ];
 
     boot.kernel.sysctl = lib.mkIf config.mx.security.mitigations.mitigateSshKeysignPwn {
-      "kernel.yama.ptrace_scope" = 2;
+      "kernel.yama.ptrace_scope" = lib.mkMxDefault 2;
     };
 
     assertions = [

@@ -21,9 +21,9 @@ in
     boot.kernelPackages = lib.mkIf cfg.cachyos-kernel.enable
   (lib.mkForce (pkgs.linuxPackagesFor cfg.cachyos-kernel.package));
 
-    boot.supportedFilesystems.zfs = false;
+    boot.supportedFilesystems.zfs = lib.mkMxDefault false;
     boot.zfs.package = lib.mkIf cfg.cachyos-kernel.enable
-    cfg.cachyos-kernel.package.zfs_cachyos;
+    (lib.mkMxDefault cfg.cachyos-kernel.package.zfs_cachyos);
     nix.settings.substituters = []
     ++ lib.optionals cfg.cachyos-kernel.enable [ "https://attic.xuyh0120.win/lantian" ];
     nix.settings.trusted-public-keys = []

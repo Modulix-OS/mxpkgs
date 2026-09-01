@@ -37,7 +37,7 @@ in
         lib.mkIf deEnabled {
           services = {
             displayManager.gdm.enable = true;
-            displayManager.defaultSession = lib.mkDefault "gnome";
+            displayManager.defaultSession = lib.mkMxDefault "gnome";
             desktopManager.gnome = {
               sessionPath = lib.optional cfg.rounded-blur gnome-rounded-blur;
               enable = true;

@@ -9,6 +9,46 @@
     "summary": "Lanceur unifié pour exécuter des jeux Windows via Proton",
     "keyword": ["proton", "wine", "lanceur", "umu"]
   },
+  "programs.games.steam": {
+    "name": "Steam",
+    "summary": "Boutique et lanceur de jeux Valve, réglé pour Proton, gamescope et les mises à niveau FSR/DLSS",
+    "keyword": ["steam", "valve", "jeu", "proton", "gamescope"]
+  },
+  "programs.games.lutris": {
+    "name": "Lutris",
+    "summary": "Gestionnaire de jeux libre pour installer et lancer des jeux depuis de nombreuses sources",
+    "keyword": ["lutris", "jeu", "lanceur", "wine"]
+  },
+  "programs.games.heroic": {
+    "name": "Heroic Games Launcher",
+    "summary": "Lanceur pour les jeux Epic Games Store et GOG",
+    "keyword": ["heroic", "epic", "gog", "jeu", "lanceur"]
+  },
+  "programs.creativity.blender": {
+    "name": "Blender",
+    "summary": "Suite de création 3D, réglée pour le calcul GPU (CUDA/HIP) et intégrant les polices créatives",
+    "keyword": ["blender", "3d", "modélisation", "rendu", "animation"]
+  },
+  "programs.creativity.bambu-studio": {
+    "name": "Bambu Studio",
+    "summary": "Logiciel de découpe pour imprimantes 3D Bambu Lab",
+    "keyword": ["bambu", "impression 3d", "découpe", "impression"]
+  },
+  "programs.dev.arduino": {
+    "name": "Arduino",
+    "summary": "IDE, CLI et serveur de langage Arduino, avec accès aux cartes via les groupes dialout/uucp",
+    "keyword": ["arduino", "microcontrôleur", "embarqué", "dev"]
+  },
+  "programs.studio.obs-studio": {
+    "name": "OBS Studio",
+    "summary": "Studio de diffusion et d'enregistrement avec caméra virtuelle et plugins de capture GPU/VA-API",
+    "keyword": ["obs", "diffusion", "enregistrement", "capture", "caméra"]
+  },
+  "programs.team-viewer": {
+    "name": "TeamViewer",
+    "summary": "Assistance et accès à distance à cette machine",
+    "keyword": ["teamviewer", "distant", "assistance", "accès"]
+  },
   "services.docker": {
     "name": "Docker",
     "summary": "Environnement d'exécution de conteneurs Docker",
@@ -53,5 +93,10 @@
     "name": "Écrans virtuels",
     "summary": "Écrans virtuels générés à partir d'un firmware EDID",
     "keyword": ["écran", "virtuel", "edid", "affichage", "sans écran"]
+  },
+  "fonts": {
+    "name": "Polices supplémentaires",
+    "summary": "Familles de polices d'affichage et à chasse fixe pour le travail créatif",
+    "keyword": ["police", "typographie", "nerd-fonts", "chasse fixe"]
   }
 }

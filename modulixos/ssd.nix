@@ -13,8 +13,8 @@ in
 
   config = {
     hardware.block = {
-      defaultScheduler = "kyber";
-      defaultSchedulerRotational = "bfq";
+      defaultScheduler = lib.mkMxDefault "kyber";
+      defaultSchedulerRotational = lib.mkMxDefault "bfq";
     };
 
     fileSystems = builtins.listToAttrs (map (disk: {

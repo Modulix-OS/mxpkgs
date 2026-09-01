@@ -24,7 +24,7 @@ in
     services = {
       printing = {
         enable = true;
-        startWhenNeeded = true;
+        startWhenNeeded = lib.mkMxDefault true;
         drivers = with pkgs; [
           # Brother BrGenML1 CUPS wrapper driver
           brgenml1cupswrapper
@@ -60,8 +60,8 @@ in
 
       avahi = {
         enable = true;
-        nssmdns4 = true;
-        openFirewall = true;
+        nssmdns4 = lib.mkMxDefault true;
+        openFirewall = lib.mkMxDefault true;
       };
 
       udev.packages = with pkgs; [

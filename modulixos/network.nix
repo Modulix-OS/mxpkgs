@@ -22,7 +22,7 @@ in
   config = lib.mkIf (!config.mx.mode.server.enable && cfg.enable) (
     lib.mkMerge [
       {
-        networking.networkmanager.enable = lib.mkDefault true;
+        networking.networkmanager.enable = lib.mkMxDefault true;
         networking.firewall.enable = lib.mkForce true;
 
         users.groups.networkmanager.members = cfg.users;
@@ -41,19 +41,19 @@ in
               };
             };
             wifi = {
-              macAddress = "random";
-              scanRandMacAddress = true;
+              macAddress = lib.mkMxDefault "random";
+              scanRandMacAddress = lib.mkMxDefault true;
             };
             ethernet = {
-              macAddress = "random";
+              macAddress = lib.mkMxDefault "random";
             };
           };
           environment.etc."machine-info".text = "";
 
           # Hostname anonyme pour mDNS/LLMNR
           services.resolved.settings.Resolve = {
-            MulticastDNS = "no";
-            LLMNR = "no";
+            MulticastDNS = lib.mkMxDefault "no";
+            LLMNR = lib.mkMxDefault "no";
           };
 
           services.avahi.enable = lib.mkForce false;

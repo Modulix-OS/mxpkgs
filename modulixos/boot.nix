@@ -21,10 +21,10 @@ in
       lib.mkIf cfg.enable {
         boot.loader.limine = {
           enable = true;
-          maxGenerations = 10;
+          maxGenerations = lib.mkMxDefault 10;
           secureBoot = {
             enable = cfg.secureBoot.enable;
-            autoGenerateKeys = cfg.secureBoot.enable;
+            autoGenerateKeys = lib.mkMxDefault cfg.secureBoot.enable;
             autoEnrollKeys = {
               enable = cfg.secureBoot.enable;
               extraArgs = [
@@ -40,14 +40,14 @@ in
           '';
         };
 
-        boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+        boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault true;
       }
     )
     {
       boot = {
         kernelPackages = lib.mkDefault pkgs.linuxPackages;
-        initrd.verbose = false;
-        tmp.useTmpfs = lib.mkDefault true;
+        initrd.verbose = lib.mkMxDefault false;
+        tmp.useTmpfs = lib.mkMxDefault true;
         kernelParams = lib.mkDefault [
           "quiet"
           "udev.log_level=3"
@@ -55,7 +55,7 @@ in
         ];
 
         initrd.systemd.enable = lib.mkDefault true;
-        plymouth.enable = lib.mkDefault (!config.mx.mode.server.enable);
+        plymouth.enable = lib.mkMxDefault (!config.mx.mode.server.enable);
 
         initrd.systemd.tpm2.enable = true;
         initrd.systemd.services.systemd-udev-settle.enable = lib.mkForce false;

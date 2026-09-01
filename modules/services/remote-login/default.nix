@@ -204,10 +204,10 @@ in
     ];
 
     services.openssh = {
-      openFirewall = true;
+      openFirewall = lib.mkMxDefault true;
       settings = {
-        PasswordAuthentication = lib.mkDefault false;
-        KbdInteractiveAuthentication = lib.mkDefault false;
+        PasswordAuthentication = lib.mkMxDefault false;
+        KbdInteractiveAuthentication = lib.mkMxDefault false;
       };
     };
 

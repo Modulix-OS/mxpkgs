@@ -20,7 +20,7 @@ in
         enable = true;
         alsa = {
           enable = true;
-          support32Bit = true;
+          support32Bit = lib.mkMxDefault true;
         };
         pulse.enable = true;
         jack.enable = true;

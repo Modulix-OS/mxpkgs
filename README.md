@@ -126,3 +126,27 @@ mx.services.patch-runner = {
 4. Commit the patch, `manifest.json`, and `manifest.json.minisig` together.
 
 The `patches-manifest` CI workflow fails the PR if `manifest.json` is stale.
+
+## Consuming `nixosModules.modulix-os` directly
+
+ModulixOS uses `lib.mkOverride 900` (`mkMxDefault`) for its own upstream-option
+defaults, so they beat plain `lib.mkDefault` from nixpkgs modules while still
+losing to a normal definition in your own config. This priority level is added
+via `lib.extend`, which `modulixosSystem` wires in automatically. If you build
+your system with `nixosModules.modulix-os` and `nixpkgs.lib.nixosSystem`
+instead, extend `lib` yourself:
+
+```nix
+nixpkgs.lib.nixosSystem {
+  lib = mxpkgs.lib.extendLib nixpkgs.lib;
+  modules = [
+    mxpkgs.nixosModules.home-manager
+    mxpkgs.nixosModules.modulix-os
+  ];
+}
+```
+
+ModulixOS modules call `lib.mkMxDefault` on the `lib` special arg they are
+given, so omitting the `lib.extend` step above makes evaluation fail with an
+"attribute missing" error as soon as a module using `mkMxDefault` is
+evaluated.

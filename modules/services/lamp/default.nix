@@ -12,11 +12,11 @@ in
   config = lib.mkIf cfg.enable {
     services.httpd = {
       enable = true;
-      adminAddr = "webmaster@local.org";
-      enablePHP = true;
+      adminAddr = lib.mkMxDefault "webmaster@local.org";
+      enablePHP = lib.mkMxDefault true;
 
       virtualHosts."localhost" = {
-        documentRoot = "/var/www/html/";
+        documentRoot = lib.mkMxDefault "/var/www/html/";
         extraConfig = ''
             DirectoryIndex index.php index.html
             <Directory "/var/www/html/">
@@ -35,7 +35,7 @@ in
     };
 
     services.mysql.enable = true;
-    services.mysql.package = pkgs.mariadb;
+    services.mysql.package = lib.mkMxDefault pkgs.mariadb;
 
     # hacky way to create our directory structure and index page... don't actually use this
     systemd.tmpfiles.rules = [

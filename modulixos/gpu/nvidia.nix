@@ -88,7 +88,7 @@ in
 
         hardware.nvidia = {
           modesetting.enable = true;  # required for Wayland (nixpkgs default already true)
-          package =
+          package = lib.mkMxDefault
             (
             if legacy-390 then
               config.boot.kernelPackages.nvidiaPackages.legacy_390
@@ -99,20 +99,20 @@ in
             else
               nvidia595Driver
             );
-          open = !legacyDriver;
+          open = lib.mkMxDefault (!legacyDriver);
           prime = {
-            intelBusId = lib.optionalString (cfg.intelBusId != null) cfg.intelBusId;
-            nvidiaBusId = lib.optionalString (cfg.nvidiaBusId != null) cfg.nvidiaBusId;
-            amdgpuBusId = lib.optionalString (cfg.amdBusId != null) cfg.amdBusId;
+            intelBusId = lib.mkMxDefault (lib.optionalString (cfg.intelBusId != null) cfg.intelBusId);
+            nvidiaBusId = lib.mkMxDefault (lib.optionalString (cfg.nvidiaBusId != null) cfg.nvidiaBusId);
+            amdgpuBusId = lib.mkMxDefault (lib.optionalString (cfg.amdBusId != null) cfg.amdBusId);
           };
           dynamicBoost.enable = isLaptop && !legacyDriver;
-          powerManagement.enable = lib.mkDefault true;
-          powerManagement.finegrained = !legacyDriver && cfg.experimental-power-management;
+          powerManagement.enable = lib.mkMxDefault true;
+          powerManagement.finegrained = lib.mkMxDefault (!legacyDriver && cfg.experimental-power-management);
         };
 
-        systemd.services.nvidia-suspend.enable = lib.mkDefault true;
-        systemd.services.nvidia-resume.enable = lib.mkDefault true;
-        systemd.services.nvidia-hibernate.enable = lib.mkDefault true;
+        systemd.services.nvidia-suspend.enable = lib.mkMxDefault true;
+        systemd.services.nvidia-resume.enable = lib.mkMxDefault true;
+        systemd.services.nvidia-hibernate.enable = lib.mkMxDefault true;
 
         environment.variables = {
           __GL_SHADER_DISK_CACHE_SIZE = (if config.mx.programs.games.enable then "12000000000" else "2000000000");

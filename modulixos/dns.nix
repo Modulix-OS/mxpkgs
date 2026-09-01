@@ -14,9 +14,9 @@ in
     services.dnsmasq = {
       enable = true;
       settings = {
-        listen-address = "127.0.0.1";
-        cache-size = 1000;
-        no-resolv = true;
+        listen-address = lib.mkMxDefault "127.0.0.1";
+        cache-size = lib.mkMxDefault 1000;
+        no-resolv = lib.mkMxDefault true;
 
         server = [
           "9.9.9.9"         # Quad9
@@ -41,6 +41,6 @@ in
         ]);
       };
     };
-    networking.networkmanager.dns = "dnsmasq";
+    networking.networkmanager.dns = lib.mkMxDefault "dnsmasq";
   };
 }

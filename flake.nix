@@ -22,6 +22,9 @@
       allowUnfree = true;
     };
 
+    extendLib = base: base.extend (final: prev: import ./lib/mx-lib.nix { lib = prev; });
+    mxLib = extendLib nixpkgs.lib;
+
     make-system = {
         system ? "x86_64-linux",
         modules ? [],
@@ -37,6 +40,7 @@
         };
       in nixpkgs.lib.nixosSystem {
         inherit system;
+        lib = mxLib;
         specialArgs = defaults // specialArgs;
         modules = [
           inputs.home-manager.nixosModules.default
@@ -48,6 +52,8 @@
   {
     lib = {
       modulixosSystem = make-system;
+      inherit extendLib;
+      inherit (mxLib) mkMxDefault mxDefaultPriority;
 
       mkGameConfigSwitcher = { pkgs, ... } @ args:
         pkgs.callPackage ./lib/game-settings-switcher.nix args;

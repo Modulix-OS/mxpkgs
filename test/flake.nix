@@ -22,6 +22,7 @@
 
       mkVm = desktop: nixpkgs.lib.nixosSystem {
         inherit system;
+        lib = inputs.mx.lib.extendLib nixpkgs.lib;
         specialArgs = { inherit self inputs pkgs-unstable; };
         modules = [
           home-manager.nixosModules.default

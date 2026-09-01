@@ -23,8 +23,8 @@ in {
     virtualisation.libvirtd = {
       enable = true;
       qemu = {
-        package = if cfg.allArchitectures then pkgs.qemu else pkgs.qemu_kvm;
-        runAsRoot = true;
+        package = lib.mkMxDefault (if cfg.allArchitectures then pkgs.qemu else pkgs.qemu_kvm);
+        runAsRoot = lib.mkMxDefault true;
         swtpm.enable = true;
       };
     };

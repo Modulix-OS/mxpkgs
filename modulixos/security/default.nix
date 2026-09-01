@@ -5,10 +5,10 @@
     ./mitigations.nix
   ];
 
-  security.rtkit.enable = lib.mkDefault true;
-  security.apparmor.enable = lib.mkDefault false;
-  services.gnome.gnome-keyring.enable = lib.mkDefault (!config.mx.mode.server.enable);
-  security.pam.services.login.enableGnomeKeyring = lib.mkDefault (!config.mx.mode.server.enable);
+  security.rtkit.enable = true;
+  security.apparmor.enable = false;
+  services.gnome.gnome-keyring.enable = !config.mx.mode.server.enable;
+  security.pam.services.login.enableGnomeKeyring = lib.mkMxDefault (!config.mx.mode.server.enable);
 
   security.tpm2 = {
     enable = true;

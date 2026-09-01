@@ -156,12 +156,12 @@ in
   config = lib.mkIf cfg.enable {
     services.sunshine = {
       enable = true;
-      autoStart = true;
-      openFirewall = lib.mkDefault true;
-      capSysAdmin = true;
+      autoStart = lib.mkMxDefault true;
+      openFirewall = lib.mkMxDefault true;
+      capSysAdmin = lib.mkMxDefault true;
       applications = {
         env = {
-          PATH = "$(PATH):$(HOME)/.local/bin";
+          PATH = lib.mkMxDefault "$(PATH):$(HOME)/.local/bin";
         };
         apps = map mkApp cfg.app;
       };
