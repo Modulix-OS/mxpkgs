@@ -10,19 +10,10 @@
         url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
         inputs.nixpkgs.follows = "nixpkgs";
     };
-    coe33 = {
-      url = "github:qhorgues/CO-E33-Save-Editor";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # Rust crate providing `mx-init`, the ModulixOS configuration generator.
-    modulix-core-utils = {
-      url = "github:Modulix-OS/modulix-core-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, coe33, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   let
     systems = [ "x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -63,6 +54,15 @@
 
       igpu-launch = { pkgs, igpuId, igpuNumber }:
         pkgs.callPackage ./lib/igpu-launch.nix { inherit igpuId igpuNumber; };
+
+      mkNixUpdate = { pkgs, flake_path, flake_config }:
+        import ./pkgs/nix-update.nix {
+          inherit pkgs flake_path flake_config;
+          nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
+        };
+
+      mkNixCleanBoot = { pkgs, flake_path, flake_config }:
+        import ./pkgs/nix-clean-boot.nix { inherit pkgs flake_path flake_config; };
     };
 
     nixosModules = {
@@ -81,19 +81,16 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        coe33 = coe33.packages.${system}.default;
         clean-dir = import ./pkgs/clean-dir.nix { inherit pkgs; };
         lsfg-vk = pkgs.callPackage ./pkgs/lsfg-vk.nix {};
         nix-clean = import ./pkgs/nix-clean.nix { inherit pkgs; };
         nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
         kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
+        modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
         gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
         texstudio = pkgs.callPackage ./pkgs/texstudio.nix { inherit pkgs; };
-      } // nixpkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-        # ModulixOS configuration generator (Linux only).
-        mx-init = inputs.modulix-core-utils.packages.${system}.mx-init;
       }
     );
   };
