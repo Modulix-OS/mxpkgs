@@ -1,0 +1,4 @@
+{
+  "description": "Extra display and monospace font families for creative work. Pulled in automatically by the creative modules (Blender, Bambu Studio, OBS Studio all force mx.fonts.enable). Installs Nerd Fonts (0xProto, Droid Sans Mono), Fira Code, Dina, Merriweather, Roboto, Lato, League Spartan, Montserrat, Source Sans Pro, Raleway, Oswald and Poppins.",
+  "keyword": ["font", "typography", "nerd-fonts", "monospace", "fira-code", "roboto"]
+}
