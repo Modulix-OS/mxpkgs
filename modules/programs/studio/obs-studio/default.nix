@@ -3,6 +3,7 @@
 let
   cfg = config.mx.programs.studio.obs-studio;
   cgpu = config.mx.hardware.gpu;
+  gamesEnabled = config.mx.programs.games.enable;
 in
 {
   options.mx.programs.studio.obs-studio = {
@@ -24,9 +25,16 @@ in
       );
       plugins = with pkgs.obs-studio-plugins; [
         obs-move-transition
-      ] ++ lib.optional config.mx.programs.games.enable pkgs.obs-studio-plugins.obs-vkcapture;
+      ] ++ lib.optional (cgpu.vendor != "nvidia") pkgs.obs-studio-plugins.obs-vaapi
+       ++ lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture;
     };
-  };
 
+    # obs-gamecapture must also be reachable outside the OBS plugin dir: mx-games
+    # wraps the game with it, and Steam needs it inside its FHS environment.
+    environment.systemPackages =
+      lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture;
+
+    programs.steam.extraPackages =
+      lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture;
+  };
 }
- # -> modesetting driver, fine under virtio-gpu
