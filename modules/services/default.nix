@@ -2,6 +2,7 @@
 {
   imports = [
     ./docker
+    ./flatpak
     ./printing
     ./remote-desktop
     ./vm

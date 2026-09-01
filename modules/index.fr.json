@@ -14,6 +14,11 @@
     "summary": "Environnement d'exécution de conteneurs Docker",
     "keyword": ["conteneur", "docker", "compose"]
   },
+  "services.flatpak": {
+    "name": "Flatpak",
+    "summary": "Applications Flathub déclaratives par utilisateur",
+    "keyword": ["flatpak", "flathub", "bac à sable", "application"]
+  },
   "services.lamp": {
     "name": "Pile LAMP",
     "summary": "Pile web Apache, MySQL, PHP et phpMyAdmin",

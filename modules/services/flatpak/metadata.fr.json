@@ -1,0 +1,4 @@
+{
+  "description": "Active Flatpak et maintient installée, pour chaque utilisateur, une liste déclarée d'applications Flathub, en désinstallant celles retirées de la liste.",
+  "keyword": ["flatpak", "flathub", "bac à sable", "application"]
+}

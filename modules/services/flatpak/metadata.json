@@ -1,0 +1,4 @@
+{
+  "description": "Enable Flatpak and keep a declared list of Flathub applications installed for each user, removing the ones that were taken out of the list.",
+  "keyword": ["flatpak", "flathub", "sandbox", "app"]
+}

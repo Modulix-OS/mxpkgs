@@ -65,6 +65,12 @@
     "summary": "Docker container runtime",
     "keyword": ["container", "docker", "compose"]
   },
+  "services.flatpak": {
+    "path": "services/flatpak",
+    "name": "Flatpak",
+    "summary": "Declarative Flathub applications per user",
+    "keyword": ["flatpak", "flathub", "sandbox", "app"]
+  },
   "services.lamp": {
     "path": "services/lamp",
     "name": "LAMP stack",
