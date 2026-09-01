@@ -55,7 +55,16 @@
       };
   in
   {
-    lib.modulixosSystem = make-system;
+    lib = {
+      modulixosSystem = make-system;
+
+      mkGameConfigSwitcher = { pkgs, ... } @ args:
+        pkgs.callPackage ./lib/game-settings-switcher.nix args;
+
+      igpu-launch = { pkgs, igpuId, igpuNumber }:
+        pkgs.callPackage ./lib/igpu-launch.nix { inherit igpuId igpuNumber; };
+    };
+
     nixosModules = {
       modulix-os =
         { ... }: {
@@ -79,6 +88,9 @@
         nix-latest-update = import ./pkgs/nix-latest-update.nix { inherit pkgs; };
         kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
+        gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
+        gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
+        texstudio = pkgs.callPackage ./pkgs/texstudio.nix { inherit pkgs; };
       } // nixpkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
         # ModulixOS configuration generator (Linux only).
         mx-init = inputs.modulix-core-utils.packages.${system}.mx-init;
