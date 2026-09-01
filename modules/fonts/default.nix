@@ -2,7 +2,6 @@
 
 let
   cfg = config.mx.fonts;
-  cooper-black = import ./cooper-black.nix { inherit pkgs; };
 in
 {
   options.mx.fonts = {
@@ -11,7 +10,6 @@ in
 
   config = lib.mkIf cfg.enable {
     fonts.packages = with pkgs; [
-      cooper-black
       merriweather
       nerd-fonts._0xproto
       nerd-fonts.droid-sans-mono
