@@ -247,7 +247,7 @@ in
     environment.systemPackages = [
       pkgs.mangohud
       pkgs-unstable.vkbasalt
-      pkgs-unstable.goverlay
+      pkgs.goverlay
       mx-game
     ];
     hardware = {

@@ -91,12 +91,10 @@
         lsfg-vk = pkgs.callPackage ./pkgs/lsfg-vk.nix {};
         mx-clean = import ./pkgs/mx-clean.nix { inherit pkgs; };
         mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
-        kiwix = pkgs.callPackage ./pkgs/kiwix.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
         gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
-        texstudio = pkgs.callPackage ./pkgs/texstudio.nix { inherit pkgs; };
       }
     );
   };

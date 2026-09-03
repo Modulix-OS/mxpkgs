@@ -13,6 +13,7 @@
     ./kernel
     ./dns.nix
     ./patch-runner.nix
+    ./package-fix.nix
 
     # Desktop only
     ./sound.nix
