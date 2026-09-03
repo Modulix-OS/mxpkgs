@@ -41,6 +41,6 @@ in
         ]);
       };
     };
-    networking.networkmanager.dns = lib.mkMxDefault "dnsmasq";
+    networking.networkmanager.dns = lib.mkMxDefault "none";
   };
 }
