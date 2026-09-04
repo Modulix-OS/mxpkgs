@@ -1,9 +1,7 @@
 { config, pkgs, lib, inputs, ... }:
 let
-  gaming = if config.mx.programs.games.enable then import ./gaming.nix { lib = lib; } else {};
-  media = if config.mx.programs._studio.enable then import ./media.nix { lib = lib; } else {};
-
   cfg = config.mx.kernel;
+  bfqProfile = config.mx.programs.games.enable || config.mx.programs._studio.enable;
 in
 {
   options.mx.kernel = {
@@ -21,6 +19,13 @@ in
     boot.kernelPackages = lib.mkIf cfg.cachyos-kernel.enable
   (lib.mkForce (pkgs.linuxPackagesFor cfg.cachyos-kernel.package));
 
+    boot.extraModulePackages = lib.optional config.mx.programs._studio.enable
+      config.boot.kernelPackages.v4l2loopback;
+
+    services.udev.extraRules = lib.mkIf bfqProfile ''
+      ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*|nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="bfq"
+    '';
+
     boot.supportedFilesystems.zfs = lib.mkMxDefault false;
     boot.zfs.package = lib.mkIf cfg.cachyos-kernel.enable
     (lib.mkMxDefault cfg.cachyos-kernel.package.zfs_cachyos);
@@ -29,14 +34,7 @@ in
     nix.settings.trusted-public-keys = []
      ++ lib.optionals cfg.cachyos-kernel.enable [ "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc=" ];
     nixpkgs.overlays = [
-      inputs.nix-cachyos-kernel.overlays.pinned  # toujours appliqué
-      (self: super: lib.optionalAttrs (!cfg.cachyos-kernel.enable) {
-        linuxPackages = super.linuxPackages // {
-          kernel = super.linuxPackages.kernel.override {
-            structuredExtraConfig = gaming // media;
-          };
-        };
-      })
+      inputs.nix-cachyos-kernel.overlays.pinned
     ];
   };
 }
