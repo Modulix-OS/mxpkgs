@@ -4,11 +4,14 @@ let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
 
-  proton-cachyos = pkgs.callPackage ../../../pkgs/proton-cachyos.nix { };
-  protonCompatTools = pkgs.linkFarm "mx-proton-compat-tools" [
-    { name = "proton-cachyos"; path = proton-cachyos.steamcompattool; }
-    { name = "proton-ge"; path = pkgs-unstable.proton-ge-bin.steamcompattool; }
-  ];
+  proton-cachyos = pkgs.callPackage ../../../pkgs/proton-cachyos.nix { arch=pkgs.stdenv.hostPlatform.system; };
+  proton-ge = pkgs.callPackage ../../../pkgs/proton-ge.nix { arch=pkgs.stdenv.hostPlatform.system; };
+
+  protonTools = [ proton-cachyos proton-ge ];
+
+  protonCompatTools = pkgs.linkFarm "mx-proton-compat-tools" (
+    map (p: { name = p.dirName; path = p.steamcompattool; }) protonTools
+  );
 
   normalUsers = import ../../../lib/normal-user.nix { inherit config; };
 
@@ -249,7 +252,13 @@ in
       pkgs-unstable.vkbasalt
       pkgs.goverlay
       mx-game
-    ];
+    ] ++ protonTools;
+
+    systemd.user.tmpfiles.rules = [
+      "d %h/.local/share/Steam/compatibilitytools.d 0755 - - -"
+    ] ++ map (p:
+      "L+ %h/.local/share/Steam/compatibilitytools.d/${p.dirName} - - - - ${p.steamcompattool}"
+    ) protonTools;
     hardware = {
         graphics = {
           enable = true;
