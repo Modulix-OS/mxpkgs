@@ -15,12 +15,19 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   let
+    modulixRelease = {
+      version = "0.1";
+      codeName = "Lumière";
+    };
+
     systems = [ "x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
     nixpkgsConfig = {
       allowUnfree = true;
     };
+
+    brandingModule = { mx.branding = modulixRelease; };
 
     extendLib = base: base.extend (final: prev: import ./lib/mx-lib.nix { lib = prev; });
     mxLib = extendLib nixpkgs.lib;
@@ -46,6 +53,7 @@
           inputs.home-manager.nixosModules.default
           ./modulixos
           ./modules
+          brandingModule
         ] ++ modules;
       };
   in
@@ -54,6 +62,7 @@
       modulixosSystem = make-system;
       inherit extendLib;
       inherit (mxLib) mkMxDefault mxDefaultPriority;
+      inherit modulixRelease;
 
       mkGameConfigSwitcher = { pkgs, ... } @ args:
         pkgs.callPackage ./lib/game-settings-switcher.nix args;
@@ -74,7 +83,7 @@
     nixosModules = {
       modulix-os =
         { ... }: {
-          imports = [ ./modulixos ./modules ];
+          imports = [ ./modulixos ./modules brandingModule ];
           _module.args = {
             inputs = inputs;
           };
@@ -93,6 +102,8 @@
         mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
+        modulix-boot-splash = pkgs.callPackage ./pkgs/modulix-boot-splash.nix { };
+        modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix { };
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
         gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
       }

@@ -3,7 +3,6 @@
 let
   cfg = config.mx.plasma;
   deEnabled = config.mx.desktop == "plasma";
-  modulix-logo = pkgs.callPackage ../../../pkgs/modulix-logo.nix { };
 in
 {
   options.mx.plasma = {
@@ -25,7 +24,6 @@ in
           };
           desktopManager.plasma6.enable = true;
         };
-        environment.systemPackages = [ modulix-logo ];
         environment.plasma6.excludePackages = with pkgs.kdePackages; [
           kwin-x11 # Wayland-only session
           baloo-widgets

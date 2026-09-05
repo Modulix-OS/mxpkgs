@@ -1,27 +1,23 @@
 { lib
 , stdenvNoCC
+, librsvg
 }:
 
 let
-  # Placeholder Modulix logo. Swap this SVG for the real branding asset.
-  logo = builtins.toFile "modulix-logo.svg" ''
-    <?xml version="1.0" encoding="UTF-8"?>
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-      <rect x="4" y="4" width="40" height="40" rx="9" fill="#1565c0"/>
-      <text x="24" y="32" font-family="sans-serif" font-size="26" font-weight="700"
-            text-anchor="middle" fill="#ffffff">M</text>
-    </svg>
-  '';
 
-  # Icon names Kickoff / launchers fall back to. Shipping all of them in
-  # hicolor means the active theme's start-here is overridden by the logo.
+  logo = ../assets/modulix-logo.svg;
+
   names = [
     "modulix-logo"
+    "modulix-logo-text"
+    "modulix-logo-text-dark"
     "start-here"
     "start-here-kde"
     "start-here-kde-symbolic"
     "distributor-logo"
   ];
+
+  sizes = [ 16 22 24 32 48 64 128 256 ];
 in
 stdenvNoCC.mkDerivation {
   pname = "modulix-logo";
@@ -30,20 +26,32 @@ stdenvNoCC.mkDerivation {
   dontUnpack = true;
   dontWrapQtApps = true;
 
+  nativeBuildInputs = [ librsvg ];
+
   installPhase = ''
     runHook preInstall
 
-    DIR="$out/share/icons/hicolor/scalable/apps"
-    mkdir -p "$DIR"
+    ICONS="$out/share/icons/hicolor"
+
+    mkdir -p "$ICONS/scalable/apps"
     for name in ${lib.concatStringsSep " " names}; do
-      cp ${logo} "$DIR/$name.svg"
+      cp ${logo} "$ICONS/scalable/apps/$name.svg"
+    done
+
+    for size in ${lib.concatStringsSep " " (map toString sizes)}; do
+      DIR="$ICONS/''${size}x''${size}/apps"
+      mkdir -p "$DIR"
+      rsvg-convert -w "$size" -h "$size" ${logo} -o raster.png
+      for name in ${lib.concatStringsSep " " names}; do
+        cp raster.png "$DIR/$name.png"
+      done
     done
 
     runHook postInstall
   '';
 
   meta = {
-    description = "Modulix OS menu logo (placeholder, override the SVG)";
+    description = "Modulix OS logo icons (menu, distributor logo, GDM)";
     license = lib.licenses.cc-by-sa-40;
     platforms = lib.platforms.linux;
   };

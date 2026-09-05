@@ -4,6 +4,13 @@ let
   deEnabled = config.mx.desktop == "gnome";
   cfg = config.mx.gnome;
   gnome-rounded-blur = pkgs.callPackage ../../../pkgs/gnome-rounded-blur.nix { };
+  logoPng = "${config.mx.branding.logo}/share/icons/hicolor/128x128/apps/modulix-logo.png";
+  gdmLogoSettings = lib.optionalAttrs config.mx.branding.enable {
+    "org/gnome/login-screen" = {
+      logo = logoPng;
+      fallback-logo = logoPng;
+    };
+  };
 in
 {
     options.mx.gnome = {
@@ -48,7 +55,7 @@ in
               enable = true;
               profiles = {
                   gdm.databases = [{
-                      settings = {
+                      settings = gdmLogoSettings // {
                           "org/gnome/settings-daemon/plugins/color" = {
                               night-light-enabled = true;
                           };

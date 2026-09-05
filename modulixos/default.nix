@@ -3,6 +3,7 @@
 {
   imports = [
     ./boot.nix
+    ./branding.nix
     ./options
     ./security
     ./update.nix
