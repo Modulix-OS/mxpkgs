@@ -5,6 +5,7 @@ let
   homeUrl = "https://github.com/Modulix-OS";
   distroName = "Modulix OS";
   distroId = "modulixos";
+  logoTxt = ../assets/modulixos-ascii.txt;
 
   asciiCodeName = lib.replaceStrings
     [ "à" "â" "ä" "ç" "é" "è" "ê" "ë" "î" "ï" "ô" "ö" "ù" "û" "ü" " " ]
@@ -68,6 +69,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+
+    # Fastfetch
+    nixpkgs.overlays = [
+      (final: prev: {
+        fastfetch = prev.fastfetch.overrideAttrs (old: {
+          postInstall = (old.postInstall or "") + ''
+            wrapProgram $out/bin/fastfetch \
+              --add-flags "--logo-type file --logo ${logoTxt}"
+          '';
+
+          nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ final.makeWrapper ];
+        });
+      })
+    ];
+
+
     system.nixos = {
       distroId = lib.mkMxDefault distroId;
       distroName = lib.mkMxDefault distroName;
