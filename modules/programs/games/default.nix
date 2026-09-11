@@ -160,6 +160,7 @@ in
     ./lutris
     ./heroic
     ./umu
+    ./bindfs-shared-mount.nix
   ];
 
   options.mx.programs.games = {
@@ -171,7 +172,7 @@ in
 
     users = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = normalUsers;
       description = "Users added to the 'gamers' group.";
     };
 
@@ -179,23 +180,6 @@ in
       type = lib.types.listOf lib.types.str;
       default = [];
       description = "Folder with games shared for all gamers user";
-    };
-
-    shared_steam_dir = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      example = "/mnt/Games/SteamLibrary";
-      description = ''
-        Directory on the shared disk holding the Steam data common to every gamer.
-        Inside the Steam wrapper, `<dir>/common` is bind-mounted onto
-        `~/.local/share/Steam/steamapps/common`, so the installed games are shared,
-        and `<dir>/work/<user>/{downloading,temp,shadercache}` onto their
-        counterparts, so downloads are staged on the same filesystem as the games
-        and land with a rename instead of a copy across partitions.
-
-        Everything else stays in each user home, Proton prefixes first: Wine
-        refuses a prefix it does not own.
-      '';
     };
 
     latest-unstable-mesa-driver.enable = lib.mkEnableOption "Enable latest unstable Mesa driver";
@@ -275,29 +259,6 @@ in
     users.users = lib.mkMerge (map (user: {
       ${user}.extraGroups = [ "gamemode" ];
     }) cfg.users);
-
-    systemd.tmpfiles.rules =
-    let
-      acl = lib.concatStringsSep "," [
-        "user::rwX"
-        "group::rwX"
-        "group:gamers:rwX"
-        "mask::rwX"
-        "other::---"
-        "default:user::rwx"
-        "default:group::rwx"
-        "default:group:gamers:rwx"
-        "default:mask::rwx"
-        "default:other::---"
-      ];
-      mkRules = owner: p: [
-        "d ${p} 2770 ${owner} gamers -"
-        "a+ ${p} - - - - ${acl}"
-      ];
-    in
-    lib.concatMap (mkRules "root") cfg.game_lib_dirs
-    ++ lib.optional (cfg.shared_steam_dir != null)
-        "d ${cfg.shared_steam_dir} 0700 root root -";
 
     services.udev.extraRules = ''
       ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"

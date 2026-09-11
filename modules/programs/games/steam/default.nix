@@ -17,8 +17,6 @@ let
   lsfg-vk-ui-fhs = mkFhsDesktop lsfg-vk-ui "gay.pancake.lsfg-vk-ui.desktop" "lsfg-vk-ui";
 in
 {
-  imports = [ ./bindfs-shared-mount.nix ];
-
   options.mx.programs.games = {
     steam.enable = lib.mkEnableOption "Install Steam";
 
