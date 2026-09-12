@@ -37,6 +37,7 @@ in
     imports = [
       ./numlock.nix
       ./trash.nix
+      ./gnome-software.nix
     ];
 
     config = lib.mkMerge [
