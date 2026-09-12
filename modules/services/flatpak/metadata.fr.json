@@ -1,4 +1,4 @@
 {
-  "description": "Active Flatpak et maintient installée, pour chaque utilisateur, une liste déclarée d'applications Flathub, en désinstallant celles retirées de la liste.",
+  "description": "Active Flatpak et enregistre la logithèque Flathub, pour installer sur cette machine les applications qui y sont publiées.",
   "keyword": ["flatpak", "flathub", "bac à sable", "application"]
 }

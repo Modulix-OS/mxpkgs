@@ -92,7 +92,7 @@
   "services.flatpak": {
     "path": "services/flatpak",
     "name": "Flatpak",
-    "summary": "Declarative Flathub applications per user",
+    "summary": "Applications from the Flathub store",
     "keyword": ["flatpak", "flathub", "sandbox", "app"]
   },
   "services.lamp": {

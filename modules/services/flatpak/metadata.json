@@ -1,4 +1,4 @@
 {
-  "description": "Enable Flatpak and keep a declared list of Flathub applications installed for each user, removing the ones that were taken out of the list.",
+  "description": "Enable Flatpak and register the Flathub store, so applications published there can be installed on this machine.",
   "keyword": ["flatpak", "flathub", "sandbox", "app"]
 }

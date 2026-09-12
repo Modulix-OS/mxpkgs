@@ -56,7 +56,7 @@
   },
   "services.flatpak": {
     "name": "Flatpak",
-    "summary": "Applications Flathub déclaratives par utilisateur",
+    "summary": "Applications de la logithèque Flathub",
     "keyword": ["flatpak", "flathub", "bac à sable", "application"]
   },
   "services.lamp": {
