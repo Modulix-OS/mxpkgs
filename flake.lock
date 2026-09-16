@@ -1,28 +1,5 @@
 {
   "nodes": {
-    "fenix": {
-      "inputs": {
-        "nixpkgs": [
-          "modulix-daemon",
-          "naersk",
-          "nixpkgs"
-        ],
-        "rust-analyzer-src": "rust-analyzer-src"
-      },
-      "locked": {
-        "lastModified": 1752475459,
-        "narHash": "sha256-z6QEu4ZFuHiqdOPbYss4/Q8B0BFhacR8ts6jO/F/aOU=",
-        "owner": "nix-community",
-        "repo": "fenix",
-        "rev": "bf0d6f70f4c9a9cf8845f992105652173f4b617f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "fenix",
-        "type": "github"
-      }
-    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -125,10 +102,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "dirtyRev": "353fbde86b11a32c23ab2cbe7813537bcc6dfde6-dirty",
-        "dirtyShortRev": "353fbde-dirty",
-        "lastModified": 1789593317,
+        "lastModified": 1789595539,
         "narHash": "sha256-tGezpDKjr/gmAzrVZyj+Zemop4MoC8Pzv5ppFDRTEmg=",
+        "ref": "refs/heads/main",
+        "rev": "82bcac8bf82b6123c653a9d527c75fc3ec0dcb80",
+        "revCount": 4,
         "type": "git",
         "url": "file:///home/quentin/Programmes/Modulix-OS/gnome-software-plugin"
       },
@@ -177,16 +155,16 @@
       "inputs": {
         "flake-utils": "flake-utils_2",
         "modulix-core-utils": "modulix-core-utils",
-        "naersk": "naersk",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "dirtyRev": "b13dcea03c4217c95cdb24c0fbd172c145204031-dirty",
-        "dirtyShortRev": "b13dcea-dirty",
-        "lastModified": 1789593110,
-        "narHash": "sha256-O/Xey7SPiSwalcWs2Wj7daLBTUBHg9BVEXp8fd0TCwU=",
+        "lastModified": 1789595506,
+        "narHash": "sha256-AELsNkXdhwMFrmK4tDaNpAeWmjXGibpcaxFZmgIDjBM=",
+        "ref": "refs/heads/main",
+        "rev": "d009af6e7d3f986503414aaa75dd900f8c531b7e",
+        "revCount": 10,
         "type": "git",
         "url": "file:///home/quentin/Programmes/Modulix-OS/modulix-daemon"
       },
@@ -209,28 +187,6 @@
       "original": {
         "type": "git",
         "url": "file:///home/quentin/Programmes/Modulix-OS/modulix-store-client"
-      }
-    },
-    "naersk": {
-      "inputs": {
-        "fenix": "fenix",
-        "nixpkgs": [
-          "modulix-daemon",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1769799857,
-        "narHash": "sha256-88IFXZ7Sa1vxbz5pty0Io5qEaMQMMUPMonLa3Ls/ss4=",
-        "owner": "nix-community",
-        "repo": "naersk",
-        "rev": "9d4ed44d8b8cecdceb1d6fd76e74123d90ae6339",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "naersk",
-        "type": "github"
       }
     },
     "nix-cachyos-kernel": {
@@ -326,23 +282,6 @@
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable"
-      }
-    },
-    "rust-analyzer-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1752428706,
-        "narHash": "sha256-EJcdxw3aXfP8Ex1Nm3s0awyH9egQvB2Gu+QEnJn2Sfg=",
-        "owner": "rust-lang",
-        "repo": "rust-analyzer",
-        "rev": "591e3b7624be97e4443ea7b5542c191311aa141d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "rust-lang",
-        "ref": "nightly",
-        "repo": "rust-analyzer",
-        "type": "github"
       }
     },
     "rust-overlay": {
