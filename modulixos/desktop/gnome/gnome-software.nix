@@ -1,7 +1,7 @@
 { config, lib, pkgs, inputs, ... }:
 
 let
-  gnome-software-modulix = inputs.gnome-software-plugin.packages.${pkgs.system}.default;
+  gnome-software-modulix = inputs.gnome-software-plugin.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   options = {

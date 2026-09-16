@@ -13,7 +13,7 @@ in
 
     package = lib.mkOption {
       type        = lib.types.package;
-      default     = inputs.modulix-daemon.packages.${pkgs.system}.default;
+      default     = inputs.modulix-daemon.packages.${pkgs.stdenv.hostPlatform.system}.default;
       description = "Modulix daemon package";
     };
   };

@@ -164,11 +164,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789595506,
-        "narHash": "sha256-AELsNkXdhwMFrmK4tDaNpAeWmjXGibpcaxFZmgIDjBM=",
+        "lastModified": 1789595890,
+        "narHash": "sha256-p4vhUc/YqV0QI43ZVqe38YS1cZBl2BeSK8LpiK5poDs=",
         "ref": "refs/heads/main",
-        "rev": "d009af6e7d3f986503414aaa75dd900f8c531b7e",
-        "revCount": 10,
+        "rev": "ad8d4ac93a17fd67e861dc761016a5e00900e48f",
+        "revCount": 11,
         "type": "git",
         "url": "file:///home/quentin/Programmes/Modulix-OS/modulix-daemon"
       },
