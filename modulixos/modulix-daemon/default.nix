@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   cfg = config.mx.services.modulix-daemon;
@@ -13,11 +13,15 @@ in
 
     package = lib.mkOption {
       type        = lib.types.package;
+      default     = inputs.modulix-daemon.packages.${pkgs.system}.default;
       description = "Modulix daemon package";
     };
   };
 
   config = lib.mkIf cfg.enable {
+    nix.registry.nixpkgs.flake = inputs.nixpkgs;
+    nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
     systemd.services.modulix-daemon = {
       description = "Modulix OS daemon";
       after       = [ "dbus.service" "polkit.service" ];
@@ -27,13 +31,15 @@ in
       serviceConfig = {
         Type            = "dbus";
         BusName         = "org.modulix.Daemon";
-        ExecStart       = "${cfg.package}/bin/modulix-daemon";
+        ExecStart       = "${cfg.package}/bin/mx-daemon";
         User            = "root";
         Restart         = "on-failure";
         RestartSec      = 5;
         StandardOutput  = "journal";
         StandardError   = "journal";
         SyslogIdentifier = "modulix-daemon";
+        CacheDirectory     = "modulix";
+        CacheDirectoryMode = "0755";
       };
 
       environment = {
@@ -43,6 +49,9 @@ in
 
     services.dbus.packages = [ cfg.package ];
     environment.systemPackages = [ cfg.package ];
+
+    environment.etc."modulix-os/modules/index.json".source = ../../modules/index.json;
+    environment.etc."modulix-os/modules/index.fr.json".source = ../../modules/index.fr.json;
 
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {

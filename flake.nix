@@ -11,6 +11,16 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
+    modulix-daemon = {
+      url = "git+file:///home/quentin/Programmes/Modulix-OS/modulix-daemon";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    gnome-software-plugin = {
+      url = "git+file:///home/quentin/Programmes/Modulix-OS/gnome-software-plugin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:

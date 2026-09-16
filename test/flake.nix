@@ -9,6 +9,8 @@
     nixpkgs-unstable.follows = "mx/nixpkgs-unstable";
     home-manager.follows = "mx/home-manager";
     nix-cachyos-kernel.follows = "mx/nix-cachyos-kernel";
+    modulix-daemon.follows = "mx/modulix-daemon";
+    gnome-software-plugin.follows = "mx/gnome-software-plugin";
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs:

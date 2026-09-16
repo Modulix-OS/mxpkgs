@@ -15,6 +15,7 @@
     ./dns.nix
     ./patch-runner.nix
     ./package-fix.nix
+    ./modulix-daemon
 
     # Desktop only
     ./sound.nix

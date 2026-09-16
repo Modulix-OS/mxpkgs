@@ -10,6 +10,5 @@
     ./virtual-display
     ./lamp
     ./llm
-    # ./modulix-daemon
   ];
 }
