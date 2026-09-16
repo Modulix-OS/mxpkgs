@@ -1,7 +1,7 @@
 {
   callPackage,
   steamDisplayName ? "GE-Proton",
-  version ? "11-6",
+  version ? "11-7",
   arch,
   lib
 }:
@@ -19,9 +19,9 @@ callPackage ./proton-compat-tool.nix { } {
 
   url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/GE-Proton${version}/GE-Proton${version}-${archi}.tar.gz";
   hash = (if arch == "x86_64-linux" then
-            "sha256-rX27DUrrrHtR1cgyr/424m9JPjrdASIisVGv2vWzMAs="
+            "sha256-ftW0vE45v2JsbaYqo/So0ZFfvdtakHX0XEXEE4TdxLk="
           else if arch == "aarch64-linux" then
-            "sha256-sIwM++9FJzpIq4LkYQDL1TIfPFEnaVowrGT/3JPfPZk="
+            "sha256-tyI95zCUQklRVA9YtarD+gBQouMVcJmv7BafNx5CQu8="
           else lib.fakeHash);
 
   vdfPlaceholder = "GE-Proton${version}-${archi}";
