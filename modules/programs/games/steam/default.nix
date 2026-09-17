@@ -152,8 +152,8 @@ in
                   }
                   "ShaderCacheManager"
                   {
-                      "EnableShaderBackgroundProcessing"          "0"
-                      "DisableShaderCache"		"1"
+                      "EnableShaderBackgroundProcessing"          "1"
+                      "DisableShaderCache"		"0"
                   }
               }
           }
