@@ -31,6 +31,13 @@ in
   };
   services.getty.autologinUser = lib.mkIf (!isGraphical) user;
 
+  # Seed modulix-test-config via real mx-init (modulix-test-config-init.service)
+  # instead of the daemon reading a live /etc/modulix-os.
+  mx.services.modulix-daemon = {
+    testMode = true;
+    testUser = user;
+  };
+
   # VM resources + virtio GPU (needed for a usable Plasma/GNOME Wayland session).
   virtualisation = {
     memorySize = 4096;
