@@ -8,6 +8,12 @@ in
 {
   options.mx.programs.studio.obs-studio = {
     enable = lib.mkEnableOption "Enable OBS Studio";
+    plugins = lib.mkOption {
+      default = [ ];
+      example = lib.literalExpression "[ pkgs.obs-studio-plugins.wlrobs ]";
+      description = "Optional OBS plugins.";
+      type = lib.types.listOf lib.types.package;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -26,7 +32,8 @@ in
       plugins = with pkgs.obs-studio-plugins; [
         obs-move-transition
       ] ++ lib.optional (cgpu.vendor != "nvidia") pkgs.obs-studio-plugins.obs-vaapi
-       ++ lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture;
+       ++ lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture
+       ++ cfg.plugins;
     };
 
     # obs-gamecapture must also be reachable outside the OBS plugin dir: mx-games
