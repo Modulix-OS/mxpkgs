@@ -13,12 +13,17 @@
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
     modulix-daemon = {
-      url = "git+file:///home/quentin/Programmes/Modulix-OS/modulix-daemon";
+      url = "github:Modulix-OS/modulix-daemon";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     gnome-software-plugin = {
-      url = "git+file:///home/quentin/Programmes/Modulix-OS/gnome-software-plugin";
+      url = "github:Modulix-OS/gnome-software-plugin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    modulix-core-utils = {
+      url = "github:Modulix-OS/modulix-core-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
