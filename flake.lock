@@ -167,11 +167,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789686118,
-        "narHash": "sha256-dENCpEaAeUpv5avrSQQJd19m1lEfyBuzgShVEdxQTbQ=",
+        "lastModified": 1790014016,
+        "narHash": "sha256-lK7HRkq2BVgRP6tHBvVHP859HFhdYoBGVn4DeTOYykU=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "ae8a21a01124b987d39ab4e56c7d97a777931059",
+        "rev": "9bfbe94832971b8bb64b8edab349a5dee214e640",
         "type": "github"
       },
       "original": {
@@ -183,11 +183,11 @@
     "modulix-core-utils_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1789686118,
-        "narHash": "sha256-dENCpEaAeUpv5avrSQQJd19m1lEfyBuzgShVEdxQTbQ=",
+        "lastModified": 1790014016,
+        "narHash": "sha256-lK7HRkq2BVgRP6tHBvVHP859HFhdYoBGVn4DeTOYykU=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "ae8a21a01124b987d39ab4e56c7d97a777931059",
+        "rev": "9bfbe94832971b8bb64b8edab349a5dee214e640",
         "type": "github"
       },
       "original": {
@@ -205,11 +205,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789687894,
-        "narHash": "sha256-4VDOvPK/55kP0KFSpEr9pNaPUeK0YGu/xXiY72MwNAI=",
+        "lastModified": 1790015176,
+        "narHash": "sha256-S0ihEhxkSbbB2tQLaXYRkSSZ0liks0+2/YQdb0H1WPQ=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "f90b4bd7b59806b076c1264fc4457a7ecf225ac7",
+        "rev": "b5d9fa91d4d6eb36ec0afd6552b9644cdeb01044",
         "type": "github"
       },
       "original": {
