@@ -15,6 +15,7 @@ in
       enable = true;
       settings = {
         listen-address = lib.mkMxDefault "127.0.0.1";
+        bind-dynamic = lib.mkMxDefault true;
         cache-size = lib.mkMxDefault 1000;
         no-resolv = lib.mkMxDefault true;
 
