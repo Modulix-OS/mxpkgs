@@ -72,8 +72,8 @@ in
           WLR_RENDERER         = lib.mkMxDefault "vulkan";
           XKB_DEFAULT_LAYOUT   = lib.mkMxDefault config.services.xserver.xkb.layout;
           XKB_DEFAULT_VARIANT  = lib.mkMxDefault config.services.xserver.xkb.variant;
-        };
-      };
+        }
+        // cfg.mangohud.sessionEnv;
       remotePlay.openFirewall = lib.mkMxDefault false;
       dedicatedServer.openFirewall = lib.mkMxDefault false;
       localNetworkGameTransfers.openFirewall = lib.mkMxDefault true;
@@ -85,7 +85,6 @@ in
       package = lib.mkMxDefault (pkgs.steam.override {
         extraEnv = {
           TZ = ":/etc/localtime";
-          MANGOHUD = true;
           OBS_VKCAPTURE = config.mx.programs.studio.obs-studio.enable;
           # PROTON_NO_D3D12=true;
           PROTON_PRIORITY_HIGH=true;
