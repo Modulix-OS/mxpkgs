@@ -105,6 +105,12 @@ pkgs.writeShellScriptBin "mx-games" ''
         echo "                            and MX_GAMES_REFRESH."
         echo "  MX_GAMES_RESOLUTION=WxH   override the detected resolution"
         echo "  MX_GAMES_REFRESH=HZ       override the detected refresh rate (0 disables -r)"
+        echo "  MX_GAMESCOPE_SESSION=1    set by the dedicated gamescope session. The command"
+        echo "                            is then run directly: the session already provides"
+        echo "                            gamescope and the performance power profile, and"
+        echo "                            MANGOHUD is forced to 0 because mangoapp draws the"
+        echo "                            overlay at the session level. Services and the fan"
+        echo "                            profile are still handled."
         echo ""
         echo "Setting MX_GAMES_RESOLUTION alone still uses the detected refresh rate;"
         echo "set both to force a full mode."
@@ -120,6 +126,12 @@ pkgs.writeShellScriptBin "mx-games" ''
 
     use_gamescope=1
     if [ "''${MX_GAMES_NO_GAMESCOPE:-0}" = "1" ]; then
+        use_gamescope=0
+    fi
+
+    in_gamescope_session=0
+    if [ "''${MX_GAMESCOPE_SESSION:-0}" = "1" ]; then
+        in_gamescope_session=1
         use_gamescope=0
     fi
 
@@ -200,7 +212,11 @@ pkgs.writeShellScriptBin "mx-games" ''
     }
 
     if [ "$use_gamescope" = "0" ] && [ ''${#user_gs_args[@]} -gt 0 ]; then
-        echo "Warning: MX_GAMES_GAMESCOPE_ARGS ignored (gamescope disabled)" >&2
+        if [ "$in_gamescope_session" = "1" ]; then
+            echo "Warning: MX_GAMES_GAMESCOPE_ARGS ignored (gamescope session)" >&2
+        else
+            echo "Warning: MX_GAMES_GAMESCOPE_ARGS ignored (gamescope disabled)" >&2
+        fi
     fi
 
     detect_mode() {
@@ -221,8 +237,10 @@ pkgs.writeShellScriptBin "mx-games" ''
 
     cleanup() {
         set +e
-        echo "==> Restoring power profile to 'balanced'..."
-        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
+        if [ "$in_gamescope_session" = "0" ]; then
+            echo "==> Restoring power profile to 'balanced'..."
+            ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
+        fi
         ${fanAfterCmd}
         echo "==> Restarting services..."
         ${startCmds}
@@ -238,8 +256,10 @@ pkgs.writeShellScriptBin "mx-games" ''
 
     echo "==> Stopping services..."
     ${stopCmds}
-    echo "==> Setting power profile to 'performance'..."
-    ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
+    if [ "$in_gamescope_session" = "0" ]; then
+        echo "==> Setting power profile to 'performance'..."
+        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
+    fi
     ${fanBeforeCmd}
 
     if [ "$use_gamescope" = "1" ]; then
@@ -331,6 +351,10 @@ pkgs.writeShellScriptBin "mx-games" ''
             -- ''${child_prefix[@]+"''${child_prefix[@]}"} \
                ''${capture_cmd[@]+"''${capture_cmd[@]}"} "$@" &
     else
+        if [ "$in_gamescope_session" = "1" ]; then
+            export MANGOHUD=0
+            echo "==> Gamescope session detected: no gamescope wrapping"
+        fi
         echo "==> Running: $*"
         ''${capture_cmd[@]+"''${capture_cmd[@]}"} "$@" &
     fi

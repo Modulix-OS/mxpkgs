@@ -37,14 +37,20 @@ in
       enable = lib.mkEnableOption "Enable gamescope dedicated session";
       screen = {
         width = lib.mkOption {
-          type = lib.types.int;
-          description = "Screen width";
-          default = 1920;
+          type = lib.types.nullOr lib.types.int;
+          description = "Forced scanout width, null keeps the panel native mode";
+          default = null;
         };
         height = lib.mkOption {
-          type = lib.types.int;
-          description = "Screen height";
-          default = 1080;
+          type = lib.types.nullOr lib.types.int;
+          description = "Forced scanout height, null keeps the panel native mode";
+          default = null;
+        };
+        output = lib.mkOption {
+          type = lib.types.nullOr (lib.types.listOf lib.types.str);
+          description = "Preferred DRM connectors in order of preference, null lets gamescope pick the output";
+          default = null;
+          example = [ "DP-1" "HDMI-A-1" ];
         };
       };
     };
@@ -56,24 +62,41 @@ in
       gamescopeSession = {
         enable = cfg.gamescopeSession.enable;
         args = [
+          "--backend"
+          "drm"
           "--adaptive-sync"
-          "--steam"
           "--rt"
-          "-e"
-          "-W ${toString cfg.gamescopeSession.screen.width}"
-          "-H ${toString cfg.gamescopeSession.screen.height}"
-          "-f"
+          "--force-grab-cursor"
+          "--mangoapp"
+        ]
+        ++ lib.optionals (cfg.gamescopeSession.screen.width != null) [
+          "-W"
+          (toString cfg.gamescopeSession.screen.width)
+        ]
+        ++ lib.optionals (cfg.gamescopeSession.screen.height != null) [
+          "-H"
+          (toString cfg.gamescopeSession.screen.height)
+        ]
+        ++ lib.optionals (cfg.gamescopeSession.screen.output != null
+                          && cfg.gamescopeSession.screen.output != [ ]) [
+          "-O"
+          (lib.concatStringsSep "," cfg.gamescopeSession.screen.output)
         ]
         ++ lib.optional cfg.enableHDR "--hdr-enabled";
         env = {
           TZ = lib.mkMxDefault ":/etc/localtime";
           ENABLE_GAMESCOPE_WSI = lib.mkMxDefault "1";
-          DXVK_HDR             = lib.mkMxDefault "1";
-          WLR_RENDERER         = lib.mkMxDefault "vulkan";
+          MX_GAMESCOPE_SESSION = "1";
           XKB_DEFAULT_LAYOUT   = lib.mkMxDefault config.services.xserver.xkb.layout;
-          XKB_DEFAULT_VARIANT  = lib.mkMxDefault config.services.xserver.xkb.variant;
         }
-        // cfg.mangohud.sessionEnv;
+        // cfg.mangohud.sessionEnv
+        // lib.optionalAttrs cfg.enableHDR {
+          DXVK_HDR = lib.mkMxDefault "1";
+        }
+        // lib.optionalAttrs (config.services.xserver.xkb.variant != "") {
+          XKB_DEFAULT_VARIANT = lib.mkMxDefault config.services.xserver.xkb.variant;
+        };
+      };
       remotePlay.openFirewall = lib.mkMxDefault false;
       dedicatedServer.openFirewall = lib.mkMxDefault false;
       localNetworkGameTransfers.openFirewall = lib.mkMxDefault true;
@@ -121,7 +144,8 @@ in
 
     environment.systemPackages = [
       pkgs.adwsteamgtk
-    ] ++ lib.optional cfg.lsfg.enable lsfg-vk-ui-fhs;
+    ]
+    ++ lib.optional cfg.lsfg.enable lsfg-vk-ui-fhs;
 
     system.activationScripts.steamConfigInject = {
       text = ''
