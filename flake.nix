@@ -30,10 +30,7 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   let
-    modulixRelease = {
-      version = "0.1";
-      codeName = "Lumière";
-    };
+    modulixRelease = builtins.fromJSON (builtins.readFile ./release.json);
 
     systems = [ "x86_64-linux" "aarch64-linux" "i686-linux" "x86_64-darwin" "aarch64-darwin" ];
     forAllSystems = nixpkgs.lib.genAttrs systems;
