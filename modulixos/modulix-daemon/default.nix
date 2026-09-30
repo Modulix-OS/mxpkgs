@@ -8,6 +8,9 @@ let
 
   cacheDir = "${configDir}/.cache";
 
+  buildQueueDir = "/tmp/mx-build-queue";
+  skipRebuildLock = "/tmp/mx-skip-rebuild.lock";
+
   moduleIndexFiles = {
     "index.json" = ../../modules/index.json;
     "index.fr.json" = ../../modules/index.fr.json;
@@ -77,13 +80,16 @@ in
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
     nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-    systemd.tmpfiles.rules = lib.optionals cfg.testMode [
+    systemd.tmpfiles.rules = [
+      "d ${buildQueueDir} 0755 root root -"
+      "f ${skipRebuildLock} 0644 root root -"
+    ] ++ lib.optionals cfg.testMode [
       "d ${vmResultDir} 0755 ${cfg.testUser} users -"
     ];
 
     systemd.services.modulix-daemon = {
       description = "Modulix OS daemon";
-      after       = [ "dbus.service" "polkit.service" ];
+      after       = [ "dbus.service" "polkit.service" "systemd-tmpfiles-setup.service" ];
       requires    = [ "dbus.service" ];
       wantedBy    = [ "multi-user.target" ];
 
@@ -103,6 +109,8 @@ in
         StandardOutput  = "journal";
         StandardError   = "journal";
         SyslogIdentifier = "modulix-daemon";
+        PrivateTmp = true;
+        BindPaths = [ buildQueueDir skipRebuildLock ];
         # configDir is wiped and re-created by mx-init, so the index files have
         # to be put back before the daemon reads them.
         ExecStartPre = "${installModuleIndex}";
