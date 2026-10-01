@@ -123,11 +123,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790797903,
-        "narHash": "sha256-dqBT66vzVG2fNbB5Id9InSUMdXxesKqUsq/W0uDo67E=",
+        "lastModified": 1790856932,
+        "narHash": "sha256-wCj3XDe6P6tjbH+ULF1lYbh0it6F0dUBeb6Yd6l1oj0=",
         "owner": "Modulix-OS",
         "repo": "gnome-software-plugin",
-        "rev": "d12827d30c2b09eb883296ff1583e2e42b451cb7",
+        "rev": "2fa9259f1e3bdc6e22bacb2457363fb2432d2440",
         "type": "github"
       },
       "original": {
@@ -165,11 +165,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790797863,
-        "narHash": "sha256-KpRwj9amcw3FvFqarj12y9PeQOdXlWOMdetP6vmT/zY=",
+        "lastModified": 1790856916,
+        "narHash": "sha256-If1VhUifU2HFIEyGfeK2xYknTyyBv2dVVK+hOhvT348=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "990eee0b745777b238293edf361ff24fb5abf892",
+        "rev": "533e66e8e134448deafbdf7d59e422bf6627edeb",
         "type": "github"
       },
       "original": {
@@ -181,11 +181,11 @@
     "modulix-core-utils_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1790797863,
-        "narHash": "sha256-KpRwj9amcw3FvFqarj12y9PeQOdXlWOMdetP6vmT/zY=",
+        "lastModified": 1790856916,
+        "narHash": "sha256-If1VhUifU2HFIEyGfeK2xYknTyyBv2dVVK+hOhvT348=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "990eee0b745777b238293edf361ff24fb5abf892",
+        "rev": "533e66e8e134448deafbdf7d59e422bf6627edeb",
         "type": "github"
       },
       "original": {
@@ -203,11 +203,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790797976,
-        "narHash": "sha256-k8PBNg0CyCv0XtCM3kSvc5sB/6yo4D2iOHk/RuzJdXQ=",
+        "lastModified": 1790857269,
+        "narHash": "sha256-aUzg/eTAQ6A8uouCM3xdTi78y2oqq8XI42k9QdMHHv4=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "fa460c0061764655a4365af3a22ea62fa2238481",
+        "rev": "4c56e5e4f193276ca23d9c586536f70a4b6928bc",
         "type": "github"
       },
       "original": {
