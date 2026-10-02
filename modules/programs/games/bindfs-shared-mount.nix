@@ -19,7 +19,7 @@ let
 in
 {
   options.mx.programs.games = {
-    shared_steam_dir = lib.mkOption {
+    game_shared_lib_dir = lib.mkOption {
       type = lib.types.listOf shared_dirs_conf;
       default = [ ];
       description = ''
@@ -28,7 +28,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && cfg.shared_steam_dir != [ ]) {
+  config = lib.mkIf (cfg.enable && cfg.game_shared_lib_dir != [ ]) {
     environment.systemPackages = [ pkgs.bindfs ];
 
     systemd.tmpfiles.rules =
@@ -51,7 +51,7 @@ in
       ];
     in
     lib.concatMap (mkRules "root") cfg.game_lib_dirs
-    ++ map (entry: "d ${entry.real_path} 0700 root root -") cfg.shared_steam_dir;
+    ++ map (entry: "d ${entry.real_path} 0700 root root -") cfg.game_shared_lib_dir;
 
     systemd.services = lib.mkMerge (lib.flatten (map (user:
       let
@@ -85,7 +85,7 @@ in
             };
           };
         }
-      ) cfg.shared_steam_dir
+      ) cfg.game_shared_lib_dir
     ) gamersMembers));
   };
 }

@@ -35,6 +35,8 @@ in
     ./heroic
     ./umu
     ./bindfs-shared-mount.nix
+    ./game_folder.nix
+    ./folder_check.nix
     ./mangohud.nix
   ];
 
