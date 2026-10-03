@@ -86,7 +86,7 @@ in
         };
 
         boot.loader.timeout = lib.mkMxDefault 1;
-        boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault true;
+        boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault false;
       }
     )
     {
