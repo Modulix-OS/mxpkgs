@@ -13,18 +13,18 @@
     programs.dconf = {
         enable = true;
         profiles.gdm.databases = [{
-        settings = {
-            "org/gnome/desktop/peripherals/keyboard" = {
-            numlock-state = true;
-            };
-        };
+          settings = {
+              "org/gnome/desktop/peripherals/keyboard" = {
+              numlock-state = true;
+              };
+          };
         }];
-        profiles.users.databases = [{
-        settings = {
-            "org/gnome/desktop/peripherals/keyboard" = {
-            numlock-state = true;
-            };
-        };
+        profiles.user.databases = [{
+          settings = {
+              "org/gnome/desktop/peripherals/keyboard" = {
+              numlock-state = true;
+              };
+          };
         }];
     };
   };

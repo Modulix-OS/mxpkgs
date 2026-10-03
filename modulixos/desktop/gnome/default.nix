@@ -3,41 +3,18 @@
 let
   deEnabled = config.mx.desktop == "gnome";
   cfg = config.mx.gnome;
-  gnome-rounded-blur = pkgs.callPackage ../../../pkgs/gnome-rounded-blur.nix { };
-  logoPng = "${config.mx.branding.logo}/share/icons/hicolor/128x128/apps/modulix-logo.png";
-  gdmLogoSettings = lib.optionalAttrs config.mx.branding.enable {
-    "org/gnome/login-screen" = {
-      logo = logoPng;
-      fallback-logo = logoPng;
-    };
-  };
 in
 {
     options.mx.gnome = {
-      scaling = lib.mkOption {
-        type = lib.types.int;
-        default = 1;
-        description = "GNOME scaling for GDM";
-      };
-      text-scaling = lib.mkOption {
-        type = lib.types.float;
-        default = 1.0;
-        description = "GNOME text scaling for GDM";
-      };
-      core-app = lib.mkOption {
-        type = lib.types.bool;
-        default = true;
-        description = "Enable core app application auto managed";
-      };
       gsconnect = lib.mkEnableOption "Enable GSConnect";
       remote-desktop = lib.mkEnableOption "Enable GNOME remote desktop";
-      rounded-blur = lib.mkEnableOption "gnome-rounded-blur";
     };
 
     imports = [
       ./numlock.nix
       ./trash.nix
       ./gnome-software.nix
+      ./custom.nix
     ];
 
     config = lib.mkMerge [
@@ -46,45 +23,9 @@ in
           services = {
             displayManager.gdm.enable = true;
             displayManager.defaultSession = lib.mkMxDefault "gnome";
-            desktopManager.gnome = {
-              sessionPath = lib.optional cfg.rounded-blur gnome-rounded-blur;
-              enable = true;
-            };
+            desktopManager.gnome.enable = true;
           };
 
-          programs.dconf = {
-              enable = true;
-              profiles = {
-                  gdm.databases = [{
-                      settings = gdmLogoSettings // {
-                          "org/gnome/settings-daemon/plugins/color" = {
-                              night-light-enabled = true;
-                          };
-                          "org/gnome/desktop/interface" = {
-                              scaling-factor = lib.gvariant.mkUint32 config.mx.gnome.scaling;
-                              show-battery-percentage = true;
-                              text-scaling-factor = lib.gvariant.mkDouble config.mx.gnome.text-scaling;
-                          };
-                          "org/gnome/desktop/input-sources" = {
-                              sources = [
-                                  (lib.gvariant.mkTuple["xkb" "fr+oss"])
-                              ];
-                          };
-                      };
-                  }];
-                  user.databases = [{
-                      settings = {
-                          "org/gnome/settings-daemon/plugins/color" = {
-                              night-light-enabled = true;
-                          };
-                          # "org/gnome/desktop/interface" = {
-                          #     scaling-factor = lib.gvariant.mkUint32 config.mx.gnome.scaling;
-                          #     text-scaling-factor = lib.gvariant.mkDouble config.mx.gnome.text-scaling;
-                          # };
-                      };
-                  }];
-              };
-          };
           environment.gnome.excludePackages = with pkgs; [
               atomix # puzzle game
               cheese # webcam tool
