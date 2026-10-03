@@ -109,6 +109,13 @@ in
               ]
               ++ lib.optional cfg.gsconnect pkgs.gnomeExtensions.gsconnect.extensionUuid;
             };
+            "org/gnome/desktop/interface" = {
+              icon-theme = "Modulix-OS";
+              show-battery-percentage = true;
+              toolbar-style = "text";
+              gtk-theme = "Adwaita";
+              enable-hot-corners = false;
+            };
             "org/gnome/desktop/wm/preferences" = {
               button-layout = "appmenu:minimize,maximize,close";
             };
