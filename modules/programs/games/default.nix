@@ -114,11 +114,8 @@ in
 
     users.groups = {
       gamers.members = cfg.users;
+      gamemode.members = cfg.users;
     };
-
-    users.users = lib.mkMerge (map (user: {
-      ${user}.extraGroups = [ "gamemode" ];
-    }) cfg.users);
 
     services.udev.extraRules = ''
       ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
