@@ -25,6 +25,9 @@ let
 
   mx-init = inputs.modulix-core-utils.packages.${pkgs.stdenv.hostPlatform.system}.mx-init;
 
+  mx-apply-update =
+    inputs.modulix-core-utils.packages.${pkgs.stdenv.hostPlatform.system}.mx-apply-update;
+
   mx-init-test = pkgs.writeShellScriptBin "mx-init-test" ''
     set -euo pipefail
 
@@ -93,6 +96,11 @@ in
       requires    = [ "dbus.service" ];
       wantedBy    = [ "multi-user.target" ];
 
+      restartIfChanged = false;
+      stopIfChanged    = false;
+
+      startLimitIntervalSec = 0;
+
       path = [
         config.nix.package
         pkgs.git
@@ -104,8 +112,10 @@ in
         BusName         = "org.modulix.Daemon";
         ExecStart       = "${cfg.package}/bin/mx-daemon";
         User            = "root";
-        Restart         = "on-failure";
+        Restart         = "always";
         RestartSec      = 5;
+        KillMode        = "process";
+        TimeoutStopSec  = "30min";
         StandardOutput  = "journal";
         StandardError   = "journal";
         SyslogIdentifier = "modulix-daemon";
@@ -124,6 +134,37 @@ in
       } // lib.optionalAttrs cfg.testMode {
         MX_DAEMON_CONFIG_DIR = "${configDir}/";
         MX_DAEMON_DRY_RUN    = "0";
+      };
+    };
+
+    systemd.services.mx-apply-update = {
+      description = "Apply the staged Modulix system update";
+      wantedBy    = [ "shutdown.target" ];
+      before      = [ "shutdown.target" "umount.target" "final.target" ];
+      after       = [ "local-fs.target" ];
+
+      unitConfig.DefaultDependencies = false;
+
+      path = [
+        config.nix.package
+        pkgs.git
+        "/run/current-system/sw"
+      ];
+
+      serviceConfig = {
+        Type             = "oneshot";
+        ExecStart        = "${mx-apply-update}/bin/mx-apply-update";
+        User             = "root";
+        TimeoutStartSec  = "15min";
+        StandardOutput   = "journal";
+        StandardError    = "journal";
+        SyslogIdentifier = "mx-apply-update";
+      };
+
+      environment = {
+        MX_CACHE_DIR = cacheDir;
+      } // lib.optionalAttrs cfg.testMode {
+        MX_DAEMON_CONFIG_DIR = "${configDir}/";
       };
     };
 
