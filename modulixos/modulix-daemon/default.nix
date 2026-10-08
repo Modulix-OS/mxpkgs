@@ -6,7 +6,7 @@ let
   configDir = "/etc/modulix-os";
   vmResultDir = "${config.users.users.${cfg.testUser}.home}/modulix-vm";
 
-  cacheDir = "${configDir}/.cache";
+  cacheDir = "/var/cache/modulix-os";
 
   buildQueueDir = "/tmp/mx-build-queue";
   skipRebuildLock = "/tmp/mx-skip-rebuild.lock";
@@ -121,8 +121,7 @@ in
         SyslogIdentifier = "modulix-daemon";
         PrivateTmp = true;
         BindPaths = [ buildQueueDir skipRebuildLock ];
-        # configDir is wiped and re-created by mx-init, so the index files have
-        # to be put back before the daemon reads them.
+        CacheDirectory = "modulix-os";
         ExecStartPre = "${installModuleIndex}";
       } // lib.optionalAttrs cfg.testMode {
         WorkingDirectory = vmResultDir;
@@ -159,6 +158,7 @@ in
         StandardOutput   = "journal";
         StandardError    = "journal";
         SyslogIdentifier = "mx-apply-update";
+        CacheDirectory   = "modulix-os";
       };
 
       environment = {
