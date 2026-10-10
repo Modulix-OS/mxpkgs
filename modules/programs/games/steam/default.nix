@@ -139,6 +139,9 @@ in
           && cfg.lsfg.steam_library_for_lossless_scaling != null then {
           LSFG_DLL_PATH="${cfg.lsfg.steam_library_for_lossless_scaling}/steamapps/common/Lossless Scaling/Lossless.dll";
         } else {});
+        extraProfile = ''
+          export TZ="$(timedatectl show -p Timezone --value)"
+        '';
       });
     };
 
