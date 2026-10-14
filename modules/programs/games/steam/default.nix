@@ -84,7 +84,6 @@ in
         ]
         ++ lib.optional cfg.enableHDR "--hdr-enabled";
         env = {
-          TZ = lib.mkMxDefault ":/etc/localtime";
           ENABLE_GAMESCOPE_WSI = lib.mkMxDefault "1";
           MX_GAMESCOPE_SESSION = "1";
           XKB_DEFAULT_LAYOUT   = lib.mkMxDefault config.services.xserver.xkb.layout;
@@ -107,7 +106,6 @@ in
       ];
       package = lib.mkMxDefault (pkgs.steam.override {
         extraEnv = {
-          TZ = ":/etc/localtime";
           OBS_VKCAPTURE = config.mx.programs.studio.obs-studio.enable;
           # PROTON_NO_D3D12=true;
           PROTON_PRIORITY_HIGH=true;
@@ -139,9 +137,6 @@ in
           && cfg.lsfg.steam_library_for_lossless_scaling != null then {
           LSFG_DLL_PATH="${cfg.lsfg.steam_library_for_lossless_scaling}/steamapps/common/Lossless Scaling/Lossless.dll";
         } else {});
-        extraProfile = ''
-          export TZ="$(timedatectl show -p Timezone --value)"
-        '';
       });
     };
 
