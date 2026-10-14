@@ -79,7 +79,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && !config.mx.mode.server.enable) {
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
     nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
