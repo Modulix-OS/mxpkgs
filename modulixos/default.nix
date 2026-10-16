@@ -45,6 +45,10 @@
 
   environment.systemPackages = with self.packages.${pkgs.stdenv.hostPlatform.system}; [
     mx-diff-update
+    mx-clean
+    mx-clean-generations
+    mx-list-generations
+    mx-switch-generation
   ];
 
   environment.pathsToLink = [ "/share/zsh" ];
