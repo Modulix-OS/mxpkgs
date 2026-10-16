@@ -85,11 +85,8 @@
       mkMxUpdate = { pkgs, flake_path, flake_config }:
         import ./pkgs/mx-update.nix {
           inherit pkgs flake_path flake_config;
-          mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
+          mx-diff-update = import ./pkgs/mx-diff-update.nix { inherit pkgs; };
         };
-
-      mkMxCleanBoot = { pkgs, flake_path, flake_config }:
-        import ./pkgs/mx-clean-boot.nix { inherit pkgs flake_path flake_config; };
     };
 
     nixosModules = {
@@ -111,7 +108,10 @@
         clean-dir = import ./pkgs/clean-dir.nix { inherit pkgs; };
         lsfg-vk = pkgs.callPackage ./pkgs/lsfg-vk.nix {};
         mx-clean = import ./pkgs/mx-clean.nix { inherit pkgs; };
-        mx-latest-update = import ./pkgs/mx-latest-update.nix { inherit pkgs; };
+        mx-clean-generations = import ./pkgs/mx-clean-generations.nix { inherit pkgs; };
+        mx-list-generations = import ./pkgs/mx-list-generations.nix { inherit pkgs; };
+        mx-switch-generation = import ./pkgs/mx-switch-generation.nix { inherit pkgs; };
+        mx-diff-update = import ./pkgs/mx-diff-update.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         modulix-boot-splash = pkgs.callPackage ./pkgs/modulix-boot-splash.nix { };
