@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, mx-latest-update, flake_path, flake_config }:
+{ pkgs ? import <nixpkgs> {}, mx-diff-update, flake_path, flake_config }:
 
 pkgs.writeShellScriptBin "mx-update" ''
     cd "${flake_path}" || exit 1
@@ -53,7 +53,7 @@ pkgs.writeShellScriptBin "mx-update" ''
 
     if [ $COMMAND_EXIT_CODE -eq 0 ]; then
         echo -e "$GREEN Update finish successfully!$NC"
-        ${mx-latest-update}/bin/mx-latest-update
+        ${mx-diff-update}/bin/mx-diff-update
     else
         echo -e "$RED Update failed$NC"
         restore_lock

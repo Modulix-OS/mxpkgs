@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, self, pkgs, ... }:
 
 {
   imports = [
@@ -42,4 +42,10 @@
   hardware.fw-fanctrl.enable = config.mx.hardware.framework-fan-ctrl.enable;
   hardware.enableRedistributableFirmware = lib.mkMxDefault true;
   hardware.enableAllFirmware = lib.mkMxDefault true;
+
+  environment.systemPackages = with self.packages.${pkgs.stdenv.hostPlatform.system}; [
+    mx-diff-update
+  ];
+
+  environment.pathsToLink = [ "/share/zsh" ];
 }
