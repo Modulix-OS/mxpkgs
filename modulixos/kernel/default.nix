@@ -29,16 +29,6 @@ in
     boot.supportedFilesystems.zfs = lib.mkMxDefault false;
     boot.zfs.package = lib.mkIf cfg.cachyos-kernel.enable
     (lib.mkMxDefault cfg.cachyos-kernel.package.zfs_cachyos);
-    nix.settings.substituters = []
-    ++ lib.optionals cfg.cachyos-kernel.enable [
-      "https://attic.xuyh0120.win/lantian"
-      "https://cache.xinux.uz"
-    ];
-    nix.settings.trusted-public-keys = []
-     ++ lib.optionals cfg.cachyos-kernel.enable [
-       "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-       "cache.xinux.uz:BXCrtqejFjWzWEB9YuGB7X2MV4ttBur1N8BkwQRdH+0="
-      ];
     nixpkgs.overlays = [
       inputs.nix-cachyos-kernel.overlays.pinned
     ];
