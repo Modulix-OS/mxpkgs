@@ -10,9 +10,9 @@ let
         --all-profiles) all=1 ;;
         -h|--help)
           echo "usage: mx-list-generations [--all-profiles]"
-          echo "  --all-profiles  liste aussi les profils de tous les users"
+          echo "  --all-profiles  also list profiles of all users"
           exit 0 ;;
-        *) echo "option inconnue: $arg" >&2; exit 2 ;;
+        *) echo "unknown option: $arg" >&2; exit 2 ;;
       esac
     done
 
@@ -58,13 +58,13 @@ pkgs.symlinkJoin {
     (completion "/share/zsh/site-functions/_mx-list-generations" ''
       #compdef mx-list-generations
       _arguments \
-        '--all-profiles[lister les profils de tous les users]' \
-        '(- *)'{-h,--help}'[afficher l aide]'
+        '--all-profiles[also list profiles of all users]' \
+        '(- *)'{-h,--help}'[show help]'
     '')
 
     (completion "/share/fish/vendor_completions.d/mx-list-generations.fish" ''
-      complete -c mx-list-generations -l all-profiles -d 'Lister les profils de tous les users'
-      complete -c mx-list-generations -s h -l help -d 'Afficher aide'
+      complete -c mx-list-generations -l all-profiles -d 'Also list profiles of all users'
+      complete -c mx-list-generations -s h -l help -d 'Show help'
     '')
   ];
 }
