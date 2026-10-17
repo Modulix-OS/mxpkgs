@@ -12,15 +12,9 @@
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
-    modulix-daemon = {
-      url = "github:Modulix-OS/modulix-daemon";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    modulix-daemon.url = "github:Modulix-OS/modulix-daemon";
 
-    gnome-software-plugin = {
-      url = "github:Modulix-OS/gnome-software-plugin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    gnome-software-plugin.url = "github:Modulix-OS/gnome-software-plugin";
 
     modulix-core-utils = {
       url = "github:Modulix-OS/modulix-core-utils";
@@ -98,6 +92,7 @@
           };
         };
       home-manager = inputs.home-manager.nixosModules.default;
+      attic-cache = import ./infra/attic-cache.nix;
     };
 
     packages = forAllSystems (system:

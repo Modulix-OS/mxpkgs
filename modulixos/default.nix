@@ -13,6 +13,7 @@
     ./gpu
     ./kernel
     ./dns.nix
+    ./cache.nix
     ./patch-runner.nix
     ./package-fix.nix
     ./modulix-daemon
