@@ -51,5 +51,12 @@
     mx-switch-generation
   ];
 
+  nix.settings = {
+    connect-timeout = 3;
+    download-attempts = 1;
+    stalled-download-timeout = 10;
+    fallback = true;
+  };
+
   environment.pathsToLink = [ "/share/zsh" ];
 }
