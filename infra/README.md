@@ -7,7 +7,7 @@ this module declares an `age.secrets` entry but does not pull agenix in, so
 that hosts which already import agenix do not end up with two copies of it.
 
 Current deployment: `rpi-horgues` in `Config-raspberry`, served on
-`https://cache.modulixos.org:16443/modulix`, local disk storage, certificate
+`https://cache.modulixos.org:8443/modulix`, local disk storage, certificate
 issued through an OVH DNS-01 challenge (port 80 is not reachable on that line).
 
 ```nix
@@ -19,7 +19,7 @@ issued through an OVH DNS-01 challenge (port 80 is not reachable on that line).
   mx.infra.attic-cache = {
     enable = true;
     domain = "cache.modulixos.org";
-    publicPort = 16443;
+    publicPort = 8443;
     secretFile = ./secrets/rpi-horgues/attic-env.age;
     nginx = {
       acmeEmail = "admin@modulixos.org";
@@ -82,7 +82,7 @@ atticd-atticadm make-token --sub ci --validity '1y' \
   --create-cache 'modulix' --push 'modulix' --pull 'modulix' \
   --configure-cache 'modulix'
 
-attic login modulix https://cache.modulixos.org:16443 <token>
+attic login modulix https://cache.modulixos.org:8443 <token>
 attic cache create modulix
 attic cache configure modulix --public
 attic cache info modulix
@@ -96,7 +96,7 @@ public key.
 
 - **CI**: in both `Modulix-OS/modulix-daemon` and
   `Modulix-OS/gnome-software-plugin`, set the variables `ATTIC_ENDPOINT`
-  (`https://cache.modulixos.org:16443`), `ATTIC_CACHE` (`modulix`) and
+  (`https://cache.modulixos.org:8443`), `ATTIC_CACHE` (`modulix`) and
   `ATTIC_PUBLIC_KEY`, plus the secret `ATTIC_TOKEN` (the token above).
   Setting them once at the organisation level covers both repositories.
   These stay GitHub-managed secrets: the runners hold no age identity, so
@@ -112,9 +112,9 @@ only ever need anonymous read access.
 
 ```sh
 nix build github:Modulix-OS/modulix-daemon#mx-daemon \
-  --substituters https://cache.modulixos.org:16443/modulix \
+  --substituters https://cache.modulixos.org:8443/modulix \
   --trusted-public-keys '<public key>' -L
 ```
 
-The output must show `copying path … from 'https://cache.modulixos.org:16443/modulix'`
+The output must show `copying path … from 'https://cache.modulixos.org:8443/modulix'`
 and no `building` line.

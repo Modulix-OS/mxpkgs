@@ -17,7 +17,7 @@ in
 
     url = lib.mkOption {
       type = lib.types.str;
-      default = "https://cache.modulixos.org:16443/modulix";
+      default = "https://cache.modulixos.org:8443/modulix";
       description = "Substituter URL of the Modulix Attic cache.";
     };
 

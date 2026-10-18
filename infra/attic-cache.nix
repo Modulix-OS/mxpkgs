@@ -22,7 +22,7 @@ in
     publicPort = lib.mkOption {
       type = lib.types.port;
       default = 443;
-      example = 16443;
+      example = 8443;
       description = ''
         Port nginx serves the cache on, and the port clients are told to use.
         Anything other than 443 is appended to the advertised URL, so the
