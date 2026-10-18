@@ -16,9 +16,10 @@ in
       (if cgpu.vendor == "nvidia" then
           blender.override {
             cudaSupport = true;
+            rocmSupport = false;
           }
         else if cgpu.vendor == "amd" then
-          blender-hip
+          pkgsRocm.blender
         else
           blender)
     ];
