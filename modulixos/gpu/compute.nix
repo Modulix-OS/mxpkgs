@@ -46,6 +46,7 @@ in
         ROC_ENABLE_PRE_VEGA = "1";
         RUSTICL_ENABLE      = "radeonsi";
       };
+      nixpkgs.config.rocmSupport = true;
     })
 
     (lib.mkIf (cgpu.vendor == "intel") {
