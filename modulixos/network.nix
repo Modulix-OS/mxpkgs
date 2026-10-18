@@ -50,7 +50,6 @@ in
           };
           environment.etc."machine-info".text = "";
 
-          # Hostname anonyme pour mDNS/LLMNR
           services.resolved.settings.Resolve = {
             MulticastDNS = lib.mkMxDefault "no";
             LLMNR = lib.mkMxDefault "no";
