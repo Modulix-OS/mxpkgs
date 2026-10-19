@@ -13,6 +13,7 @@ in
 
   config = lib.mkIf cfg.enable {
     mx.hardware.gpu.compute.enable = true;
+    mx.hardware.gpu.compute.rocmStack.enable = lib.mkIf hasRocm true;
     mx.fonts.enable = true;
     environment.systemPackages = [
       (if hasRocm then

@@ -2,6 +2,8 @@
 let
   cfg = config.mx.services.llm;
 
+  hasRocmStack = lib.mxGpuHasStack config.mx.hardware.gpu "rocm";
+
   llamaCppPackage =
     let
       cgpu = config.mx.hardware.gpu;
@@ -131,6 +133,7 @@ in
   config = lib.mkIf cfg.enable {
 
     mx.hardware.gpu.compute.enable = true;
+    mx.hardware.gpu.compute.rocmStack.enable = lib.mkIf hasRocmStack true;
 
     environment.systemPackages = lib.mkIf cfg.enableNewelle [
       pkgs-unstable.newelle

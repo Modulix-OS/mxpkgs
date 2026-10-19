@@ -25,6 +25,10 @@ let
   count = c: n: lib.count (x: x == n) (rawNames c);
   libva = c: c.environment.sessionVariables.LIBVA_DRIVER_NAME or null;
   moz = c: c.environment.sessionVariables.MOZ_DISABLE_RDD_SANDBOX or null;
+  evar = c: n: c.environment.variables.${n} or null;
+  rocmSupport = c: c.nixpkgs.config.rocmSupport or false;
+  hasRocmTree = c: lib.any (lib.hasInfix "/opt/rocm") c.systemd.tmpfiles.rules;
+  bits32 = c: c.hardware.graphics.enable32Bit;
 
   # ---- scenarios -----------------------------------------------------------
   c = {
@@ -43,6 +47,11 @@ let
     hybridAmdCompute = cfgOf (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; integrated = { vendor = "amd"; generation = "rdna2"; }; compute.enable = true; });
     igpuOnly     = cfgOf (gpu { dedicated.vendor = ov null; integrated = { vendor = "amd"; generation = "rdna2"; }; compute.enable = true; });
     igpuLauncher = cfgOf (gpu { dedicated.vendor = ov null; integrated = { vendor = "intel"; pciId = "8086:46a6"; pciAddr = "00:02.0"; drmIndex = 1; }; });
+    amdComputeRocm = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; rocmStack.enable = true; }; });
+    intelSkylake     = cfgOf (gpu { dedicated = { vendor = ov "intel"; generation = "skylake"; }; compute.enable = true; });
+    intelTigerCompute = cfgOf (gpu { dedicated = { vendor = ov "intel"; generation = "tigerlake"; }; compute.enable = true; });
+    nvidiaOffload    = cfgOf (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
+    amdOffload       = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
   };
 
   # Slot layout of a scenario, fed to the pure lib.mxGpu* helpers.
@@ -58,6 +67,13 @@ let
     };
     accelEnable = cc.mx.hardware.gpu.acceleration.enable;
     amdgpuOpencl = cc.hardware.amdgpu.opencl.enable;
+    rocmSupport = rocmSupport cc;
+    rocmTree = hasRocmTree cc;
+    enable32Bit = bits32 cc;
+    rusticl = evar cc "RUSTICL_ENABLE";
+    rocPreVega = evar cc "ROC_ENABLE_PRE_VEGA";
+    nvOffload = evar cc "__NV_PRIME_RENDER_OFFLOAD";
+    glxVendor = evar cc "__GLX_VENDOR_LIBRARY_NAME";
     pkgs = names cc;
   }) c;
 
@@ -146,6 +162,32 @@ let
     # integrated launcher: built only when the PCI id is known
     (expect "igpuOnly.noLauncher" (c.igpuOnly.mx.hardware.gpu.integrated.launcher == null) true)
     (expect "igpuLauncher.name"   c.igpuLauncher.mx.hardware.gpu.integrated.launcher.name "igpu-launch")
+
+    # OpenCL baseline is decoupled from the ROCm/HIP stack: this is the DaVinci
+    # Resolve case, and the minimal configuration documented on the NixOS wiki.
+    (expect "amdCompute.rusticl"     (evar c.amdCompute "RUSTICL_ENABLE") "radeonsi")
+    (expect "amdCompute.noRocmFlag"  (rocmSupport c.amdCompute) false)
+    (expect "amdCompute.noRocmTree"  (hasRocmTree c.amdCompute) false)
+    (expect "amdCompute.noPreVega"   (evar c.amdCompute "ROC_ENABLE_PRE_VEGA") null)
+
+    # rocmStack opt-in (Blender, llama.cpp) brings the heavy bits back
+    (expect "amdComputeRocm.flag"    (rocmSupport c.amdComputeRocm) true)
+    (expect "amdComputeRocm.tree"    (hasRocmTree c.amdComputeRocm) true)
+    (expect "amdComputeRocm.preVega" (evar c.amdComputeRocm "ROC_ENABLE_PRE_VEGA") "1")
+    (expect "amdComputeRocm.rusticl" (evar c.amdComputeRocm "RUSTICL_ENABLE") "radeonsi")
+
+    # intel compute runtime: Gen 8/9/11 need the legacy one, Gen 12+ the current one
+    (expect "intelSkylake.legacy"    (has c.intelSkylake "intel-compute-runtime-legacy1") true)
+    (expect "intelSkylake.noCurrent" (has c.intelSkylake "intel-compute-runtime") false)
+    (expect "intelSkylake.32bit"     (bits32 c.intelSkylake) true)
+    (expect "intelTigerCompute.rt"   (has c.intelTigerCompute "intel-compute-runtime") true)
+    (expect "intelTigerCompute.noLegacy" (has c.intelTigerCompute "intel-compute-runtime-legacy1") false)
+
+    # nvidia PRIME render offload env, opt-in and cuda-only
+    (expect "nvidiaOffload.prime"    (evar c.nvidiaOffload "__NV_PRIME_RENDER_OFFLOAD") "1")
+    (expect "nvidiaOffload.glx"      (evar c.nvidiaOffload "__GLX_VENDOR_LIBRARY_NAME") "nvidia")
+    (expect "nvidiaCompute.noPrime"  (evar c.nvidiaCompute "__NV_PRIME_RENDER_OFFLOAD") null)
+    (expect "amdOffload.noPrime"     (evar c.amdOffload "__NV_PRIME_RENDER_OFFLOAD") null)
   ];
 
   allOk = lib.all (x: x == true) checks;
