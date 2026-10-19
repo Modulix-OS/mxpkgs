@@ -21,15 +21,7 @@ in
   config = lib.mkIf isGraphical {
     services.xserver = {
       enable = true;
-      videoDrivers = [
-        (
-          if cgpu.vendor == "amd"
-          then "amdgpu"
-          else if cgpu.vendor == "nvidia" then
-          cgpu.vendor
-          else "modesetting"
-        )
-      ];
+      videoDrivers = lib.mxGpuVideoDrivers cgpu;
       excludePackages = with pkgs; [
         xterm
       ];

@@ -1,30 +1,19 @@
 { config, pkgs, lib, ... }:
 let
   cgpu = config.mx.hardware.gpu;
+  hasStack = lib.mxGpuHasStack cgpu;
   cfg = cgpu.compute;
-
-  defaultBackend =
-    if cgpu.vendor == "amd" then "rocm"
-    else if cgpu.vendor == "nvidia" then "cuda"
-    else if cgpu.vendor == "intel" then "intel"
-    else "cpu";
 in
 {
   options.mx.hardware.gpu.compute = {
     enable = lib.mkEnableOption "GPU compute (ROCm / CUDA / oneAPI / OpenCL)";
-
-    backend = lib.mkOption {
-      type = lib.types.enum [ "cuda" "rocm" "intel" "cpu" ];
-      default = defaultBackend;
-      description = "Compute backend used by GPU-accelerated apps (auto-derived from vendor)";
-    };
   };
 
   config = lib.mkIf cfg.enable (lib.mkMerge [
     # Compute runtimes need the graphics stack, even headless.
     { hardware.graphics.enable = true; }
 
-    (lib.mkIf (cgpu.vendor == "amd") {
+    (lib.mkIf (hasStack "rocm") {
       systemd.tmpfiles.rules =
         let
           rocmEnv = pkgs.symlinkJoin {
@@ -49,7 +38,7 @@ in
       nixpkgs.config.rocmSupport = true;
     })
 
-    (lib.mkIf (cgpu.vendor == "intel") {
+    (lib.mkIf (hasStack "oneapi") {
       hardware.graphics.extraPackages = with pkgs; [
         intel-compute-runtime
       ];

@@ -3,6 +3,7 @@
 let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
+  pgpu = lib.mxGpuPrimary cgpu;
 
   proton-cachyos = pkgs.callPackage ../../../pkgs/proton-cachyos.nix { arch=pkgs.stdenv.hostPlatform.system; };
   proton-ge = pkgs.callPackage ../../../pkgs/proton-ge.nix { arch=pkgs.stdenv.hostPlatform.system; };
@@ -77,8 +78,8 @@ in
         settings = {
           general.renice = lib.mkMxDefault 10;
           gpu = {
-            amd_performance_level = lib.mkIf (cgpu.vendor == "amd") (lib.mkMxDefault "high");
-            nv_powermizer_mode = lib.mkIf (cgpu.vendor == "nvidia") (lib.mkMxDefault 1);
+            amd_performance_level = lib.mkIf (pgpu.vendor == "amd") (lib.mkMxDefault "high");
+            nv_powermizer_mode = lib.mkIf (pgpu.vendor == "nvidia") (lib.mkMxDefault 1);
           };
         };
       };
@@ -88,8 +89,8 @@ in
       sessionVariables = {
         STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${protonCompatTools}:\${HOME}/.steam/root/compatibilitytools.d";
 
-        MESA_SHADER_CACHE_MAX_SIZE= lib.mkIf (cgpu.vendor == "amd") "12G";
-        __GL_SHADER_DISK_CACHE_SIZE= lib.mkIf (cgpu.vendor == "nvidia") "12000000000";
+        MESA_SHADER_CACHE_MAX_SIZE= lib.mkIf (pgpu.vendor == "amd") "12G";
+        __GL_SHADER_DISK_CACHE_SIZE= lib.mkIf (pgpu.vendor == "nvidia") "12000000000";
 
       };
     };

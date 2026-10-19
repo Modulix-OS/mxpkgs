@@ -4,17 +4,16 @@ let
 
   llamaCppPackage =
     let
-      base = pkgs-unstable.llama-cpp;
-      computing = config.mx.hardware.gpu.compute.backend;
+      cgpu = config.mx.hardware.gpu;
+      hasCuda = lib.mxGpuHasStack cgpu "cuda";
+      hasRocm = lib.mxGpuHasStack cgpu "rocm";
+      hasOneapi = lib.mxGpuHasStack cgpu "oneapi";
+      base = if hasRocm then pkgs-unstable.pkgsRocm.llama-cpp else pkgs-unstable.llama-cpp;
     in
-      if computing == "cuda" then
-        base.override { cudaSupport = true; }
-      else if computing == "rocm" then
-        pkgs-unstable.pkgsRocm.llama-cpp
-      else if computing == "intel" then
-        base.override { vulkanSupport = true; }
-      else
-        base;
+      base.override {
+        cudaSupport = hasCuda;
+        vulkanSupport = hasOneapi;
+      };
 
   modelOptions = lib.types.submodule {
     options = {

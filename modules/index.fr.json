@@ -26,7 +26,7 @@
   },
   "programs.creativity.blender": {
     "name": "Blender",
-    "summary": "Suite de création 3D, réglée pour le calcul GPU (CUDA/HIP) et intégrant les polices créatives",
+    "summary": "Suite de création 3D, réglée pour le calcul GPU (CUDA/ROCm) et intégrant les polices créatives",
     "keyword": ["blender", "3d", "modélisation", "rendu", "animation"]
   },
   "programs.creativity.bambu-studio": {

@@ -35,7 +35,9 @@
 
     brandingModule = { mx.branding = modulixRelease; };
 
-    extendLib = base: base.extend (final: prev: import ./lib/mx-lib.nix { lib = prev; });
+    extendLib = base: base.extend (final: prev:
+      import ./lib/mx-priority.nix { lib = prev; }
+      // import ./lib/mx-gpuStack.nix { lib = prev; });
     mxLib = extendLib nixpkgs.lib;
 
     make-system = {

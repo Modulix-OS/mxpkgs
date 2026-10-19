@@ -3,6 +3,8 @@
 let
   cfg = config.mx.programs.studio.obs-studio;
   cgpu = config.mx.hardware.gpu;
+  hasCuda = lib.mxGpuHasStack cgpu "cuda";
+  hasVaapi = !hasCuda || lib.mxGpuHasStack cgpu "rocm" || lib.mxGpuHasStack cgpu "oneapi";
   gamesEnabled = config.mx.programs.games.enable;
 in
 {
@@ -23,15 +25,10 @@ in
     programs.obs-studio = {
       enable = true;
       enableVirtualCamera = lib.mkMxDefault true;
-      package = lib.mkMxDefault (
-        if cgpu.vendor != "nvidia" then
-          pkgs.obs-studio
-        else
-          pkgs.obs-studio.override { cudaSupport = true; }
-      );
+      package = lib.mkMxDefault (pkgs.obs-studio.override { cudaSupport = hasCuda; });
       plugins = with pkgs.obs-studio-plugins; [
         obs-move-transition
-      ] ++ lib.optional (cgpu.vendor != "nvidia") pkgs.obs-studio-plugins.obs-vaapi
+      ] ++ lib.optional hasVaapi pkgs.obs-studio-plugins.obs-vaapi
        ++ lib.optional gamesEnabled pkgs.obs-studio-plugins.obs-vkcapture
        ++ cfg.plugins;
     };

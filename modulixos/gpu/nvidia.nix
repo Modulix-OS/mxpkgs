@@ -2,14 +2,14 @@
 
 let
   cfg = config.mx.hardware.gpu.nvidia;
-  igpu = config.mx.hardware.gpu.igpu;
+  igpu = config.mx.hardware.gpu.integrated;
 
-  nvidia = config.mx.hardware.gpu.vendor == "nvidia";
+  nvidia = config.mx.hardware.gpu.dedicated.vendor == "nvidia";
   isLaptop = config.mx.hardware.laptop;
 
-  legacy-390 = config.mx.hardware.gpu.generation ==  "fermi";
-  legacy-470 = config.mx.hardware.gpu.generation == "kepler";
-  legacy-580 = builtins.elem config.mx.hardware.gpu.generation [  "maxwell" "pascal" "volta" ];
+  legacy-390 = config.mx.hardware.gpu.dedicated.generation ==  "fermi";
+  legacy-470 = config.mx.hardware.gpu.dedicated.generation == "kepler";
+  legacy-580 = builtins.elem config.mx.hardware.gpu.dedicated.generation [  "maxwell" "pascal" "volta" ];
 
   legacyDriver = legacy-390 || legacy-470 || legacy-580;
 
@@ -67,11 +67,11 @@ in
         }
         {
           assertion = cfg.intelBusId != null -> igpu.vendor == "intel";
-          message = "mx.hardware.gpu.nvidia: intelBusId requires mx.hardware.gpu.igpu.vendor = \"intel\"";
+          message = "mx.hardware.gpu.nvidia: intelBusId requires mx.hardware.gpu.integrated.vendor = \"intel\"";
         }
         {
           assertion = cfg.amdBusId != null -> igpu.vendor == "amd";
-          message = "mx.hardware.gpu.nvidia: amdBusId requires mx.hardware.gpu.igpu.vendor = \"amd\"";
+          message = "mx.hardware.gpu.nvidia: amdBusId requires mx.hardware.gpu.integrated.vendor = \"amd\"";
         }
       ];
     })

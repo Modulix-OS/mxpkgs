@@ -36,7 +36,7 @@
         ];
       };
       gpuTests = import ./gpu-eval.nix {
-        inherit (nixpkgs) lib;
+        lib = inputs.mx.lib.extendLib nixpkgs.lib;
         inherit pkgs;
         baseSystem = self.nixosConfigurations.test-cli;
       };

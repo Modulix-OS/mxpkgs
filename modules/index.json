@@ -47,7 +47,7 @@
     "flathub_id": "org.blender.Blender",
     "nix_info": "blender",
     "name": "Blender",
-    "summary": "3D creation suite, auto-tuned for GPU compute (CUDA/HIP) and pulling in creative fonts",
+    "summary": "3D creation suite, auto-tuned for GPU compute (CUDA/ROCm) and pulling in creative fonts",
     "keyword": ["blender", "3d", "modeling", "render", "animation"]
   },
   "programs.creativity.bambu-studio": {

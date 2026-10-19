@@ -1,16 +1,16 @@
 { writeShellScriptBin
 , lib
 , igpuId
-, igpuNumber
-, pciAddr ? "0"
+, igpuNumber ? 1
+, pciAddr ? null
 }:
 
 let
-  driPci = if pciAddr != "0" then "0" else "pci-0000_" + (lib.replaceStrings [ ":" "." ] [ "_" "_" ] pciAddr);
+  driPci = "pci-0000_" + (lib.replaceStrings [ ":" "." ] [ "_" "_" ] pciAddr);
 in
 writeShellScriptBin "igpu-launch" ''
   export MESA_VK_DEVICE_SELECT="${igpuId}!"
-  export DRI_PRIME=${driPci}
+  ${lib.optionalString (pciAddr != null) "export DRI_PRIME=${driPci}"}
 
   gpu_count="$(find /sys/class/drm -maxdepth 1 -name 'card[0-9]*' | grep -cE '/card[0-9]+$')"
   if [ "$gpu_count" -gt 1 ]; then

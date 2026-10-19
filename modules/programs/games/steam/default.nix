@@ -3,6 +3,7 @@
 let
   cfg = config.mx.programs.games;
   cgpu = config.mx.hardware.gpu;
+  pgpu = lib.mxGpuPrimary cgpu;
   lsfg-vk = pkgs.callPackage ../../../../pkgs/lsfg-vk.nix { };
   lsfg-vk-ui = pkgs.callPackage ../../../../pkgs/lsfg-vk-ui.nix { };
 
@@ -110,19 +111,19 @@ in
           # PROTON_NO_D3D12=true;
           PROTON_PRIORITY_HIGH=true;
 
-          PROTON_FSR4_UPGRADE = cgpu.vendor == "amd"
-                                && cgpu.generation == "rdna4";
-          PROTON_FSR4_RDNA3_UPGRADE = cgpu.vendor == "amd"
-                                      && cgpu.generation == "rdna3"
+          PROTON_FSR4_UPGRADE = pgpu.vendor == "amd"
+                                && pgpu.generation == "rdna4";
+          PROTON_FSR4_RDNA3_UPGRADE = pgpu.vendor == "amd"
+                                      && pgpu.generation == "rdna3"
                                       && cfg.force-fsr4-for-rdna3;
-          PROTON_FSR3_UPGRADE = cgpu.generation == "rdna3"
+          PROTON_FSR3_UPGRADE = pgpu.generation == "rdna3"
                                 && (!cfg.force-fsr4-for-rdna3);
-          PROTON_DLSS_UPGRADE = cgpu.vendor == "nvidia";
-          PROTON_XESS_UPGRADE = cgpu.vendor == "intel"
-                                || (cgpu.vendor == "amd"
-                                    && cgpu.generation != "rdna4");
+          PROTON_DLSS_UPGRADE = pgpu.vendor == "nvidia";
+          PROTON_XESS_UPGRADE = pgpu.vendor == "intel"
+                                || (pgpu.vendor == "amd"
+                                    && pgpu.generation != "rdna4");
 
-          # PROTON_ENABLE_WAYLAND = cgpu.vendor == "amd" || cfg.enableHDR;
+          # PROTON_ENABLE_WAYLAND = pgpu.vendor == "amd" || cfg.enableHDR;
           PROTON_ENABLE_HDR = cfg.enableHDR;
           DXVK_HDR = cfg.enableHDR;
           ENABLE_HDR_WSI = cfg.enableHDR;

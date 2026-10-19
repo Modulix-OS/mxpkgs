@@ -10,7 +10,7 @@ in
       description = ''
         CPU vendor (intel, amd). Drives the microcode update package.
 
-        The integrated GPU is described by `mx.hardware.gpu.igpu.*`, not here:
+        The integrated GPU is described by `mx.hardware.gpu.integrated.*`, not here:
         video acceleration reads that option (see modulixos/gpu/acceleration.nix).
       '';
     };

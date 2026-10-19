@@ -4,11 +4,8 @@ let
   gpu = config.mx.hardware.gpu;
   cfg = gpu.acceleration;
 
-  # Intel generations served by the legacy i965 (intel-vaapi-driver) stack.
-  # Broadwell and newer (and unknown/null) use the modern iHD (intel-media-driver).
   intelLegacyGens = [ "ironlake" "sandybridge" "ivybridge" "haswell" "westmere" ];
 
-  # Per-GPU video-acceleration descriptor: { packages; libvaDriver; }.
   accelFor = vendor: generation:
     if vendor == "intel" then
       (if generation != null && builtins.elem generation intelLegacyGens then {
@@ -28,15 +25,13 @@ let
     }
     else { packages = [ ]; libvaDriver = null; };
 
-  # Every GPU present: discrete + optional integrated (hybrid laptop).
   gpus =
-    lib.optional (gpu.vendor != null) { v = gpu.vendor; g = gpu.generation; }
-    ++ lib.optional (gpu.igpu.vendor != null) { v = gpu.igpu.vendor; g = gpu.igpu.generation; };
+    lib.optional (gpu.dedicated.vendor != null) { v = gpu.dedicated.vendor; g = gpu.dedicated.generation; }
+    ++ lib.optional (gpu.integrated.vendor != null) { v = gpu.integrated.vendor; g = gpu.integrated.generation; };
 
-  # The iGPU drives display / video decode in PRIME offload; otherwise the main GPU.
   primary =
-    if gpu.igpu.vendor != null then { v = gpu.igpu.vendor; g = gpu.igpu.generation; }
-    else if gpu.vendor != null then { v = gpu.vendor; g = gpu.generation; }
+    if gpu.integrated.vendor != null then { v = gpu.integrated.vendor; g = gpu.integrated.generation; }
+    else if gpu.dedicated.vendor != null then { v = gpu.dedicated.vendor; g = gpu.dedicated.generation; }
     else null;
 in
 {
@@ -56,7 +51,7 @@ in
       (lib.mkIf (primary != null && (accelFor primary.v primary.g).libvaDriver != null) {
         LIBVA_DRIVER_NAME = (accelFor primary.v primary.g).libvaDriver;
       })
-      (lib.mkIf (gpu.vendor == "nvidia") {
+      (lib.mkIf (gpu.dedicated.vendor == "nvidia") {
         MOZ_DISABLE_RDD_SANDBOX = "1";  # Firefox VAAPI
       })
     ];

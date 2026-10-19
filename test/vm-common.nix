@@ -13,7 +13,7 @@ in
 
   # Limine bootloader is host hardware only — let qemu-vm handle boot.
   mx.bootloader.enable = false;
-  mx.hardware.gpu.vendor = null;
+  mx.hardware.gpu.dedicated.vendor = null;
 
 
   # Standard NixOS user declaration (no mx.main-user module in the tree).
