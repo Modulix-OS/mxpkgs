@@ -109,6 +109,7 @@
         mx-list-generations = import ./pkgs/mx-list-generations.nix { inherit pkgs; };
         mx-switch-generation = import ./pkgs/mx-switch-generation.nix { inherit pkgs; };
         mx-diff-update = import ./pkgs/mx-diff-update.nix { inherit pkgs; };
+        mx-redetect-hardware = import ./pkgs/mx-redetect-hardware.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         modulix-boot-splash = pkgs.callPackage ./pkgs/modulix-boot-splash.nix { };

@@ -50,6 +50,7 @@
     mx-clean-generations
     mx-list-generations
     mx-switch-generation
+    mx-redetect-hardware
   ];
 
   nix.settings = {

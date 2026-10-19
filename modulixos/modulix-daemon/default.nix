@@ -104,6 +104,7 @@ in
       path = [
         config.nix.package
         pkgs.git
+        pkgs.pciutils
         "/run/current-system/sw"
       ];
 
