@@ -1,4 +1,4 @@
 {
-  "description": "A local LAMP web stack: Apache HTTP server, MySQL/MariaDB, PHP and phpMyAdmin, ready for web development.",
-  "keyword": ["web", "apache", "mysql", "php", "phpmyadmin", "lamp"]
+  "description": "Local LAMP stack for web development: Apache with PHP serving /var/www/html on localhost (.htaccess overrides allowed), MariaDB as the database, and phpMyAdmin exposed at http://localhost/phpmyadmin to manage it.",
+  "keyword": ["web", "apache", "mysql", "mariadb", "php", "phpmyadmin", "lamp"]
 }

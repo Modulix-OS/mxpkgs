@@ -1,4 +1,4 @@
 {
-  "description": "Exécutez de grands modèles de langage en local et discutez avec eux via l'interface Open WebUI.",
-  "keyword": ["ia", "llm", "ollama", "open-webui", "discussion"]
+  "description": "Exécution locale de modèles de langage sur un serveur llama.cpp qui expose une API compatible OpenAI sur 127.0.0.1:8081, avec le backend choisi selon votre GPU (CUDA, ROCm ou Vulkan) et un débordement de couches VRAM/RAM optionnel. Les modèles sont déclarés sous forme de préréglages GGUF téléchargés depuis HuggingFace ; Open WebUI (port 8080) et le client de bureau Newelle servent d'interfaces.",
+  "keyword": ["ia", "llm", "llama.cpp", "gguf", "ollama", "open-webui", "discussion"]
 }

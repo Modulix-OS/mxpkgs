@@ -1,4 +1,4 @@
 {
-  "description": "Écrans virtuels générés à partir d'un firmware EDID, avec les commandes pour basculer une session dessus et restaurer la disposition précédente.",
+  "description": "Créer des écrans virtuels : des écrans que le système croit présents alors qu'aucun moniteur n'est branché. Pratique pour basculer une session sur un écran virtuel, l'utiliser depuis un autre appareil, puis rétablir la disposition précédente.",
   "keyword": ["écran", "virtuel", "edid", "affichage", "sans écran"]
 }

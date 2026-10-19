@@ -1,0 +1,4 @@
+{
+  "description": "Chaîne d'outils Arduino : l'IDE Arduino, arduino-cli pour compiler et flasher depuis un terminal, et arduino-language-server pour la complétion dans l'éditeur. Les règles udev des cartes sont installées et les utilisateurs normaux sont ajoutés aux groupes dialout et uucp pour accéder à une carte branchée sans root.",
+  "keyword": ["arduino", "microcontrôleur", "embarqué", "dev", "électronique", "arduino-cli"]
+}

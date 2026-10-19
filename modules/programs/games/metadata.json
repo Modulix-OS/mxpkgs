@@ -1,4 +1,4 @@
 {
-  "description": "Enable Modulix gaming support: installs the Steam, Lutris, Heroic and UMU launchers and applies shared gaming tuning (gamescope, gamemode, mangohud, kernel/polkit tweaks).",
+  "description": "Everything needed to play games on Modulix: the Steam, Lutris, Heroic and UMU launchers, plus the tuning that makes games run well.",
   "keyword": ["game", "gaming", "play", "launcher"]
 }

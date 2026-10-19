@@ -1,4 +1,4 @@
 {
-  "description": "Active Flatpak et enregistre la logithèque Flathub, pour installer sur cette machine les applications qui y sont publiées.",
+  "description": "Flatpak donne accès à la logithèque Flathub, où des milliers d'applications s'installent en un clic.",
   "keyword": ["flatpak", "flathub", "bac à sable", "application"]
 }

@@ -1,4 +1,4 @@
 {
-  "description": "Open or unlock the streaming session over SSH, so a remote client can wake the machine and reach its desktop without anyone in front of it.",
+  "description": "Wake this computer and sign in to it from somewhere else, with nobody in front of the screen.",
   "keyword": ["remote", "ssh", "login", "wake-on-lan", "streaming"]
 }

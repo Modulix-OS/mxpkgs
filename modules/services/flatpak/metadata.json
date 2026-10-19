@@ -1,4 +1,4 @@
 {
-  "description": "Enable Flatpak and register the Flathub store, so applications published there can be installed on this machine.",
+  "description": "Flatpak gives access to the Flathub store, where thousands of applications can be installed in one click.",
   "keyword": ["flatpak", "flathub", "sandbox", "app"]
 }

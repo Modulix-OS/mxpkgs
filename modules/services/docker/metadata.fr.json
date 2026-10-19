@@ -1,4 +1,4 @@
 {
-  "description": "Active l'environnement d'exécution de conteneurs Docker et son interface en ligne de commande, pour construire et exécuter des conteneurs et des piles Compose sur cette machine.",
-  "keyword": ["conteneur", "docker", "compose", "oci"]
+  "description": "Environnement d'exécution de conteneurs Docker, configuré en mode rootless : les conteneurs tournent sous votre utilisateur et non en root. Inclut la CLI docker et Compose ; tous les utilisateurs normaux sont ajoutés au groupe docker par défaut, et la liste est configurable.",
+  "keyword": ["conteneur", "docker", "compose", "oci", "rootless"]
 }

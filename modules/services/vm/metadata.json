@@ -1,4 +1,4 @@
 {
-  "description": "Virtual-machine support based on libvirt and QEMU/KVM, with the tooling to create and manage guests.",
-  "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm"]
+  "description": "Virtual machines on libvirt with QEMU/KVM: hardware-accelerated guests, emulated TPM (swtpm), SPICE display with USB redirection and the QEMU guest agent. Normal users get kvm and libvirtd access, and an option enables binfmt emulation of aarch64, riscv64 and armv7l guests.",
+  "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm", "spice"]
 }

@@ -1,4 +1,4 @@
 {
-  "description": "Virtual displays backed by generated EDID firmware, with commands to switch a session onto them and restore the previous layout.",
+  "description": "Create virtual screens: screens the system believes are there even though no monitor is plugged in. Useful to move a session onto a virtual screen, use it from another device, then put the previous layout back.",
   "keyword": ["display", "virtual", "edid", "screen", "headless"]
 }

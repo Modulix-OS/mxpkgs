@@ -1,4 +1,4 @@
 {
-  "description": "Une pile web LAMP locale : serveur HTTP Apache, MySQL/MariaDB, PHP et phpMyAdmin, prête pour le développement web.",
-  "keyword": ["web", "apache", "mysql", "php", "phpmyadmin", "lamp"]
+  "description": "Pile LAMP locale pour le développement web : Apache avec PHP qui sert /var/www/html sur localhost (surcharges .htaccess autorisées), MariaDB comme base de données, et phpMyAdmin accessible sur http://localhost/phpmyadmin pour l'administrer.",
+  "keyword": ["web", "apache", "mysql", "mariadb", "php", "phpmyadmin", "lamp"]
 }

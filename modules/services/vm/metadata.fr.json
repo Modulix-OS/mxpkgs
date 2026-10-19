@@ -1,4 +1,4 @@
 {
-  "description": "Prise en charge des machines virtuelles basée sur libvirt et QEMU/KVM, avec les outils pour créer et gérer des invités.",
-  "keyword": ["vm", "virtuel", "qemu", "libvirt", "kvm"]
+  "description": "Machines virtuelles via libvirt avec QEMU/KVM : invités accélérés par le matériel, TPM émulé (swtpm), affichage SPICE avec redirection USB et agent invité QEMU. Les utilisateurs normaux obtiennent l'accès aux groupes kvm et libvirtd, et une option active l'émulation binfmt des invités aarch64, riscv64 et armv7l.",
+  "keyword": ["vm", "virtuel", "qemu", "libvirt", "kvm", "spice"]
 }

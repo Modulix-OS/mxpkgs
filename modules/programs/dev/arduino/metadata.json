@@ -1,0 +1,4 @@
+{
+  "description": "Arduino toolchain: the Arduino IDE, arduino-cli for building and flashing from a terminal, and arduino-language-server for editor completion. Board udev rules are installed and normal users are added to the dialout and uucp groups so a plugged-in board is reachable without root.",
+  "keyword": ["arduino", "microcontroller", "embedded", "dev", "electronics", "arduino-cli"]
+}

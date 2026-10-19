@@ -1,4 +1,4 @@
 {
-  "description": "Enable the Docker container runtime and its CLI, so containers and Compose stacks can be built and run on this machine.",
-  "keyword": ["container", "docker", "compose", "oci"]
+  "description": "Docker container runtime, set up rootless so containers run under your own user rather than as root. Includes the docker CLI and Compose; every normal user is added to the docker group by default, and the user list is configurable.",
+  "keyword": ["container", "docker", "compose", "oci", "rootless"]
 }

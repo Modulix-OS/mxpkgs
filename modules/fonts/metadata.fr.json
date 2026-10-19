@@ -1,4 +1,4 @@
 {
-  "description": "Familles de polices d'affichage et à chasse fixe supplémentaires pour le travail créatif. Activé automatiquement par les modules créatifs (Blender, Bambu Studio, OBS Studio forcent tous mx.fonts.enable). Installe des Nerd Fonts (0xProto, Droid Sans Mono), Fira Code, Dina, Merriweather, Roboto, Lato, League Spartan, Montserrat, Source Sans Pro, Raleway, Oswald et Poppins.",
+  "description": "Familles de polices supplémentaires pour le travail créatif : polices d'affichage pour les affiches et les titres, polices à chasse fixe pour le code. Installées automatiquement avec les applications créatives.",
   "keyword": ["police", "typographie", "nerd-fonts", "chasse fixe", "fira-code", "roboto"]
 }
