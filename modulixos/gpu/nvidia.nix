@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, inputs, ... }:
 
 let
   cfg = config.mx.hardware.gpu.nvidia;
@@ -13,14 +13,16 @@ let
 
   legacyDriver = legacy-390 || legacy-470 || legacy-580;
 
-  nvidia595Driver = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-    version = "595.58.03";
-    sha256_64bit = "sha256-jA1Plnt5MsSrVxQnKu6BAzkrCnAskq+lVRdtNiBYKfk=";
-    sha256_aarch64 = "sha256-hzzIKY1Te8QkCBWR+H5k1FB/HK1UgGhai6cl3wEaPT8=";
-    openSha256 = "sha256-6LvJyT0cMXGS290Dh8hd9rc+nYZqBzDIlItOFk8S4n8=";
-    settingsSha256 = "sha256-2vLF5Evl2D6tRQJo0uUyY3tpWqjvJQ0/Rpxan3NOD3c=";
-    persistencedSha256 = "sha256-AtjM/ml/ngZil8DMYNH+P111ohuk9mWw5t4z7CHjPWw=";
-  };
+  gamesEnabled = config.mx.programs.games.enable;
+
+  nvidiaUnstablePackages = config.boot.kernelPackages.callPackage
+    "${inputs.nixpkgs-unstable}/pkgs/os-specific/linux/nvidia-x11" { };
+
+  nvidiaLatestDriver =
+    if gamesEnabled then
+      nvidiaUnstablePackages.latest
+    else
+      config.boot.kernelPackages.nvidiaPackages.production;
 
 in
 {
@@ -97,7 +99,7 @@ in
             else if legacy-580 then
               config.boot.kernelPackages.nvidiaPackages.legacy_580
             else
-              nvidia595Driver
+              nvidiaLatestDriver
             );
           open = lib.mkMxDefault (!legacyDriver);
           prime = {
@@ -115,7 +117,7 @@ in
         systemd.services.nvidia-hibernate.enable = lib.mkMxDefault true;
 
         environment.variables = {
-          __GL_SHADER_DISK_CACHE_SIZE = (if config.mx.programs.games.enable then "12000000000" else "2000000000");
+          __GL_SHADER_DISK_CACHE_SIZE = (if gamesEnabled then "12000000000" else "2000000000");
         };
 
 
