@@ -2,6 +2,7 @@
   "programs.games": {
     "path": "programs/games",
     "name": "Gaming",
+    "icon_name": "applications-games",
     "summary": "Everything needed to play games: Steam, Lutris, Heroic and UMU",
     "keyword": ["game", "gaming", "play"],
     "modules": [
@@ -38,6 +39,7 @@
   "programs.games.umu": {
     "path": "programs/games/umu",
     "name": "UMU Launcher",
+    "icon_name": "wine",
     "summary": "UMU Launcher — run Windows games",
     "keyword": ["proton", "wine", "launcher", "umu"],
     "nix_info": "umu-launcher"
@@ -62,6 +64,7 @@
     "path": "programs/creativity/davinci-resolve",
     "nix_info": "davinci-resolve",
     "name": "DaVinci Resolve",
+    "icon_name": "davinci-resolve",
     "summary": "DaVinci Resolve — edit, colour-grade and finish videos",
     "keyword": ["davinci", "resolve", "video", "editing", "colour grading"]
   },
@@ -69,6 +72,7 @@
     "path": "programs/creativity/davinci-resolve-studio",
     "nix_info": "davinci-resolve-studio",
     "name": "DaVinci Resolve Studio",
+    "icon_name": "davinci-resolve",
     "summary": "DaVinci Resolve Studio — edit, colour-grade and finish videos, paid edition",
     "keyword": ["davinci", "resolve", "studio", "video", "editing", "colour grading"]
   },
@@ -100,60 +104,70 @@
   "services.docker": {
     "path": "services/docker",
     "name": "Docker",
+    "icon_name": "docker-desktop",
     "summary": "Docker — run applications in rootless containers",
     "keyword": ["container", "docker", "compose"]
   },
   "services.flatpak": {
     "path": "services/flatpak",
     "name": "Flatpak",
+    "icon_name": "software-store",
     "summary": "Flatpak — install apps from the Flathub store",
     "keyword": ["flatpak", "flathub", "sandbox", "app"]
   },
   "services.lamp": {
     "path": "services/lamp",
     "name": "LAMP stack",
+    "icon_name": "applications-development-web",
     "summary": "LAMP stack — Apache, PHP, MariaDB and phpMyAdmin for local web development",
     "keyword": ["web", "apache", "mysql", "mariadb", "php", "phpmyadmin"]
   },
   "services.llm": {
     "path": "services/llm",
     "name": "Local AI",
+    "icon_name": "applications-science",
     "summary": "Local AI — llama.cpp server with an OpenAI-compatible API and Open WebUI",
     "keyword": ["ai", "llm", "llama.cpp", "ollama", "open-webui", "chat"]
   },
   "services.printer": {
     "path": "services/printing",
     "name": "Printing",
+    "icon_name": "printer",
     "summary": "Printing — print your documents",
     "keyword": ["print", "printer", "cups"]
   },
   "services.remote-desktop": {
     "path": "services/remote-desktop",
     "name": "Remote Desktop",
+    "icon_name": "preferences-desktop-remote-desktop",
     "summary": "Remote Desktop — use this computer's desktop from somewhere else",
     "keyword": ["remote", "desktop", "rdp", "vnc"]
   },
   "services.remote-login": {
     "path": "services/remote-login",
     "name": "Remote login",
+    "icon_name": "network-server",
     "summary": "Remote login — sign in to this computer from somewhere else",
     "keyword": ["remote", "ssh", "login", "wake-on-lan"]
   },
   "services.vm": {
     "path": "services/vm",
     "name": "Virtual Machines",
+    "icon_name": "virt-manager",
     "summary": "Virtual Machines — libvirt and QEMU/KVM guests with SPICE display",
     "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm"]
   },
   "services.virtual-display": {
     "path": "services/virtual-display",
     "name": "Virtual Displays",
+    "icon_name": "video-display",
     "summary": "Virtual Displays — screens the system sees even with no monitor plugged in",
     "keyword": ["display", "virtual", "edid", "screen", "headless"]
   },
   "fonts": {
     "path": "fonts",
     "name": "Extra Fonts",
+    "icon_name": "preferences-desktop-font",
     "summary": "Extra Fonts — more font families for creative work",
     "keyword": ["font", "typography", "nerd-fonts", "monospace"]
   }
