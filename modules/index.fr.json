@@ -1,37 +1,37 @@
 {
   "programs.games": {
     "name": "Jeux",
-    "summary": "Steam, Lutris, Heroic et UMU avec des réglages de jeu partagés",
+    "summary": "Tout pour jouer : Steam, Lutris, Heroic et UMU",
     "keyword": ["jeu", "jeux", "jouer"]
   },
   "programs.games.umu": {
     "name": "Lanceur UMU",
-    "summary": "Lanceur unifié pour exécuter des jeux Windows via Proton",
+    "summary": "Lanceur UMU — exécuter des jeux Windows",
     "keyword": ["proton", "wine", "lanceur", "umu"]
   },
   "programs.games.steam": {
     "name": "Steam",
-    "summary": "Boutique et lanceur de jeux Valve, réglé pour Proton, gamescope et les mises à niveau FSR/DLSS",
+    "summary": "Steam — acheter, installer et jouer à vos jeux",
     "keyword": ["steam", "valve", "jeu", "proton", "gamescope"]
   },
   "programs.games.lutris": {
     "name": "Lutris",
-    "summary": "Gestionnaire de jeux libre pour installer et lancer des jeux depuis de nombreuses sources",
+    "summary": "Lutris — installer et lancer des jeux de toutes les boutiques",
     "keyword": ["lutris", "jeu", "lanceur", "wine"]
   },
   "programs.games.heroic": {
     "name": "Heroic Games Launcher",
-    "summary": "Lanceur pour les jeux Epic Games Store et GOG",
+    "summary": "Heroic Games Launcher — jouer à vos jeux Epic Games Store et GOG",
     "keyword": ["heroic", "epic", "gog", "jeu", "lanceur"]
   },
   "programs.creativity.blender": {
     "name": "Blender",
-    "summary": "Suite de création 3D, réglée pour le calcul GPU (CUDA/ROCm) et intégrant les polices créatives",
+    "summary": "Blender — modéliser, animer et faire des rendus en 3D",
     "keyword": ["blender", "3d", "modélisation", "rendu", "animation"]
   },
   "programs.creativity.bambu-studio": {
     "name": "Bambu Studio",
-    "summary": "Logiciel de découpe pour imprimantes 3D Bambu Lab",
+    "summary": "Bambu Studio — préparer des modèles pour l'impression 3D",
     "keyword": ["bambu", "impression 3d", "découpe", "impression"]
   },
   "programs.creativity.davinci-resolve": {
@@ -46,67 +46,67 @@
   },
   "programs.dev.arduino": {
     "name": "Arduino",
-    "summary": "IDE, CLI et serveur de langage Arduino, avec accès aux cartes via les groupes dialout/uucp",
+    "summary": "Arduino — IDE, CLI et serveur de langage pour cartes Arduino",
     "keyword": ["arduino", "microcontrôleur", "embarqué", "dev"]
   },
   "programs.studio.obs-studio": {
     "name": "OBS Studio",
-    "summary": "Studio de diffusion et d'enregistrement avec caméra virtuelle et plugins de capture GPU/VA-API",
+    "summary": "OBS Studio — enregistrer son écran et diffuser en direct",
     "keyword": ["obs", "diffusion", "enregistrement", "capture", "caméra"]
   },
   "programs.team-viewer": {
     "name": "TeamViewer",
-    "summary": "Assistance et accès à distance à cette machine",
+    "summary": "TeamViewer — utiliser cet ordinateur à distance",
     "keyword": ["teamviewer", "distant", "assistance", "accès"]
   },
   "services.docker": {
     "name": "Docker",
-    "summary": "Environnement d'exécution de conteneurs Docker",
+    "summary": "Docker — exécuter des applications dans des conteneurs rootless",
     "keyword": ["conteneur", "docker", "compose"]
   },
   "services.flatpak": {
     "name": "Flatpak",
-    "summary": "Applications de la logithèque Flathub",
+    "summary": "Flatpak — installer des applications depuis la logithèque Flathub",
     "keyword": ["flatpak", "flathub", "bac à sable", "application"]
   },
   "services.lamp": {
     "name": "Pile LAMP",
-    "summary": "Pile web Apache, MySQL, PHP et phpMyAdmin",
-    "keyword": ["web", "apache", "mysql", "php", "phpmyadmin"]
+    "summary": "Pile LAMP — Apache, PHP, MariaDB et phpMyAdmin pour le développement web local",
+    "keyword": ["web", "apache", "mysql", "mariadb", "php", "phpmyadmin"]
   },
   "services.llm": {
     "name": "IA locale",
-    "summary": "Exécution locale de grands modèles de langage avec Open WebUI",
-    "keyword": ["ia", "llm", "ollama", "open-webui", "discussion"]
+    "summary": "IA locale — serveur llama.cpp avec API compatible OpenAI et Open WebUI",
+    "keyword": ["ia", "llm", "llama.cpp", "ollama", "open-webui", "discussion"]
   },
   "services.printer": {
     "name": "Impression",
-    "summary": "Prise en charge de l'impression via CUPS",
+    "summary": "Impression — imprimer vos documents",
     "keyword": ["imprimer", "imprimante", "cups"]
   },
   "services.remote-desktop": {
     "name": "Bureau à distance",
-    "summary": "Accès au bureau à distance de cette machine",
+    "summary": "Bureau à distance — utiliser le bureau de cet ordinateur à distance",
     "keyword": ["distant", "bureau", "rdp", "vnc"]
   },
   "services.remote-login": {
     "name": "Connexion à distance",
-    "summary": "Connexion pilotée par SSH et Wake-on-LAN pour la session de streaming",
+    "summary": "Connexion à distance — se connecter à cet ordinateur à distance",
     "keyword": ["distant", "ssh", "connexion", "wake-on-lan"]
   },
   "services.vm": {
     "name": "Machines virtuelles",
-    "summary": "Prise en charge de la virtualisation libvirt/QEMU",
+    "summary": "Machines virtuelles — invités libvirt et QEMU/KVM avec affichage SPICE",
     "keyword": ["vm", "virtuel", "qemu", "libvirt", "kvm"]
   },
   "services.virtual-display": {
     "name": "Écrans virtuels",
-    "summary": "Écrans virtuels générés à partir d'un firmware EDID",
+    "summary": "Écrans virtuels — des écrans vus par le système sans aucun moniteur branché",
     "keyword": ["écran", "virtuel", "edid", "affichage", "sans écran"]
   },
   "fonts": {
     "name": "Polices supplémentaires",
-    "summary": "Familles de polices d'affichage et à chasse fixe pour le travail créatif",
+    "summary": "Polices supplémentaires — plus de familles de polices pour le travail créatif",
     "keyword": ["police", "typographie", "nerd-fonts", "chasse fixe"]
   }
 }

@@ -2,7 +2,7 @@
   "programs.games": {
     "path": "programs/games",
     "name": "Gaming",
-    "summary": "Steam, Lutris, Heroic and UMU with shared gaming tuning",
+    "summary": "Everything needed to play games: Steam, Lutris, Heroic and UMU",
     "keyword": ["game", "gaming", "play"],
     "modules": [
       "programs.games.steam",
@@ -16,7 +16,7 @@
     "flathub_id": "com.valvesoftware.Steam",
     "nix_info": "steam",
     "name": "Steam",
-    "summary": "Valve game store and launcher, tuned for Proton, gamescope and FSR/DLSS upgrades",
+    "summary": "Steam — buy, install and play your games",
     "keyword": ["steam", "valve", "game", "proton", "gamescope"]
   },
   "programs.games.lutris": {
@@ -24,7 +24,7 @@
     "flathub_id": "net.lutris.Lutris",
     "nix_info": "lutris",
     "name": "Lutris",
-    "summary": "Open game manager for installing and launching games from many sources",
+    "summary": "Lutris — install and launch games from every store",
     "keyword": ["lutris", "game", "launcher", "wine"]
   },
   "programs.games.heroic": {
@@ -32,13 +32,13 @@
     "flathub_id": "com.heroicgameslauncher.hgl",
     "nix_info": "heroic",
     "name": "Heroic Games Launcher",
-    "summary": "Launcher for Epic Games Store and GOG titles",
+    "summary": "Heroic Games Launcher — play your Epic Games Store and GOG games",
     "keyword": ["heroic", "epic", "gog", "game", "launcher"]
   },
   "programs.games.umu": {
     "path": "programs/games/umu",
     "name": "UMU Launcher",
-    "summary": "Unified launcher for running Windows games through Proton",
+    "summary": "UMU Launcher — run Windows games",
     "keyword": ["proton", "wine", "launcher", "umu"],
     "nix_info": "umu-launcher"
   },
@@ -47,7 +47,7 @@
     "flathub_id": "org.blender.Blender",
     "nix_info": "blender",
     "name": "Blender",
-    "summary": "3D creation suite, auto-tuned for GPU compute (CUDA/ROCm) and pulling in creative fonts",
+    "summary": "Blender — model, animate and render in 3D",
     "keyword": ["blender", "3d", "modeling", "render", "animation"]
   },
   "programs.creativity.bambu-studio": {
@@ -55,7 +55,7 @@
     "flathub_id": "com.bambulab.BambuStudio",
     "nix_info": "bambu-studio",
     "name": "Bambu Studio",
-    "summary": "Slicer for Bambu Lab 3D printers",
+    "summary": "Bambu Studio — prepare models for 3D printing",
     "keyword": ["bambu", "3d printing", "slicer", "print"]
   },
   "programs.creativity.davinci-resolve": {
@@ -77,7 +77,7 @@
     "flathub_id": "cc.arduino.IDE2",
     "nix_info": "arduino-ide",
     "name": "Arduino",
-    "summary": "Arduino IDE, CLI and language server, with board access via dialout/uucp groups",
+    "summary": "Arduino — IDE, CLI and language server for Arduino boards",
     "keyword": ["arduino", "microcontroller", "embedded", "dev"]
   },
   "programs.studio.obs-studio": {
@@ -86,7 +86,7 @@
     "nix_info": "obs-studio",
     "plugins": "obs-studio-plugins",
     "name": "OBS Studio",
-    "summary": "Streaming and recording studio with virtual camera and GPU capture/VA-API plugins",
+    "summary": "OBS Studio — record your screen and stream live",
     "keyword": ["obs", "stream", "record", "capture", "camera"]
   },
   "programs.team-viewer": {
@@ -94,67 +94,67 @@
     "flathub_id": "com.teamviewer.TeamViewer",
     "nix_info": "teamviewer",
     "name": "TeamViewer",
-    "summary": "Remote support and remote access to this machine",
+    "summary": "TeamViewer — use this computer from somewhere else",
     "keyword": ["teamviewer", "remote", "support", "access"]
   },
   "services.docker": {
     "path": "services/docker",
     "name": "Docker",
-    "summary": "Docker container runtime",
+    "summary": "Docker — run applications in rootless containers",
     "keyword": ["container", "docker", "compose"]
   },
   "services.flatpak": {
     "path": "services/flatpak",
     "name": "Flatpak",
-    "summary": "Applications from the Flathub store",
+    "summary": "Flatpak — install apps from the Flathub store",
     "keyword": ["flatpak", "flathub", "sandbox", "app"]
   },
   "services.lamp": {
     "path": "services/lamp",
     "name": "LAMP stack",
-    "summary": "Apache, MySQL, PHP and phpMyAdmin web stack",
-    "keyword": ["web", "apache", "mysql", "php", "phpmyadmin"]
+    "summary": "LAMP stack — Apache, PHP, MariaDB and phpMyAdmin for local web development",
+    "keyword": ["web", "apache", "mysql", "mariadb", "php", "phpmyadmin"]
   },
   "services.llm": {
     "path": "services/llm",
     "name": "Local AI",
-    "summary": "Local large-language-model runtime with Open WebUI",
-    "keyword": ["ai", "llm", "ollama", "open-webui", "chat"]
+    "summary": "Local AI — llama.cpp server with an OpenAI-compatible API and Open WebUI",
+    "keyword": ["ai", "llm", "llama.cpp", "ollama", "open-webui", "chat"]
   },
   "services.printer": {
     "path": "services/printing",
     "name": "Printing",
-    "summary": "CUPS printing support",
+    "summary": "Printing — print your documents",
     "keyword": ["print", "printer", "cups"]
   },
   "services.remote-desktop": {
     "path": "services/remote-desktop",
     "name": "Remote Desktop",
-    "summary": "Remote desktop access to this machine",
+    "summary": "Remote Desktop — use this computer's desktop from somewhere else",
     "keyword": ["remote", "desktop", "rdp", "vnc"]
   },
   "services.remote-login": {
     "path": "services/remote-login",
     "name": "Remote login",
-    "summary": "SSH driven login and Wake-on-LAN for the streaming session",
+    "summary": "Remote login — sign in to this computer from somewhere else",
     "keyword": ["remote", "ssh", "login", "wake-on-lan"]
   },
   "services.vm": {
     "path": "services/vm",
     "name": "Virtual Machines",
-    "summary": "libvirt/QEMU virtualization support",
+    "summary": "Virtual Machines — libvirt and QEMU/KVM guests with SPICE display",
     "keyword": ["vm", "virtual", "qemu", "libvirt", "kvm"]
   },
   "services.virtual-display": {
     "path": "services/virtual-display",
     "name": "Virtual Displays",
-    "summary": "Virtual screens backed by generated EDID firmware",
+    "summary": "Virtual Displays — screens the system sees even with no monitor plugged in",
     "keyword": ["display", "virtual", "edid", "screen", "headless"]
   },
   "fonts": {
     "path": "fonts",
     "name": "Extra Fonts",
-    "summary": "Extra display and monospace font families for creative work",
+    "summary": "Extra Fonts — more font families for creative work",
     "keyword": ["font", "typography", "nerd-fonts", "monospace"]
   }
 }
