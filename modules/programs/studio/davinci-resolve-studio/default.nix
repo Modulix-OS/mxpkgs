@@ -1,10 +1,10 @@
 { pkgs, config, lib, ... }:
 
 let
-  cfg = config.mx.programs.creativity.davinci-resolve-studio;
+  cfg = config.mx.programs.studio.davinci-resolve-studio;
 in
 {
-  options.mx.programs.creativity.davinci-resolve-studio = {
+  options.mx.programs.studio.davinci-resolve-studio = {
     enable = lib.mkEnableOption "Enable DaVinci Resolve Studio";
   };
 

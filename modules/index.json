@@ -60,22 +60,6 @@
     "summary": "Bambu Studio — prepare models for 3D printing",
     "keyword": ["bambu", "3d printing", "slicer", "print"]
   },
-  "programs.creativity.davinci-resolve": {
-    "path": "programs/creativity/davinci-resolve",
-    "nix_info": "davinci-resolve",
-    "name": "DaVinci Resolve",
-    "icon_name": "davinci-resolve",
-    "summary": "DaVinci Resolve — edit, colour-grade and finish videos",
-    "keyword": ["davinci", "resolve", "video", "editing", "colour grading"]
-  },
-  "programs.creativity.davinci-resolve-studio": {
-    "path": "programs/creativity/davinci-resolve-studio",
-    "nix_info": "davinci-resolve-studio",
-    "name": "DaVinci Resolve Studio",
-    "icon_name": "davinci-resolve",
-    "summary": "DaVinci Resolve Studio — edit, colour-grade and finish videos, paid edition",
-    "keyword": ["davinci", "resolve", "studio", "video", "editing", "colour grading"]
-  },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",
     "flathub_id": "cc.arduino.IDE2",
@@ -83,6 +67,22 @@
     "name": "Arduino",
     "summary": "Arduino — IDE, CLI and language server for Arduino boards",
     "keyword": ["arduino", "microcontroller", "embedded", "dev"]
+  },
+  "programs.studio.davinci-resolve": {
+    "path": "programs/studio/davinci-resolve",
+    "nix_info": "davinci-resolve",
+    "name": "DaVinci Resolve",
+    "icon_name": "davinci-resolve",
+    "summary": "DaVinci Resolve — edit, colour-grade and finish videos",
+    "keyword": ["davinci", "resolve", "video", "editing", "colour grading"]
+  },
+  "programs.studio.davinci-resolve-studio": {
+    "path": "programs/studio/davinci-resolve-studio",
+    "nix_info": "davinci-resolve-studio",
+    "name": "DaVinci Resolve Studio",
+    "icon_name": "davinci-resolve",
+    "summary": "DaVinci Resolve Studio — edit, colour-grade and finish videos, paid edition",
+    "keyword": ["davinci", "resolve", "studio", "video", "editing", "colour grading"]
   },
   "programs.studio.obs-studio": {
     "path": "programs/studio/obs-studio",

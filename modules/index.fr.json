@@ -34,20 +34,20 @@
     "summary": "Bambu Studio — préparer des modèles pour l'impression 3D",
     "keyword": ["bambu", "impression 3d", "découpe", "impression"]
   },
-  "programs.creativity.davinci-resolve": {
-    "name": "DaVinci Resolve",
-    "summary": "DaVinci Resolve — monter, étalonner et finaliser des vidéos",
-    "keyword": ["davinci", "resolve", "vidéo", "montage", "étalonnage"]
-  },
-  "programs.creativity.davinci-resolve-studio": {
-    "name": "DaVinci Resolve Studio",
-    "summary": "DaVinci Resolve Studio — monter, étalonner et finaliser des vidéos, édition payante",
-    "keyword": ["davinci", "resolve", "studio", "vidéo", "montage", "étalonnage"]
-  },
   "programs.dev.arduino": {
     "name": "Arduino",
     "summary": "Arduino — IDE, CLI et serveur de langage pour cartes Arduino",
     "keyword": ["arduino", "microcontrôleur", "embarqué", "dev"]
+  },
+  "programs.studio.davinci-resolve": {
+    "name": "DaVinci Resolve",
+    "summary": "DaVinci Resolve — monter, étalonner et finaliser des vidéos",
+    "keyword": ["davinci", "resolve", "vidéo", "montage", "étalonnage"]
+  },
+  "programs.studio.davinci-resolve-studio": {
+    "name": "DaVinci Resolve Studio",
+    "summary": "DaVinci Resolve Studio — monter, étalonner et finaliser des vidéos, édition payante",
+    "keyword": ["davinci", "resolve", "studio", "vidéo", "montage", "étalonnage"]
   },
   "programs.studio.obs-studio": {
     "name": "OBS Studio",
