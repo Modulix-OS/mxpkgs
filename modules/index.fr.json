@@ -34,6 +34,16 @@
     "summary": "Logiciel de découpe pour imprimantes 3D Bambu Lab",
     "keyword": ["bambu", "impression 3d", "découpe", "impression"]
   },
+  "programs.creativity.davinci-resolve": {
+    "name": "DaVinci Resolve",
+    "summary": "DaVinci Resolve — monter, étalonner et finaliser des vidéos",
+    "keyword": ["davinci", "resolve", "vidéo", "montage", "étalonnage"]
+  },
+  "programs.creativity.davinci-resolve-studio": {
+    "name": "DaVinci Resolve Studio",
+    "summary": "DaVinci Resolve Studio — monter, étalonner et finaliser des vidéos, édition payante",
+    "keyword": ["davinci", "resolve", "studio", "vidéo", "montage", "étalonnage"]
+  },
   "programs.dev.arduino": {
     "name": "Arduino",
     "summary": "IDE, CLI et serveur de langage Arduino, avec accès aux cartes via les groupes dialout/uucp",

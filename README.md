@@ -50,7 +50,7 @@ A modular NixOS configuration framework managed with Flakes, designed to be impo
 │   ├── fonts/
 │   │   └── cooper-black.nix
 │   ├── programs/
-│   │   ├── creativity/              → Bambu Studio, Blender
+│   │   ├── creativity/              → Bambu Studio, Blender, DaVinci Resolve
 │   │   ├── dev/                     → Arduino, dev tools
 │   │   ├── games/                   → Steam, Heroic, Lutris, UMU
 │   │   └── studio/                  → OBS Studio
