@@ -35,6 +35,17 @@ in
   options.mx.hardware.gpu.compute = {
     enable = lib.mkEnableOption "GPU compute (OpenCL / CUDA / oneAPI runtimes)";
 
+    rusticl.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Mesa rusticl OpenCL ICD alongside the ROCm one. Off by default: both
+        ICDs enumerate the same physical GPUs, so OpenCL consumers such as
+        DaVinci Resolve list every board twice. Turn it on for AMD GPUs the
+        ROCm runtime does not enumerate.
+      '';
+    };
+
     rocmStack.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -62,6 +73,9 @@ in
 
       (lib.mkIf (hasStack "rocm") {
         hardware.amdgpu.opencl.enable = true;
+      })
+
+      (lib.mkIf (hasStack "rocm" && cfg.rusticl.enable) {
         hardware.graphics.extraPackages = with pkgs; [
           mesa.opencl
         ];

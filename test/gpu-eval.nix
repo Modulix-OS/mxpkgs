@@ -48,6 +48,7 @@ let
     igpuOnly     = cfgOf (gpu { dedicated.vendor = ov null; integrated = { vendor = "amd"; generation = "rdna2"; }; compute.enable = true; });
     igpuLauncher = cfgOf (gpu { dedicated.vendor = ov null; integrated = { vendor = "intel"; pciId = "8086:46a6"; pciAddr = "00:02.0"; drmIndex = 1; }; });
     amdComputeRocm = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; rocmStack.enable = true; }; });
+    amdComputeRusticl = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; rusticl.enable = true; }; });
     intelSkylake     = cfgOf (gpu { dedicated = { vendor = ov "intel"; generation = "skylake"; }; compute.enable = true; });
     intelTigerCompute = cfgOf (gpu { dedicated = { vendor = ov "intel"; generation = "tigerlake"; }; compute.enable = true; });
     nvidiaOffload    = cfgOf (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
@@ -133,7 +134,7 @@ let
 
     # compute side effects
     (expect "amdCompute.opencl"  c.amdCompute.hardware.amdgpu.opencl.enable true)
-    (expect "amdCompute.mesa"    (has c.amdCompute "mesa") true)
+    (expect "amdCompute.mesa"    (has c.amdCompute "mesa") false)
     (expect "intelCompute.rt"    (has c.intelCompute "intel-compute-runtime") true)
     (expect "nvidiaCompute.none" (has c.nvidiaCompute "intel-compute-runtime") false)
     (expect "igpuOnly.opencl"    c.igpuOnly.hardware.amdgpu.opencl.enable true)
@@ -141,7 +142,7 @@ let
     # hybrid: the iGPU stack is installed even though the dGPU drives CUDA
     (expect "hybridCompute.rt"     (has c.hybridCompute "intel-compute-runtime") true)
     (expect "hybridAmdCompute.ocl" c.hybridAmdCompute.hardware.amdgpu.opencl.enable true)
-    (expect "hybridAmdCompute.mesa" (has c.hybridAmdCompute "mesa") true)
+    (expect "hybridAmdCompute.mesa" (has c.hybridAmdCompute "mesa") false)
     (expect "nvidiaCompute.noOcl"  c.nvidiaCompute.hardware.amdgpu.opencl.enable false)
 
     # X video drivers: every GPU present gets its driver, dedicated first
@@ -164,8 +165,9 @@ let
     (expect "igpuLauncher.name"   c.igpuLauncher.mx.hardware.gpu.integrated.launcher.name "igpu-launch")
 
     # OpenCL baseline is decoupled from the ROCm/HIP stack: this is the DaVinci
-    # Resolve case, and the minimal configuration documented on the NixOS wiki.
-    (expect "amdCompute.rusticl"     (evar c.amdCompute "RUSTICL_ENABLE") "radeonsi")
+    # Resolve case. A single ICD (amdocl64) ships by default, so OpenCL
+    # consumers enumerate each physical GPU once.
+    (expect "amdCompute.rusticl"     (evar c.amdCompute "RUSTICL_ENABLE") null)
     (expect "amdCompute.noRocmFlag"  (rocmSupport c.amdCompute) false)
     (expect "amdCompute.noRocmTree"  (hasRocmTree c.amdCompute) false)
     (expect "amdCompute.noPreVega"   (evar c.amdCompute "ROC_ENABLE_PRE_VEGA") null)
@@ -174,7 +176,13 @@ let
     (expect "amdComputeRocm.flag"    (rocmSupport c.amdComputeRocm) true)
     (expect "amdComputeRocm.tree"    (hasRocmTree c.amdComputeRocm) true)
     (expect "amdComputeRocm.preVega" (evar c.amdComputeRocm "ROC_ENABLE_PRE_VEGA") "1")
-    (expect "amdComputeRocm.rusticl" (evar c.amdComputeRocm "RUSTICL_ENABLE") "radeonsi")
+    (expect "amdComputeRocm.rusticl" (evar c.amdComputeRocm "RUSTICL_ENABLE") null)
+
+    # rusticl opt-in: second ICD, for AMD GPUs the ROCm runtime does not enumerate
+    (expect "amdComputeRusticl.var"   (evar c.amdComputeRusticl "RUSTICL_ENABLE") "radeonsi")
+    (expect "amdComputeRusticl.mesa"  (has c.amdComputeRusticl "mesa") true)
+    (expect "amdComputeRusticl.ocl"   c.amdComputeRusticl.hardware.amdgpu.opencl.enable true)
+    (expect "nvidiaCompute.noRusticl" (evar c.nvidiaCompute "RUSTICL_ENABLE") null)
 
     # intel compute runtime: Gen 8/9/11 need the legacy one, Gen 12+ the current one
     (expect "intelSkylake.legacy"    (has c.intelSkylake "intel-compute-runtime-legacy1") true)
