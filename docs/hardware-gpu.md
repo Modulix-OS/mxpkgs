@@ -60,21 +60,40 @@ ls -l /sys/class/drm/card*/device   # card0, card1 … → drmIndex
 | --- | --- | --- | --- |
 | `mx.hardware.gpu.acceleration.enable` | `bool` | `!config.mx.mode.server.enable` | VAAPI / VDPAU stack. Enables `hardware.graphics`, installs vendor drivers, sets `LIBVA_DRIVER_NAME` from the primary GPU (iGPU first, else dedicated), and `MOZ_DISABLE_RDD_SANDBOX=1` when the dedicated GPU is NVIDIA. |
 
-## 3. Compute
+## 3. Hybrid laptops
 
 | Option | Type | Default | Purpose |
 | --- | --- | --- | --- |
-| `mx.hardware.gpu.compute.enable` | `bool` | `false` | ROCm / CUDA / oneAPI / OpenCL runtimes. Auto-enabled by `blender`, `obs-studio`, and the `llm` service. |
+| `mx.hardware.gpu.hybrid.enable` | `bool` | both slots have a `vendor` | Runs `switcheroo-control`, without which the `PrefersNonDefaultGPU` key of a `.desktop` entry is a no-op on GNOME and Plasma alike. |
+
+Applications that must not start on the iGPU ship a `.desktop` override built by
+`lib/prefers-dgpu-desktop.nix` and installed at `lib.hiPrio`, which is what both
+DaVinci Resolve modules do — see [`davinci-resolve.md`](davinci-resolve.md).
+`switcheroo-control` reads `boot_vga` from sysfs to tell the default GPU from the
+discrete one, so a desktop whose discrete card already drives the display is left
+alone. The routing only applies to launches from the desktop, not from a terminal.
+
+## 4. Compute
+
+| Option | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `mx.hardware.gpu.compute.enable` | `bool` | `false` | ROCm / CUDA / oneAPI / OpenCL runtimes. Auto-enabled by `blender`, `obs-studio`, both `davinci-resolve` modules, and the `llm` service. |
+| `mx.hardware.gpu.compute.rusticl.enable` | `bool` | `false` | Second OpenCL ICD (Mesa rusticl) next to the ROCm one. Off by default: both enumerate the same boards, so OpenCL applications list every GPU twice. Turn it on for AMD GPUs the ROCm runtime does not enumerate. |
+| `mx.hardware.gpu.compute.rocmStack.enable` | `bool` | `false` | Full ROCm/HIP stack on top of the OpenCL baseline. Needed by HIP applications (Blender, llama.cpp) only. **Triggers large rebuilds.** |
+| `mx.hardware.gpu.compute.nvidiaOffloadEnv.enable` | `bool` | `false` | Sets `__NV_PRIME_RENDER_OFFLOAD` and `__GLX_VENDOR_LIBRARY_NAME` system-wide. Off by default: it routes every GL client to the discrete GPU. |
 
 Effects per detected stack:
 
-- `rocm` → `/opt/rocm` symlink tree, `hardware.amdgpu.opencl.enable`,
-  `mesa.opencl`, `ROC_ENABLE_PRE_VEGA=1`, `RUSTICL_ENABLE=radeonsi`,
-  `nixpkgs.config.rocmSupport = true` (**triggers large rebuilds**).
-- `oneapi` → `intel-compute-runtime`.
+- `rocm` → `hardware.amdgpu.opencl.enable`, that is the `amdocl64.icd` ICD alone.
+  `mesa.opencl` and `RUSTICL_ENABLE=radeonsi` come with `compute.rusticl.enable`,
+  and the `/opt/rocm` tree, `ROC_ENABLE_PRE_VEGA=1` and
+  `nixpkgs.config.rocmSupport` with `compute.rocmStack.enable` — OpenCL-only
+  consumers such as DaVinci Resolve leave both off.
+- `oneapi` → `intel-compute-runtime` (`intel-compute-runtime-legacy1` on Gen 8/9/11),
+  plus `hardware.graphics.enable32Bit`.
 - `cuda` → nothing system-wide; handled per application via `cudaSupport`.
 
-## 4. NVIDIA specifics
+## 5. NVIDIA specifics
 
 Only meaningful when `dedicated.vendor = "nvidia"`.
 
@@ -98,7 +117,7 @@ Only meaningful when `dedicated.vendor = "nvidia"`.
 Bus id format differs from `pciAddr`: `lspci` prints `01:00.0`, NixOS wants
 `PCI:1:0:0` (decimal, colon-separated, no leading zeros).
 
-## 5. Examples
+## 6. Examples
 
 ### Desktop, single AMD card
 
@@ -158,7 +177,7 @@ mx.hardware.gpu.acceleration.enable = false;
 
 Video drivers fall back to `[ "modesetting" ]` when both slots are `null`.
 
-## 6. Renamed options (backwards compatibility)
+## 7. Renamed options (backwards compatibility)
 
 | Old | New |
 | --- | --- |
@@ -167,7 +186,7 @@ Video drivers fall back to `[ "modesetting" ]` when both slots are `null`.
 | `mx.hardware.gpu.igpu.vendor` | `mx.hardware.gpu.integrated.vendor` |
 | `mx.hardware.gpu.igpu.generation` | `mx.hardware.gpu.integrated.generation` |
 
-## 7. Derived — do not set
+## 8. Derived — do not set
 
 | Option | Value |
 | --- | --- |
