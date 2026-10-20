@@ -3,7 +3,6 @@
 let
   cfg = config.mx.programs.studio.davinci-resolve;
   studioEnabled = config.mx.programs.studio.davinci-resolve-studio.enable;
-  waylandDesktop = builtins.elem config.mx.desktop [ "gnome" "plasma" ];
 in
 {
   options.mx.programs.studio.davinci-resolve = {
@@ -28,11 +27,5 @@ in
     environment.variables = lib.mkIf (cfg.ofxPlugins != [ ]) {
       OFX_PLUGIN_PATH = lib.concatStringsSep ";" (map toString cfg.ofxPlugins);
     };
-
-    warnings = lib.optional waylandDesktop ''
-      DaVinci Resolve cannot run on a native Wayland session (qtwayland version
-      mismatch, NixOS/nixpkgs#341634). Launch it as
-      `QT_QPA_PLATFORM=xcb davinci-resolve` to force XWayland.
-    '';
   };
 }

@@ -2,7 +2,6 @@
 
 let
   cfg = config.mx.programs.studio.davinci-resolve-studio;
-  waylandDesktop = builtins.elem config.mx.desktop [ "gnome" "plasma" ];
 in
 {
   options.mx.programs.studio.davinci-resolve-studio = {
