@@ -596,7 +596,7 @@ let
       Comment[es]=Convertir archivos MP4 a MOV que DaVinci Resolve lee de forma nativa
       Comment[de]=MP4-Material in MOV umwandeln, das DaVinci Resolve direkt liest
       Exec=mx-mp4-to-mov
-      Icon=video-x-generic
+      Icon=video-player
       Terminal=false
       Categories=AudioVideo;Video;
       Keywords=mp4;mov;dnxhr;prores;ffmpeg;resolve;
