@@ -110,6 +110,7 @@
         mx-switch-generation = import ./pkgs/mx-switch-generation.nix { inherit pkgs; };
         mx-diff-update = import ./pkgs/mx-diff-update.nix { inherit pkgs; };
         mx-redetect-hardware = import ./pkgs/mx-redetect-hardware.nix { inherit pkgs; };
+        mx-mp4-to-mov = import ./pkgs/mx-mp4-to-mov.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix { };
