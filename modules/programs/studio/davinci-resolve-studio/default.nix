@@ -2,6 +2,16 @@
 
 let
   cfg = config.mx.programs.studio.davinci-resolve-studio;
+
+  resolveDesktop = pkgs.callPackage ../../../../lib/prefers-dgpu-desktop.nix {
+    package = pkgs.davinci-resolve-studio;
+    desktopIds = [
+      "davinci-resolve-studio"
+      "blackmagicraw-player"
+      "blackmagicraw-speedtest"
+      "davinci-remote-monitor"
+    ];
+  };
 in
 {
   options.mx.programs.studio.davinci-resolve-studio = {
@@ -21,7 +31,10 @@ in
   config = lib.mkIf cfg.enable {
     mx.hardware.gpu.compute.enable = true;
     mx.fonts.enable = true;
-    environment.systemPackages = [ pkgs.davinci-resolve-studio ];
+    environment.systemPackages = [
+      pkgs.davinci-resolve-studio
+      (lib.hiPrio resolveDesktop)
+    ];
 
     environment.variables = lib.mkIf (cfg.ofxPlugins != [ ]) {
       OFX_PLUGIN_PATH = lib.concatStringsSep ";" (map toString cfg.ofxPlugins);
