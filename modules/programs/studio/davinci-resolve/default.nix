@@ -35,17 +35,6 @@ in
       mp4ToMov
     ];
 
-    warnings = [
-      ''
-        DaVinci Resolve (free edition) cannot decode H.264, H.265 or AAC on Linux:
-        the licences ship with Resolve Studio only, and the remaining decode path is
-        NVDEC, which needs an NVIDIA GPU. Transcode the footage to DNxHR/ProRes with
-        PCM audio, or enable mx.programs.studio.davinci-resolve-studio. The
-        mx-mp4-to-mov tool shipped with this module does that transcode from a
-        graphical dialog. See docs/davinci-resolve.md.
-      ''
-    ];
-
     environment.variables = lib.mkIf (cfg.ofxPlugins != [ ]) {
       OFX_PLUGIN_PATH = lib.concatStringsSep ";" (map toString cfg.ofxPlugins);
     };
