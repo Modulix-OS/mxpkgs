@@ -29,6 +29,7 @@ let
   rocmSupport = c: c.nixpkgs.config.rocmSupport or false;
   hasRocmTree = c: lib.any (lib.hasInfix "/opt/rocm") c.systemd.tmpfiles.rules;
   bits32 = c: c.hardware.graphics.enable32Bit;
+  switcheroo = c: c.services.switcherooControl.enable;
 
   # ---- scenarios -----------------------------------------------------------
   c = {
@@ -53,6 +54,7 @@ let
     intelTigerCompute = cfgOf (gpu { dedicated = { vendor = ov "intel"; generation = "tigerlake"; }; compute.enable = true; });
     nvidiaOffload    = cfgOf (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
     amdOffload       = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
+    hybridAmdAmd     = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; integrated = { vendor = "amd"; generation = "rdna3"; }; });
   };
 
   # Slot layout of a scenario, fed to the pure lib.mxGpu* helpers.
@@ -75,6 +77,7 @@ let
     rocPreVega = evar cc "ROC_ENABLE_PRE_VEGA";
     nvOffload = evar cc "__NV_PRIME_RENDER_OFFLOAD";
     glxVendor = evar cc "__GLX_VENDOR_LIBRARY_NAME";
+    switcheroo = switcheroo cc;
     pkgs = names cc;
   }) c;
 
@@ -196,6 +199,13 @@ let
     (expect "nvidiaOffload.glx"      (evar c.nvidiaOffload "__GLX_VENDOR_LIBRARY_NAME") "nvidia")
     (expect "nvidiaCompute.noPrime"  (evar c.nvidiaCompute "__NV_PRIME_RENDER_OFFLOAD") null)
     (expect "amdOffload.noPrime"     (evar c.amdOffload "__NV_PRIME_RENDER_OFFLOAD") null)
+
+    # hybrid laptops run switcheroo-control, so the PrefersNonDefaultGPU key the
+    # DaVinci Resolve modules ship in their .desktop override is not a no-op.
+    (expect "hybridAmdAmd.switcheroo"  (switcheroo c.hybridAmdAmd) true)
+    (expect "hybridIntel.switcheroo"   (switcheroo c.hybridIntel) true)
+    (expect "amd.noSwitcheroo"         (switcheroo c.amd) false)
+    (expect "igpuOnly.noSwitcheroo"    (switcheroo c.igpuOnly) false)
   ];
 
   allOk = lib.all (x: x == true) checks;
