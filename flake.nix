@@ -112,7 +112,6 @@
         mx-redetect-hardware = import ./pkgs/mx-redetect-hardware.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
-        modulix-boot-splash = pkgs.callPackage ./pkgs/modulix-boot-splash.nix { };
         modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix { };
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
         gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
