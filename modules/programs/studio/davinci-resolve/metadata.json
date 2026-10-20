@@ -1,4 +1,4 @@
 {
-  "description": "DaVinci Resolve is a video editor: cut your footage, grade the colours, mix the sound and export the finished film. This is the free edition.",
+  "description": "DaVinci Resolve is a video editor: cut your footage, grade the colours, mix the sound and export the finished film. This is the free edition, which cannot read H.264, H.265 or AAC on Linux: convert those files with the MP4 to MOV tool installed alongside it, or install the Studio edition.",
   "keyword": ["davinci", "resolve", "video", "editing", "colour grading"]
 }

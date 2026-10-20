@@ -1,4 +1,4 @@
 {
-  "description": "DaVinci Resolve est un logiciel de montage vidéo : monter vos rushes, étalonner les couleurs, mixer le son et exporter le film fini. Il s'agit de l'édition gratuite.",
+  "description": "DaVinci Resolve est un logiciel de montage vidéo : monter vos rushes, étalonner les couleurs, mixer le son et exporter le film fini. Il s'agit de l'édition gratuite, qui ne sait pas lire le H.264, le H.265 ni l'AAC sous Linux : convertissez ces fichiers avec l'outil MP4 vers MOV installé avec lui, ou installez l'édition Studio.",
   "keyword": ["davinci", "resolve", "vidéo", "montage", "étalonnage"]
 }

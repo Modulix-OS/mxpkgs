@@ -8,6 +8,8 @@ let
     package = pkgs.davinci-resolve;
     desktopIds = [ "davinci-resolve" "blackmagicraw-player" "blackmagicraw-speedtest" ];
   };
+
+  mp4ToMov = import ../../../../pkgs/mx-mp4-to-mov.nix { inherit pkgs; };
 in
 {
   options.mx.programs.studio.davinci-resolve = {
@@ -30,6 +32,18 @@ in
     environment.systemPackages = [
       pkgs.davinci-resolve
       (lib.hiPrio resolveDesktop)
+      mp4ToMov
+    ];
+
+    warnings = [
+      ''
+        DaVinci Resolve (free edition) cannot decode H.264, H.265 or AAC on Linux:
+        the licences ship with Resolve Studio only, and the remaining decode path is
+        NVDEC, which needs an NVIDIA GPU. Transcode the footage to DNxHR/ProRes with
+        PCM audio, or enable mx.programs.studio.davinci-resolve-studio. The
+        mx-mp4-to-mov tool shipped with this module does that transcode from a
+        graphical dialog. See docs/davinci-resolve.md.
+      ''
     ];
 
     environment.variables = lib.mkIf (cfg.ofxPlugins != [ ]) {
