@@ -5,6 +5,7 @@ let
   splashBackground = ../assets/bootloader-background.png;
   logo = ../assets/modulix-logo.png;
   plymouthTheme = pkgs.callPackage ../pkgs/modulix-plymouth-theme.nix {
+    logo = cfg.splash.logo;
     watermarkVerticalAlignment = cfg.splash.logoPosition;
   };
 in
@@ -26,8 +27,9 @@ in
         default = true;
         description = ''
           Show the Modulix branding across the boot: Limine background image,
-          then the Plymouth screen, where the default `bgrt` theme keeps the
-          firmware vendor logo and draws the Modulix logo as a watermark.
+          then the Plymouth screen, which drops the firmware vendor logo and
+          draws the Modulix logo large on a black background, with the spinner
+          below it.
         '';
       };
       image = lib.mkOption {
@@ -38,17 +40,22 @@ in
       logo = lib.mkOption {
         type = lib.types.path;
         default = logo;
-        defaultText = lib.literalExpression ''"''${pkgs.modulix-boot-splash}/share/modulix/logo.png"'';
-        description = "Modulix logo drawn as the Plymouth watermark (PNG).";
+        defaultText = lib.literalExpression "../assets/modulix-logo.png";
+        description = ''
+          Modulix logo drawn on the Plymouth screen (PNG). The theme scales it
+          down to 960 pixels wide, so it stays within screens narrower than the
+          source image.
+        '';
       };
       logoPosition = lib.mkOption {
         type = lib.types.float;
-        default = 0.9;
+        default = 0.5;
         description = ''
-          Vertical position of the Modulix watermark on the Plymouth screen,
-          from 0.0 (top) to 1.0 (bottom). Plymouth places the image at
+          Vertical position of the Modulix logo on the Plymouth screen, from
+          0.0 (top) to 1.0 (bottom). Plymouth places the image at
           `logoPosition * (screenHeight - logoHeight)`, so the value is
-          resolution independent. The upstream `bgrt` theme uses 0.96.
+          resolution independent. 0.5 centres it; the upstream `spinner` theme
+          uses 0.96 for its watermark.
         '';
       };
     };

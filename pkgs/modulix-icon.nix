@@ -19,7 +19,8 @@ stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    THEME_DIR="$out/share/icons/Modulix-OS"
+    ICONS_DIR="$out/share/icons"
+    THEME_DIR="$ICONS_DIR/Modulix-OS"
     mkdir -p "$THEME_DIR"
 
     cp -r ${adwaita-icon-theme}/share/icons/Adwaita/. "$THEME_DIR/"
@@ -27,6 +28,10 @@ stdenvNoCC.mkDerivation {
 
     sed -i 's/^Inherits=.*/Inherits=Papirus,hicolor/' "$THEME_DIR/index.theme"
     sed -i 's/^Name=.*/Name=Modulix-OS/'              "$THEME_DIR/index.theme"
+
+    for theme in ${papirus-icon-theme}/share/icons/*Papirus*; do
+      ln -s "$theme" "$ICONS_DIR/$(basename "$theme")"
+    done
 
     runHook postInstall
   '';

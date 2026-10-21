@@ -2,7 +2,6 @@
 let
   cfg = config.mx.gnome;
 
-  modulix-os-icon = self.packages.${pkgs.stdenv.hostPlatform.system}.modulix-icon;
   hanabi = self.packages.${pkgs.stdenv.hostPlatform.system}.gnomeExtensions.hanabi;
 
   deEnabled = config.mx.desktop == "gnome";
@@ -13,6 +12,10 @@ let
       logo = logoPng;
       fallback-logo = logoPng;
     };
+  };
+
+  iconThemeSettings = lib.optionalAttrs config.mx.branding.enable {
+    icon-theme = config.mx.branding.iconThemeName;
   };
 
   # WALLPAPERS
@@ -110,12 +113,11 @@ in
               ++ lib.optional cfg.gsconnect pkgs.gnomeExtensions.gsconnect.extensionUuid;
             };
             "org/gnome/desktop/interface" = {
-              icon-theme = "Modulix-OS";
               show-battery-percentage = true;
               toolbar-style = "text";
               gtk-theme = "Adwaita";
               enable-hot-corners = false;
-            };
+            } // iconThemeSettings;
             "org/gnome/desktop/wm/preferences" = {
               button-layout = "appmenu:minimize,maximize,close";
             };
@@ -222,8 +224,6 @@ in
       gnomeExtensions.display-configuration-switcher
       gnomeExtensions.desktop-icons-ng-ding
       hanabi
-
-      modulix-os-icon
 
       lumiereWallpaper
     ];

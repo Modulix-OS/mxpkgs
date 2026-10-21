@@ -24,6 +24,13 @@ in
           };
           desktopManager.plasma6.enable = true;
         };
+        environment.etc."xdg/kdeglobals" = lib.mkIf config.mx.branding.enable {
+          text = lib.mkMxDefault ''
+            [Icons]
+            Theme=${config.mx.branding.iconThemeName}
+          '';
+        };
+
         environment.plasma6.excludePackages = with pkgs.kdePackages; [
           kwin-x11 # Wayland-only session
           baloo-widgets

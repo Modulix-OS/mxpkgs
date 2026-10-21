@@ -57,6 +57,23 @@ in
       defaultText = lib.literalExpression "pkgs.modulix-logo";
       description = "Package providing the Modulix logo icons.";
     };
+    iconTheme = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.callPackage ../pkgs/modulix-icon.nix { };
+      defaultText = lib.literalExpression "pkgs.modulix-icon";
+      description = ''
+        Package providing the Modulix OS icon theme, installed system wide so
+        that every desktop profile can resolve it.
+      '';
+    };
+    iconThemeName = lib.mkOption {
+      type = lib.types.str;
+      default = "Modulix-OS";
+      description = ''
+        Name of the icon theme the desktop profiles select. Must match the
+        `Name=` entry of the theme shipped by {option}`mx.branding.iconTheme`.
+      '';
+    };
     iconName = lib.mkOption {
       type = lib.types.str;
       default = "modulix-logo";
@@ -115,6 +132,6 @@ in
       };
     };
 
-    environment.systemPackages = [ cfg.logo ];
+    environment.systemPackages = [ cfg.logo cfg.iconTheme ];
   };
 }

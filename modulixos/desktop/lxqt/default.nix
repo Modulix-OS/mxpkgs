@@ -14,6 +14,13 @@ in
     # Automatic mounting device (moved out of modulixos/filesystem.nix)
     services.devmon.enable = true;
 
+    environment.etc."xdg/lxqt/lxqt.conf" = lib.mkIf config.mx.branding.enable {
+      text = lib.mkMxDefault ''
+        [General]
+        icon_theme=${config.mx.branding.iconThemeName}
+      '';
+    };
+
     environment.lxqt.excludePackages = with pkgs.lxqt; [
         ### CORE 1
         # libfm-qt
