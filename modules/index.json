@@ -101,6 +101,14 @@
     "summary": "TeamViewer — use this computer from somewhere else",
     "keyword": ["teamviewer", "remote", "support", "access"]
   },
+  "programs.utilities.web-browser.firefox": {
+    "path": "programs/utilities/web-browser/firefox",
+    "flathub_id": "org.mozilla.firefox",
+    "nix_info": "firefox",
+    "name": "Firefox",
+    "summary": "Firefox — browse the web, with hardware video decoding and GNOME search",
+    "keyword": ["firefox", "browser", "web", "internet", "mozilla", "search"]
+  },
   "services.docker": {
     "path": "services/docker",
     "name": "Docker",

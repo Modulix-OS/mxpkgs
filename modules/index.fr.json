@@ -59,6 +59,11 @@
     "summary": "TeamViewer — utiliser cet ordinateur à distance",
     "keyword": ["teamviewer", "distant", "assistance", "accès"]
   },
+  "programs.utilities.web-browser.firefox": {
+    "name": "Firefox",
+    "summary": "Firefox — naviguer sur le Web, avec décodage vidéo matériel et recherche GNOME",
+    "keyword": ["firefox", "navigateur", "web", "internet", "mozilla", "recherche"]
+  },
   "services.docker": {
     "name": "Docker",
     "summary": "Docker — exécuter des applications dans des conteneurs rootless",
