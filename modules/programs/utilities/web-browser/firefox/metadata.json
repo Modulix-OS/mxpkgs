@@ -1,0 +1,4 @@
+{
+  "description": "Firefox browses the web. This module installs the latest version, turns on hardware video decoding, adds the spell-checking dictionary for your language, and lets you search the web straight from the GNOME activities overview.",
+  "keyword": ["firefox", "browser", "web", "internet", "mozilla", "search"]
+}
