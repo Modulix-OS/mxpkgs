@@ -1,0 +1,4 @@
+{
+  "description": "Distrobox sur un moteur Podman sans privilèges, avec un lanceur « Ubuntu Toolbox » dans la grille d'applications. Le conteneur partage votre dossier personnel et est créé au premier clic sur le lanceur ; c'est là qu'on utilise apt, pip, npm -g et les chaînes d'outils propriétaires qui attendent une arborescence Linux classique.",
+  "keyword": ["distrobox", "ubuntu", "conteneur", "podman", "toolbox", "apt"]
+}

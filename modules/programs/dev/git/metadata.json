@@ -1,0 +1,4 @@
+{
+  "description": "Git with the tooling that goes with it day to day: git-lfs for large files, gh for GitHub pull requests and issues, and glab for GitLab. Git itself is enabled system-wide, so /etc/gitconfig applies to every user.",
+  "keyword": ["git", "github", "gitlab", "gh", "glab", "git-lfs", "vcs"]
+}

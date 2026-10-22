@@ -124,6 +124,39 @@
     "summary": "LibreOffice — Writer, Calc, Impress and the rest of the suite",
     "keyword": ["libreoffice", "office", "writer", "calc", "impress", "odt"]
   },
+  "programs.dev": {
+    "path": "programs/dev",
+    "name": "Development",
+    "icon_name": "applications-development",
+    "summary": "Development tools: Visual Studio Code, Git and an Ubuntu container",
+    "keyword": ["dev", "development", "code", "programming", "ide"],
+    "modules": ["programs.dev.vscode", "programs.dev.git", "programs.dev.distrobox"]
+  },
+  "programs.dev.vscode": {
+    "path": "programs/dev/vscode",
+    "flathub_id": "com.visualstudio.code",
+    "nix_info": "vscode-fhs",
+    "name": "Visual Studio Code",
+    "icon_name": "vscode",
+    "summary": "Visual Studio Code — code editor with extensions, debugging and Git integration",
+    "keyword": ["vscode", "code", "editor", "ide", "microsoft", "dev"]
+  },
+  "programs.dev.git": {
+    "path": "programs/dev/git",
+    "nix_info": "git",
+    "name": "Git",
+    "icon_name": "git",
+    "summary": "Git with the GitHub and GitLab command-line tools",
+    "keyword": ["git", "github", "gitlab", "gh", "glab", "vcs"]
+  },
+  "programs.dev.distrobox": {
+    "path": "programs/dev/distrobox",
+    "nix_info": "distrobox",
+    "name": "Ubuntu container",
+    "icon_name": "distributor-logo-ubuntu",
+    "summary": "Distrobox and rootless Podman, with an Ubuntu container created on first launch",
+    "keyword": ["distrobox", "ubuntu", "container", "podman", "toolbox", "apt"]
+  },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",
     "flathub_id": "cc.arduino.IDE2",

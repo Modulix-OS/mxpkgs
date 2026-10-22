@@ -85,6 +85,26 @@
       "odt"
     ]
   },
+  "programs.dev": {
+    "name": "Développement",
+    "summary": "Outils de développement : Visual Studio Code, Git et un conteneur Ubuntu",
+    "keyword": ["dev", "développement", "code", "programmation", "ide"]
+  },
+  "programs.dev.vscode": {
+    "name": "Visual Studio Code",
+    "summary": "Visual Studio Code — éditeur de code avec extensions, débogage et intégration Git",
+    "keyword": ["vscode", "code", "éditeur", "ide", "microsoft", "dev"]
+  },
+  "programs.dev.git": {
+    "name": "Git",
+    "summary": "Git avec les outils en ligne de commande GitHub et GitLab",
+    "keyword": ["git", "github", "gitlab", "gh", "glab", "versions"]
+  },
+  "programs.dev.distrobox": {
+    "name": "Conteneur Ubuntu",
+    "summary": "Distrobox et Podman sans privilèges, avec un conteneur Ubuntu créé au premier lancement",
+    "keyword": ["distrobox", "ubuntu", "conteneur", "podman", "toolbox", "apt"]
+  },
   "programs.dev.arduino": {
     "name": "Arduino",
     "summary": "Arduino — IDE, CLI et serveur de langage pour cartes Arduino",

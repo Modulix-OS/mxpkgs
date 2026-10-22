@@ -1,0 +1,4 @@
+{
+  "description": "Visual Studio Code, Microsoft's code editor: extension marketplace, integrated debugger, terminal and Git support. The FHS build is installed so extensions shipping prebuilt native binaries — clangd, debug adapters, language servers — run unmodified.",
+  "keyword": ["vscode", "code", "editor", "ide", "microsoft", "dev"]
+}

@@ -1,0 +1,4 @@
+{
+  "description": "Distrobox on a rootless Podman backend, plus an Ubuntu Toolbox launcher in the application grid. The container shares your home directory and is created the first time the launcher is clicked, which is where apt, pip, npm -g and vendor toolchains that expect a standard Linux filesystem can be used.",
+  "keyword": ["distrobox", "ubuntu", "container", "podman", "toolbox", "apt"]
+}

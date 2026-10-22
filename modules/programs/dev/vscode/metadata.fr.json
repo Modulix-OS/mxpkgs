@@ -1,0 +1,4 @@
+{
+  "description": "Visual Studio Code, l'éditeur de code de Microsoft : place de marché d'extensions, débogueur intégré, terminal et prise en charge de Git. La version FHS est installée pour que les extensions livrant des binaires natifs précompilés — clangd, adaptateurs de débogage, serveurs de langage — fonctionnent sans modification.",
+  "keyword": ["vscode", "code", "éditeur", "ide", "microsoft", "dev"]
+}

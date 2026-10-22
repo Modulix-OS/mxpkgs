@@ -1,0 +1,4 @@
+{
+  "description": "Git et les outils qui l'accompagnent au quotidien : git-lfs pour les gros fichiers, gh pour les pull requests et tickets GitHub, et glab pour GitLab. Git est activé au niveau du système, donc /etc/gitconfig s'applique à tous les utilisateurs.",
+  "keyword": ["git", "github", "gitlab", "gh", "glab", "git-lfs", "versions"]
+}
