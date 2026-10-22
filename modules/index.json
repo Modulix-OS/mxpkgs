@@ -60,6 +60,30 @@
     "summary": "Bambu Studio — prepare models for 3D printing",
     "keyword": ["bambu", "3d printing", "slicer", "print"]
   },
+  "programs.desktop": {
+    "path": "programs/desktop",
+    "name": "Office",
+    "icon_name": "org.gnome.Papers",
+    "summary": "Office suite — write documents, build spreadsheets and presentations",
+    "keyword": ["office", "document", "writer", "spreadsheet", "presentation"],
+    "modules": ["programs.desktop.onlyoffice"]
+  },
+  "programs.desktop.onlyoffice": {
+    "path": "programs/desktop/onlyoffice",
+    "flathub_id": "org.onlyoffice.desktopeditors",
+    "nix_info": "onlyoffice-desktopeditors",
+    "name": "ONLYOFFICE",
+    "summary": "ONLYOFFICE — edit documents, spreadsheets and presentations, Microsoft-compatible",
+    "keyword": ["onlyoffice", "office", "docx", "xlsx", "pptx", "document"]
+  },
+  "programs.desktop.libreoffice": {
+    "path": "programs/desktop/libreoffice",
+    "flathub_id": "org.libreoffice.LibreOffice",
+    "nix_info": "libreoffice-fresh",
+    "name": "LibreOffice",
+    "summary": "LibreOffice — Writer, Calc, Impress and the rest of the suite",
+    "keyword": ["libreoffice", "office", "writer", "calc", "impress", "odt"]
+  },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",
     "flathub_id": "cc.arduino.IDE2",
@@ -82,7 +106,14 @@
     "name": "DaVinci Resolve Studio",
     "icon_name": "davinci-resolve",
     "summary": "DaVinci Resolve Studio — edit, colour-grade and finish videos, paid edition",
-    "keyword": ["davinci", "resolve", "studio", "video", "editing", "colour grading"]
+    "keyword": [
+      "davinci",
+      "resolve",
+      "studio",
+      "video",
+      "editing",
+      "colour grading"
+    ]
   },
   "programs.studio.obs-studio": {
     "path": "programs/studio/obs-studio",

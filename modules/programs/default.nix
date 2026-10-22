@@ -5,6 +5,7 @@
     ./creativity
     ./studio
     ./dev
+    ./desktop
     ./utilities
   ];
 }

@@ -10,26 +10,16 @@ let
     else gpu.dedicated.vendor;
   nvidiaVaapi = vaapiVendor == "nvidia";
 
-  langTable = {
-    "fr" = { dict = pkgs.hunspellDicts.fr-moderne; file = "fr-moderne"; };
-    "en-US" = { dict = pkgs.hunspellDicts.en_US; file = "en_US"; };
-    "en-GB" = { dict = pkgs.hunspellDicts.en_GB-ise; file = "en_GB"; };
-    "de" = { dict = pkgs.hunspellDicts.de_DE; file = "de_DE"; };
-    "es-ES" = { dict = pkgs.hunspellDicts.es_ES; file = "es_ES"; };
-    "it" = { dict = pkgs.hunspellDicts.it_IT; file = "it_IT"; };
-    "pt-BR" = { dict = pkgs.hunspellDicts.pt_BR; file = "pt_BR"; };
-    "nl" = { dict = pkgs.hunspellDicts.nl_NL; file = "nl_NL"; };
+  mxDict = import ../../../../../lib/mx-dictionaries.nix { inherit lib pkgs; };
+
+  langs = config.mx.languages;
+  dictLanguages = mxDict.supported langs;
+  dictlessLanguages = mxDict.unsupported langs;
+
+  dictEnv = mxDict.hunspellEnv {
+    name = "mx-firefox-dictionaries";
+    langs = dictLanguages;
   };
-
-  dictLanguages = lib.filter (lang: langTable ? ${lang}) cfg.languages;
-  dictlessLanguages = lib.filter (lang: !(langTable ? ${lang})) cfg.languages;
-
-  dictEnv = pkgs.runCommand "mx-firefox-dictionaries" { } (''
-    mkdir -p $out/share/hunspell
-  '' + lib.concatMapStrings (lang: ''
-    ln -s ${langTable.${lang}.dict}/share/hunspell/${langTable.${lang}.file}.aff $out/share/hunspell/${lang}.aff
-    ln -s ${langTable.${lang}.dict}/share/hunspell/${langTable.${lang}.file}.dic $out/share/hunspell/${lang}.dic
-  '') dictLanguages);
 
   accelerationPrefs = lib.optionalAttrs cfg.hardwareAcceleration.enable ({
     "media.ffmpeg.vaapi.enabled" = true;
@@ -46,11 +36,11 @@ let
     "spellchecker.dictionary" = lib.concatStringsSep "," dictLanguages;
   };
 
-  localePrefs = lib.optionalAttrs (cfg.languages != [ ]) {
-    "intl.locale.requested" = lib.concatStringsSep "," cfg.languages;
+  localePrefs = lib.optionalAttrs (langs != [ ]) {
+    "intl.locale.requested" = lib.concatStringsSep "," langs;
   };
 
-  providerLang = lib.head (lib.splitString "-" (lib.head (cfg.languages ++ [ "en" ])));
+  providerLang = lib.head (lib.splitString "-" (lib.head (langs ++ [ "en" ])));
 
   searchProvider = pkgs.callPackage ../../../../../pkgs/mx-firefox-search-provider.nix {
     firefoxBin = "${config.programs.firefox.finalPackage}/bin/firefox";
@@ -66,22 +56,6 @@ in
       default = pkgs-unstable.firefox;
       defaultText = lib.literalExpression "pkgs-unstable.firefox";
       description = "Firefox package to install.";
-    };
-
-    languages = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ "fr" ];
-      example = [ "fr" "en-US" ];
-      description = ''
-        Interface locales, most preferred first. Each one must be a locale
-        accepted by programs.firefox.languagePacks. Locales that also ship a
-        known hunspell dictionary are enabled for spell checking; the others
-        only get their language pack and are reported as a warning.
-
-        This is the only language setting in the tree: there is no repo-wide
-        i18n option, so the Firefox interface locale cannot be derived from the
-        system locale.
-      '';
     };
 
     hardwareAcceleration.enable = lib.mkOption {
@@ -113,7 +87,7 @@ in
       programs.firefox = {
         enable = true;
         package = lib.mkMxDefault cfg.package;
-        languagePacks = lib.mkMxDefault cfg.languages;
+        languagePacks = lib.mkMxDefault langs;
         preferencesStatus = lib.mkMxDefault "default";
         preferences = lib.mkMxDefault (accelerationPrefs // dictionaryPrefs // localePrefs);
       };

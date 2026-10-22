@@ -34,6 +34,21 @@
     "summary": "Bambu Studio — préparer des modèles pour l'impression 3D",
     "keyword": ["bambu", "impression 3d", "découpe", "impression"]
   },
+  "programs.desktop": {
+    "name": "Bureautique",
+    "summary": "Suite bureautique — rédiger des documents, des tableurs et des présentations",
+    "keyword": ["bureautique", "document", "traitement de texte", "tableur", "présentation"]
+  },
+  "programs.desktop.onlyoffice": {
+    "name": "ONLYOFFICE",
+    "summary": "ONLYOFFICE — modifier documents, tableurs et présentations, compatible Microsoft",
+    "keyword": ["onlyoffice", "bureautique", "docx", "xlsx", "pptx", "document"]
+  },
+  "programs.desktop.libreoffice": {
+    "name": "LibreOffice",
+    "summary": "LibreOffice — Writer, Calc, Impress et le reste de la suite",
+    "keyword": ["libreoffice", "bureautique", "writer", "calc", "impress", "odt"]
+  },
   "programs.dev.arduino": {
     "name": "Arduino",
     "summary": "Arduino — IDE, CLI et serveur de langage pour cartes Arduino",
