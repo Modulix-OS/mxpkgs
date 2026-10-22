@@ -53,7 +53,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs-unstable.firefox;
+      default = pkgs-unstable.firefox-bin;
       defaultText = lib.literalExpression "pkgs-unstable.firefox";
       description = "Firefox package to install.";
     };
