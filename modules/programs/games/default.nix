@@ -98,6 +98,7 @@ in
     environment.systemPackages = [
       pkgs-unstable.vkbasalt
       mx-game
+      pkgs.joystickwake
     ] ++ protonTools;
 
     systemd.user.tmpfiles.rules = [
@@ -112,6 +113,8 @@ in
           package = lib.mkMxDefault (if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.mesa else pkgs.mesa);
           package32 = lib.mkMxDefault (if cfg.latest-unstable-mesa-driver.enable then pkgs-unstable.pkgsi686Linux.mesa else pkgs.pkgsi686Linux.mesa);
         };
+        xone.enable = lib.mkMxDefault true;
+        steam-hardware.enable = lib.mkMxDefault true;
     };
 
     users.groups = {
@@ -121,6 +124,11 @@ in
 
     services.udev.extraRules = ''
       ACTION=="add|change", SUBSYSTEM=="block", ATTR{queue/scheduler}="bfq"
+
+      ATTRS{name}=="Sony Interactive Entertainment Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      ATTRS{name}=="Sony Interactive Entertainment DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      ATTRS{name}=="Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      ATTRS{name}=="DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
     '';
 
     # Enable VK basalt compatibility
@@ -136,6 +144,8 @@ in
 
     boot = {
       kernelPackages = pkgs.linuxPackages_zen;
+      extraModulePackages = [ config.boot.kernelPackages.xpadneo ];
+      kernelModules = [ "hid_xpadneo" "ntsync" ];
       tmp.cleanOnBoot = lib.mkMxDefault true;
       kernel.sysctl = {
         "kernel.split_lock_mitigate" = lib.mkMxDefault 0;
