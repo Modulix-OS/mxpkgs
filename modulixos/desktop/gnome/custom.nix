@@ -96,6 +96,13 @@ in
                 night-light-enabled = true;
             };
             "org/gnome/shell" = {
+              favorite-apps = [
+                "firefox.desktop"
+                "thunderbird.desktop"
+                "org.gnome.Nautilus.desktop"
+                "org.gnome.Console.desktop"
+                "org.gnome.Software.desktop"
+              ];
               disable-user-extensions = false;
               enabled-extensions = with pkgs.gnomeExtensions; [
                 blur-my-shell.extensionUuid
@@ -205,6 +212,60 @@ in
               mute = true;
               volume = lib.gvariant.mkInt32 0;
               startup-delay = lib.gvariant.mkInt32 0;
+            };
+            "org/gnome/desktop/app-folders" = {
+              folder-children = [
+                "Games"
+                "Graphics"
+                "AudioVideo"
+                "Office"
+                "Development"
+                "Utilities"
+                "System"
+              ];
+            };
+            "org/gnome/desktop/app-folders/folders/Games" = {
+              name = "Game.directory";
+              translate = true;
+              categories = [ "Game" ];
+            };
+            "org/gnome/desktop/app-folders/folders/Graphics" = {
+              name = "Graphics.directory";
+              translate = true;
+              categories = [ "Graphics" ];
+            };
+            "org/gnome/desktop/app-folders/folders/AudioVideo" = {
+              name = "AudioVideo.directory";
+              translate = true;
+              categories = [ "AudioVideo" "Audio" "Video" ];
+            };
+            "org/gnome/desktop/app-folders/folders/Office" = {
+              name = "Office.directory";
+              translate = true;
+              categories = [ "Office" ];
+            };
+            "org/gnome/desktop/app-folders/folders/Development" = {
+              name = "Development.directory";
+              translate = true;
+              categories = [ "Development" ];
+            };
+            "org/gnome/desktop/app-folders/folders/Utilities" = {
+              name = "Utility.directory";
+              translate = true;
+              categories = [ "Utility" ];
+              excluded-apps = [
+                "org.gnome.Nautilus.desktop"
+                "org.gnome.Console.desktop"
+                "org.gnome.TextEditor.desktop"
+                "firefox.desktop"
+                "thunderbird.desktop"
+              ];
+            };
+            "org/gnome/desktop/app-folders/folders/System" = {
+              name = "System-Tools.directory";
+              translate = true;
+              categories = [ "System" "Settings" ];
+              excluded-apps = [ "org.gnome.Settings.desktop" ];
             };
           };
         }];
