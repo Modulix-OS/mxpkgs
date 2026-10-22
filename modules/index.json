@@ -62,10 +62,19 @@
   },
   "programs.desktop": {
     "path": "programs/desktop",
-    "name": "Office",
+    "name": "Office suite",
     "icon_name": "org.gnome.Papers",
     "summary": "Office suite — write documents, build spreadsheets and presentations",
-    "keyword": ["office", "document", "writer", "spreadsheet", "presentation"],
+    "keyword": [
+      "office",
+      "document",
+      "writer",
+      "spreadsheet",
+      "presentation",
+      "office",
+      "microsoft office",
+      "office 365"
+    ],
     "modules": ["programs.desktop.onlyoffice"]
   },
   "programs.desktop.onlyoffice": {
