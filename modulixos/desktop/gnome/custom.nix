@@ -100,7 +100,6 @@ in
                 "firefox.desktop"
                 "thunderbird.desktop"
                 "org.gnome.Nautilus.desktop"
-                "org.gnome.Console.desktop"
                 "org.gnome.Software.desktop"
               ];
               disable-user-extensions = false;
