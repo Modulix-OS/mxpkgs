@@ -4,6 +4,7 @@
     ./docker
     ./flatpak
     ./printing
+    ./sim-hardware
     ./remote-desktop
     ./remote-login
     ./vm

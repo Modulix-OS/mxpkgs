@@ -1,0 +1,4 @@
+{
+  "description": "Drivers and calibration tools for simulation hardware: Logitech, Fanatec and Thrustmaster wheel bases, their pedals and shifters, with the force feedback the in-kernel drivers do not provide. Oversteer sets the rotation range, centering force and LEDs.",
+  "keyword": ["wheel", "racing", "simulation", "force feedback", "logitech", "fanatec", "thrustmaster", "pedals", "oversteer"]
+}

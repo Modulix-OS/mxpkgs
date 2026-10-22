@@ -1,0 +1,4 @@
+{
+  "description": "Pilotes et outils de réglage pour le matériel de simulation : bases de volant Logitech, Fanatec et Thrustmaster, leurs pédaliers et leurs boîtes de vitesses, avec le retour de force que les pilotes du noyau n'assurent pas. Oversteer règle l'angle de rotation, la force de rappel et les LED.",
+  "keyword": ["volant", "course", "simulation", "retour de force", "logitech", "fanatec", "thrustmaster", "pédalier", "oversteer"]
+}
