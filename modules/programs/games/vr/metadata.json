@@ -1,0 +1,4 @@
+{
+  "description": "Virtual reality on this machine: ALVR streams SteamVR games to a standalone headset over Wi-Fi, OpenComposite runs OpenVR titles on an OpenXR runtime, and the headset and controller udev rules are installed. Steam is turned on with it, since the games run through SteamVR.",
+  "keyword": ["vr", "virtual reality", "alvr", "steamvr", "openxr", "quest", "headset"]
+}

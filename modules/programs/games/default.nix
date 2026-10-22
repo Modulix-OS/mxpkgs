@@ -35,6 +35,7 @@ in
     ./lutris
     ./heroic
     ./umu
+    ./vr
     ./bindfs-shared-mount.nix
     ./game_folder.nix
     ./folder_check.nix
@@ -44,7 +45,7 @@ in
   options.mx.programs.games = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.steam.enable || cfg.lutris.enable || cfg.heroic.enable || cfg.umu.enable;
+      default = cfg.steam.enable || cfg.lutris.enable || cfg.heroic.enable || cfg.umu.enable || cfg.vr.enable;
       description = "Whether shared gaming config is active (auto: any launcher enabled).";
     };
 

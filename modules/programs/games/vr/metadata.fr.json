@@ -1,0 +1,4 @@
+{
+  "description": "La réalité virtuelle sur cette machine : ALVR diffuse les jeux SteamVR vers un casque autonome par Wi-Fi, OpenComposite fait tourner les titres OpenVR sur un runtime OpenXR, et les règles udev du casque et des manettes sont installées. Steam est activé avec, puisque les jeux passent par SteamVR.",
+  "keyword": ["vr", "réalité virtuelle", "alvr", "steamvr", "openxr", "quest", "casque"]
+}
