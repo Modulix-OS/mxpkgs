@@ -1,0 +1,4 @@
+{
+  "description": "Unreal Engine 5 editor running in a dedicated Ubuntu container. The engine itself is not redistributable, so the launcher asks for the prebuilt Linux .zip downloaded from the Epic Games website, extracts it into your home directory and installs the editor's dependencies in the container. Clicking the icon afterwards either starts the editor or offers to uninstall it, and a .uproject file opens straight in it.",
+  "keyword": ["unreal", "ue5", "unreal engine", "game engine", "gamedev", "epic", "distrobox"]
+}

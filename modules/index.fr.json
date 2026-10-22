@@ -87,7 +87,7 @@
   },
   "programs.dev": {
     "name": "Développement",
-    "summary": "Outils de développement : Visual Studio Code, Git et un conteneur Ubuntu",
+    "summary": "Outils de développement : Visual Studio Code, Git, Unreal Engine 5 et un conteneur Ubuntu",
     "keyword": ["dev", "développement", "code", "programmation", "ide"]
   },
   "programs.dev.vscode": {
@@ -104,6 +104,11 @@
     "name": "Conteneur Ubuntu",
     "summary": "Distrobox et Podman sans privilèges, avec un conteneur Ubuntu créé au premier lancement",
     "keyword": ["distrobox", "ubuntu", "conteneur", "podman", "toolbox", "apt"]
+  },
+  "programs.dev.ue5": {
+    "name": "Unreal Engine 5",
+    "summary": "L'éditeur Unreal Engine 5 dans un conteneur Ubuntu dédié, installé depuis l'archive Epic Games",
+    "keyword": ["unreal", "ue5", "unreal engine", "moteur de jeu", "jeu vidéo", "epic", "distrobox"]
   },
   "programs.dev.arduino": {
     "name": "Arduino",

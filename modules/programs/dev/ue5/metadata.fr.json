@@ -1,0 +1,4 @@
+{
+  "description": "L'éditeur Unreal Engine 5 dans un conteneur Ubuntu dédié. Le moteur n'étant pas redistribuable, le lanceur vous demande l'archive .zip Linux précompilée téléchargée sur le site Epic Games, l'extrait dans votre dossier personnel et installe les dépendances de l'éditeur dans le conteneur. Les lancements suivants ouvrent l'éditeur ou proposent de le désinstaller, et un fichier .uproject s'ouvre directement dedans.",
+  "keyword": ["unreal", "ue5", "unreal engine", "moteur de jeu", "jeu vidéo", "epic", "distrobox"]
+}

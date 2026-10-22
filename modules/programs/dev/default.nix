@@ -16,12 +16,13 @@ in
     ./vscode
     ./git
     ./distrobox
+    ./ue5
   ];
 
   options.mx.programs.dev = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.arduino.enable || cfg.vscode.enable || cfg.git.enable || cfg.distrobox.enable;
+      default = cfg.arduino.enable || cfg.vscode.enable || cfg.git.enable || cfg.distrobox.enable || cfg.ue5.enable;
       defaultText = lib.literalExpression "any development module enabled";
       description = ''
         Whether the shared development tooling is active (auto: any

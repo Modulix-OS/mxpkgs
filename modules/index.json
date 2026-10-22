@@ -128,9 +128,9 @@
     "path": "programs/dev",
     "name": "Development",
     "icon_name": "applications-development",
-    "summary": "Development tools: Visual Studio Code, Git and an Ubuntu container",
+    "summary": "Development tools: Visual Studio Code, Git, Unreal Engine 5 and an Ubuntu container",
     "keyword": ["dev", "development", "code", "programming", "ide"],
-    "modules": ["programs.dev.vscode", "programs.dev.git", "programs.dev.distrobox"]
+    "modules": ["programs.dev.vscode", "programs.dev.git", "programs.dev.distrobox", "programs.dev.ue5"]
   },
   "programs.dev.vscode": {
     "path": "programs/dev/vscode",
@@ -156,6 +156,13 @@
     "icon_name": "distributor-logo-ubuntu",
     "summary": "Distrobox and rootless Podman, with an Ubuntu container created on first launch",
     "keyword": ["distrobox", "ubuntu", "container", "podman", "toolbox", "apt"]
+  },
+  "programs.dev.ue5": {
+    "path": "programs/dev/ue5",
+    "name": "Unreal Engine 5",
+    "icon_name": "ue4editor",
+    "summary": "Unreal Engine 5 editor in a dedicated Ubuntu container, installed from the Epic Games archive",
+    "keyword": ["unreal", "ue5", "unreal engine", "game engine", "gamedev", "epic", "distrobox"]
   },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",

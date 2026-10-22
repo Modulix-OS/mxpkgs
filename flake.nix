@@ -112,6 +112,7 @@
         mx-redetect-hardware = import ./pkgs/mx-redetect-hardware.nix { inherit pkgs; };
         mx-mp4-to-mov = import ./pkgs/mx-mp4-to-mov.nix { inherit pkgs; };
         mx-ubuntu-box = import ./pkgs/mx-ubuntu-box.nix { inherit pkgs; };
+        mx-ue5 = import ./pkgs/mx-ue5.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
         modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix { };
