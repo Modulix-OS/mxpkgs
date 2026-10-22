@@ -44,6 +44,13 @@
     "keyword": ["proton", "wine", "launcher", "umu"],
     "nix_info": "umu-launcher"
   },
+  "programs.games.vr": {
+    "path": "programs/games/vr",
+    "name": "Virtual reality",
+    "icon_name": "steamvr",
+    "summary": "Virtual reality — stream VR games to a standalone headset with ALVR",
+    "keyword": ["vr", "virtual reality", "alvr", "steamvr", "openxr", "quest", "headset"]
+  },
   "programs.creativity.blender": {
     "path": "programs/creativity/blender",
     "flathub_id": "org.blender.Blender",
@@ -59,6 +66,30 @@
     "name": "Bambu Studio",
     "summary": "Bambu Studio — prepare models for 3D printing",
     "keyword": ["bambu", "3d printing", "slicer", "print"]
+  },
+  "programs.creativity.krita": {
+    "path": "programs/creativity/krita",
+    "flathub_id": "org.kde.krita",
+    "nix_info": "krita",
+    "name": "Krita",
+    "summary": "Krita — paint and illustrate",
+    "keyword": ["krita", "draw", "paint", "illustration", "digital art", "brush"]
+  },
+  "programs.creativity.gimp": {
+    "path": "programs/creativity/gimp",
+    "flathub_id": "org.gimp.GIMP",
+    "nix_info": "gimp",
+    "name": "GIMP",
+    "summary": "GIMP — retouch and edit photos",
+    "keyword": ["gimp", "photo", "retouch", "image", "editor", "layer"]
+  },
+  "programs.creativity.inkscape": {
+    "path": "programs/creativity/inkscape",
+    "flathub_id": "org.inkscape.Inkscape",
+    "nix_info": "inkscape",
+    "name": "Inkscape",
+    "summary": "Inkscape — draw vector graphics and illustrations",
+    "keyword": ["inkscape", "vector", "svg", "draw", "illustration", "logo"]
   },
   "programs.desktop": {
     "path": "programs/desktop",
@@ -133,6 +164,14 @@
     "summary": "OBS Studio — record your screen and stream live",
     "keyword": ["obs", "stream", "record", "capture", "camera"]
   },
+  "programs.studio.kdenlive": {
+    "path": "programs/studio/kdenlive",
+    "flathub_id": "org.kde.kdenlive",
+    "nix_info": "kdePackages.kdenlive",
+    "name": "Kdenlive",
+    "summary": "Kdenlive — edit and export your videos",
+    "keyword": ["kdenlive", "video", "editor", "montage", "timeline", "render"]
+  },
   "programs.team-viewer": {
     "path": "programs/utilities/team-viewer",
     "flathub_id": "com.teamviewer.TeamViewer",
@@ -183,6 +222,13 @@
     "icon_name": "printer",
     "summary": "Printing — print your documents",
     "keyword": ["print", "printer", "cups"]
+  },
+  "services.sim-hardware": {
+    "path": "services/sim-hardware",
+    "name": "Simulation hardware",
+    "icon_name": "preferences-desktop-gaming",
+    "summary": "Simulation hardware — racing wheels, pedals and their force feedback",
+    "keyword": ["wheel", "racing", "simulation", "force feedback", "logitech", "fanatec", "thrustmaster", "pedals"]
   },
   "services.remote-desktop": {
     "path": "services/remote-desktop",

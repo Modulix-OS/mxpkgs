@@ -24,6 +24,11 @@
     "summary": "Heroic Games Launcher — jouer à vos jeux Epic Games Store et GOG",
     "keyword": ["heroic", "epic", "gog", "jeu", "lanceur"]
   },
+  "programs.games.vr": {
+    "name": "Réalité virtuelle",
+    "summary": "Réalité virtuelle — diffuser les jeux VR vers un casque autonome avec ALVR",
+    "keyword": ["vr", "réalité virtuelle", "alvr", "steamvr", "openxr", "quest", "casque"]
+  },
   "programs.creativity.blender": {
     "name": "Blender",
     "summary": "Blender — modéliser, animer et faire des rendus en 3D",
@@ -33,6 +38,21 @@
     "name": "Bambu Studio",
     "summary": "Bambu Studio — préparer des modèles pour l'impression 3D",
     "keyword": ["bambu", "impression 3d", "découpe", "impression"]
+  },
+  "programs.creativity.krita": {
+    "name": "Krita",
+    "summary": "Krita — peindre et illustrer",
+    "keyword": ["krita", "dessin", "peinture", "illustration", "art numérique", "brosse"]
+  },
+  "programs.creativity.gimp": {
+    "name": "GIMP",
+    "summary": "GIMP — retoucher et modifier ses photos",
+    "keyword": ["gimp", "photo", "retouche", "image", "éditeur", "calque"]
+  },
+  "programs.creativity.inkscape": {
+    "name": "Inkscape",
+    "summary": "Inkscape — dessiner en vectoriel et illustrer",
+    "keyword": ["inkscape", "vectoriel", "svg", "dessin", "illustration", "logo"]
   },
   "programs.desktop": {
     "name": "Suite bureautique",
@@ -92,6 +112,11 @@
     "summary": "OBS Studio — enregistrer son écran et diffuser en direct",
     "keyword": ["obs", "diffusion", "enregistrement", "capture", "caméra"]
   },
+  "programs.studio.kdenlive": {
+    "name": "Kdenlive",
+    "summary": "Kdenlive — monter et exporter ses vidéos",
+    "keyword": ["kdenlive", "vidéo", "montage", "éditeur", "piste", "rendu"]
+  },
   "programs.team-viewer": {
     "name": "TeamViewer",
     "summary": "TeamViewer — utiliser cet ordinateur à distance",
@@ -133,6 +158,11 @@
     "name": "Impression",
     "summary": "Impression — imprimer vos documents",
     "keyword": ["imprimer", "imprimante", "cups"]
+  },
+  "services.sim-hardware": {
+    "name": "Matériel de simulation",
+    "summary": "Matériel de simulation — volants, pédaliers et leur retour de force",
+    "keyword": ["volant", "course", "simulation", "retour de force", "logitech", "fanatec", "thrustmaster", "pédalier"]
   },
   "services.remote-desktop": {
     "name": "Bureau à distance",
