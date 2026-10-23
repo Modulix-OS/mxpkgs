@@ -3,6 +3,7 @@
 {
   imports = [
     ./mitigations.nix
+    ./hardening.nix
   ];
 
   security.rtkit.enable = true;
