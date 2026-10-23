@@ -27,7 +27,15 @@
   "programs.games.vr": {
     "name": "Réalité virtuelle",
     "summary": "Réalité virtuelle — diffuser les jeux VR vers un casque autonome avec ALVR",
-    "keyword": ["vr", "réalité virtuelle", "alvr", "steamvr", "openxr", "quest", "casque"]
+    "keyword": [
+      "vr",
+      "réalité virtuelle",
+      "alvr",
+      "steamvr",
+      "openxr",
+      "quest",
+      "casque"
+    ]
   },
   "programs.creativity.blender": {
     "name": "Blender",
@@ -42,7 +50,14 @@
   "programs.creativity.krita": {
     "name": "Krita",
     "summary": "Krita — peindre et illustrer",
-    "keyword": ["krita", "dessin", "peinture", "illustration", "art numérique", "brosse"]
+    "keyword": [
+      "krita",
+      "dessin",
+      "peinture",
+      "illustration",
+      "art numérique",
+      "brosse"
+    ]
   },
   "programs.creativity.gimp": {
     "name": "GIMP",
@@ -52,7 +67,14 @@
   "programs.creativity.inkscape": {
     "name": "Inkscape",
     "summary": "Inkscape — dessiner en vectoriel et illustrer",
-    "keyword": ["inkscape", "vectoriel", "svg", "dessin", "illustration", "logo"]
+    "keyword": [
+      "inkscape",
+      "vectoriel",
+      "svg",
+      "dessin",
+      "illustration",
+      "logo"
+    ]
   },
   "programs.desktop": {
     "name": "Suite bureautique",
@@ -85,6 +107,19 @@
       "odt"
     ]
   },
+  "programs.desktop.latex": {
+    "name": "TeXstudio",
+    "summary": "TeXstudio — rédiger des documents LaTeX, avec la distribution TeX Live complète",
+    "keyword": [
+      "latex",
+      "tex",
+      "texlive",
+      "texstudio",
+      "thèse",
+      "bibtex",
+      "pdf"
+    ]
+  },
   "programs.dev": {
     "name": "Développement",
     "summary": "Outils de développement : Visual Studio Code, Git, Unreal Engine 5 et un conteneur Ubuntu",
@@ -108,7 +143,15 @@
   "programs.dev.ue5": {
     "name": "Unreal Engine 5",
     "summary": "L'éditeur Unreal Engine 5 dans un conteneur Ubuntu dédié, installé depuis l'archive Epic Games",
-    "keyword": ["unreal", "ue5", "unreal engine", "moteur de jeu", "jeu vidéo", "epic", "distrobox"]
+    "keyword": [
+      "unreal",
+      "ue5",
+      "unreal engine",
+      "moteur de jeu",
+      "jeu vidéo",
+      "epic",
+      "distrobox"
+    ]
   },
   "programs.dev.arduino": {
     "name": "Arduino",
@@ -187,7 +230,16 @@
   "services.sim-hardware": {
     "name": "Matériel de simulation",
     "summary": "Matériel de simulation — volants, pédaliers et leur retour de force",
-    "keyword": ["volant", "course", "simulation", "retour de force", "logitech", "fanatec", "thrustmaster", "pédalier"]
+    "keyword": [
+      "volant",
+      "course",
+      "simulation",
+      "retour de force",
+      "logitech",
+      "fanatec",
+      "thrustmaster",
+      "pédalier"
+    ]
   },
   "services.remote-desktop": {
     "name": "Bureau à distance",

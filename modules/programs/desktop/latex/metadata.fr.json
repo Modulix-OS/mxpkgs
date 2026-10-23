@@ -1,0 +1,4 @@
+{
+  "description": "LaTeX est le système de composition des documents longs ou techniques : thèses, rapports, articles et diaporamas, dont la structure s'écrit en texte brut et dont la mise en page est prise en charge pour vous. Ce module installe la distribution TeX Live complète, l'éditeur TeXstudio et les dictionnaires orthographiques de vos langues.",
+  "keyword": ["latex", "tex", "texlive", "texstudio", "thèse", "bibtex", "pdf"]
+}

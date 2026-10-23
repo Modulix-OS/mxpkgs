@@ -49,7 +49,15 @@
     "name": "Virtual reality",
     "icon_name": "steamvr",
     "summary": "Virtual reality — stream VR games to a standalone headset with ALVR",
-    "keyword": ["vr", "virtual reality", "alvr", "steamvr", "openxr", "quest", "headset"]
+    "keyword": [
+      "vr",
+      "virtual reality",
+      "alvr",
+      "steamvr",
+      "openxr",
+      "quest",
+      "headset"
+    ]
   },
   "programs.creativity.blender": {
     "path": "programs/creativity/blender",
@@ -73,7 +81,14 @@
     "nix_info": "krita",
     "name": "Krita",
     "summary": "Krita — paint and illustrate",
-    "keyword": ["krita", "draw", "paint", "illustration", "digital art", "brush"]
+    "keyword": [
+      "krita",
+      "draw",
+      "paint",
+      "illustration",
+      "digital art",
+      "brush"
+    ]
   },
   "programs.creativity.gimp": {
     "path": "programs/creativity/gimp",
@@ -124,13 +139,34 @@
     "summary": "LibreOffice — Writer, Calc, Impress and the rest of the suite",
     "keyword": ["libreoffice", "office", "writer", "calc", "impress", "odt"]
   },
+  "programs.desktop.latex": {
+    "path": "programs/desktop/latex",
+    "flathub_id": "org.texstudio.TeXstudio",
+    "nix_info": "texstudio",
+    "name": "TeXstudio",
+    "icon_name": "texstudio",
+    "summary": "TeXstudio — write LaTeX documents, with the full TeX Live distribution",
+    "keyword": [
+      "latex",
+      "tex",
+      "texlive",
+      "texstudio",
+      "thesis",
+      "bibtex",
+      "pdf"
+    ]
+  },
   "programs.dev": {
     "path": "programs/dev",
     "name": "Development",
     "icon_name": "applications-development",
-    "summary": "Development tools: Visual Studio Code, Git, Unreal Engine 5 and an Ubuntu container",
+    "summary": "Development tools: Visual Studio Code, Git and an Ubuntu container",
     "keyword": ["dev", "development", "code", "programming", "ide"],
-    "modules": ["programs.dev.vscode", "programs.dev.git", "programs.dev.distrobox", "programs.dev.ue5"]
+    "modules": [
+      "programs.dev.vscode",
+      "programs.dev.git",
+      "programs.dev.distrobox"
+    ]
   },
   "programs.dev.vscode": {
     "path": "programs/dev/vscode",
@@ -162,7 +198,14 @@
     "name": "Unreal Engine 5",
     "icon_name": "ue4editor",
     "summary": "Unreal Engine 5 editor in a dedicated Ubuntu container, installed from the Epic Games archive",
-    "keyword": ["unreal", "ue5", "unreal engine", "game engine", "gamedev", "epic", "distrobox"]
+    "keyword": [
+      "unreal",
+      "ue5",
+      "unreal engine",
+      "game engine",
+      "gamedev",
+      "epic"
+    ]
   },
   "programs.dev.arduino": {
     "path": "programs/dev/arduino",
@@ -268,7 +311,16 @@
     "name": "Simulation hardware",
     "icon_name": "preferences-desktop-gaming",
     "summary": "Simulation hardware — racing wheels, pedals and their force feedback",
-    "keyword": ["wheel", "racing", "simulation", "force feedback", "logitech", "fanatec", "thrustmaster", "pedals"]
+    "keyword": [
+      "wheel",
+      "racing",
+      "simulation",
+      "force feedback",
+      "logitech",
+      "fanatec",
+      "thrustmaster",
+      "pedals"
+    ]
   },
   "services.remote-desktop": {
     "path": "services/remote-desktop",

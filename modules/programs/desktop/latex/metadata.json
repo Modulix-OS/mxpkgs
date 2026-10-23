@@ -1,0 +1,4 @@
+{
+  "description": "LaTeX is the typesetting system for long or technical documents: theses, reports, articles and slides, where the structure is written in plain text and the layout is handled for you. This module installs the full TeX Live distribution, the TeXstudio editor and the spell-checking dictionaries for your languages.",
+  "keyword": ["latex", "tex", "texlive", "texstudio", "thesis", "bibtex", "pdf"]
+}
