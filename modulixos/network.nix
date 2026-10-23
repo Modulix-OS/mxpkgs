@@ -24,11 +24,11 @@ in
       {
         networking.firewall.enable = lib.mkForce true;
       }
-      lib.mkIf (!config.mx.mode.server.enable) {
+      (lib.mkIf (!config.mx.mode.server.enable) {
         networking.networkmanager.enable = lib.mkMxDefault true;
         users.groups.networkmanager.members = cfg.users;
-      }
-      lib.mkIf cfg.security-mode {
+      })
+      (lib.mkIf cfg.security-mode {
         networking.networkmanager = {
           settings = {
             main = {
@@ -56,7 +56,7 @@ in
         };
 
         services.avahi.enable = lib.mkForce false;
-      }
+      })
     ]
   );
 }
