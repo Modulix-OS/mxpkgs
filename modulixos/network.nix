@@ -19,45 +19,44 @@ in
     };
   };
 
-  config = lib.mkIf (!config.mx.mode.server.enable && cfg.enable) (
+  config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        networking.networkmanager.enable = lib.mkMxDefault true;
         networking.firewall.enable = lib.mkForce true;
-
+      }
+      lib.mkIf (!config.mx.mode.server.enable) {
+        networking.networkmanager.enable = lib.mkMxDefault true;
         users.groups.networkmanager.members = cfg.users;
       }
-      (
-        lib.mkIf cfg.security-mode {
-          networking.networkmanager = {
-            settings = {
-              main = {
-                hostname-mode = lib.mkForce "none";
-              };
+      lib.mkIf cfg.security-mode {
+        networking.networkmanager = {
+          settings = {
+            main = {
+              hostname-mode = lib.mkForce "none";
+            };
 
-              connection = {
-                "ipv4.dhcp-send-hostname" = lib.mkForce false;
-                "ipv6.dhcp-send-hostname" = lib.mkForce false;
-              };
-            };
-            wifi = {
-              macAddress = lib.mkMxDefault "random";
-              scanRandMacAddress = lib.mkMxDefault true;
-            };
-            ethernet = {
-              macAddress = lib.mkMxDefault "random";
+            connection = {
+              "ipv4.dhcp-send-hostname" = lib.mkForce false;
+              "ipv6.dhcp-send-hostname" = lib.mkForce false;
             };
           };
-          environment.etc."machine-info".text = "";
-
-          services.resolved.settings.Resolve = {
-            MulticastDNS = lib.mkMxDefault "no";
-            LLMNR = lib.mkMxDefault "no";
+          wifi = {
+            macAddress = lib.mkMxDefault "random";
+            scanRandMacAddress = lib.mkMxDefault true;
           };
+          ethernet = {
+            macAddress = lib.mkMxDefault "random";
+          };
+        };
+        environment.etc."machine-info".text = "";
 
-          services.avahi.enable = lib.mkForce false;
-        }
-      )
+        services.resolved.settings.Resolve = {
+          MulticastDNS = lib.mkMxDefault "no";
+          LLMNR = lib.mkMxDefault "no";
+        };
+
+        services.avahi.enable = lib.mkForce false;
+      }
     ]
   );
 }
