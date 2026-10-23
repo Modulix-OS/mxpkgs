@@ -1,7 +1,7 @@
 {
   callPackage,
   steamDisplayName ? "Proton CachyOS",
-  version ? "11.0-20261014-slr",
+  version ? "11.0-20261015-slr",
   arch,
   lib
 }:
@@ -19,9 +19,9 @@ callPackage ./proton-compat-tool.nix { } {
 
   url = "https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${version}/proton-cachyos-${version}-${archi}.tar.xz";
   hash = (if arch == "x86_64-linux" then
-            "sha256-L0CzBfelMJP2jj4VNEQY/ZswJo16TN6nNf9qKVryCRU="
+            "sha256-Vb1AvDQLIpgxr3ABPMstM3DFRN1tfUD+6OnhQirMnAQ="
           else if arch == "aarch64-linux" then
-            "sha256-KMCfVYTs1P+6JZ+T1qzZuj/jUja2rVdnFmOYQhV942w="
+            "sha256-xV683d43wjkDyERXknf4yDzQbWVlD3w+Wo4H6AxeIis="
           else lib.fakeHash);
 
   vdfPlaceholder = "proton-cachyos-${version}-${archi}";
