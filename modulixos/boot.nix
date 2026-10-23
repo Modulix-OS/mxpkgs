@@ -19,8 +19,31 @@ let
       throw "mx.bootloader: upstream Limine module no longer contains ${from}"
     else
       patched;
+  replaceAny =
+    alts: text:
+    let
+      patched = builtins.replaceStrings (map (a: a.from) alts) (map (a: a.to) alts) text;
+    in
+    if patched == text then
+      throw "mx.bootloader: upstream Limine module matches none of ${
+        lib.concatMapStringsSep ", " (a: a.from) alts
+      }"
+    else
+      patched;
   limineInstaller = builtins.toFile "limine-install.py" (
-    replaceChecked "'-L', 'Limine'," "'-L', '${efiLabel}',"
+    replaceAny
+      [
+        # nixpkgs <= 26.05: compact single-quoted argv list
+        {
+          from = "'-L', 'Limine',";
+          to = "'-L', '${efiLabel}',";
+        }
+        # nixpkgs >= 26.11: black-formatted, one argv entry per line
+        {
+          from = "\"Limine\",";
+          to = "\"${efiLabel}\",";
+        }
+      ]
       (replaceChecked "{4})\\*? Limine" "{4})\\*? ${efiLabel}"
         (builtins.readFile "${limineUpstream}/limine-install.py")
       )
