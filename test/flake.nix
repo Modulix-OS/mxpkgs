@@ -40,6 +40,11 @@
         inherit pkgs;
         baseSystem = self.nixosConfigurations.test-cli;
       };
+      securityTests = import ./security-eval.nix {
+        lib = inputs.mx.lib.extendLib nixpkgs.lib;
+        inherit pkgs;
+        baseSystem = self.nixosConfigurations.test-cli;
+      };
     in
     {
       nixosConfigurations = {
@@ -50,9 +55,13 @@
 
       # GPU module eval tests. `nix build .#checks.x86_64-linux.gpu` builds only this
       # check (does not build the VMs), so it stays cheap and isolated.
-      checks.${system}.gpu = gpuTests.check;
+      checks.${system} = {
+        gpu = gpuTests.check;
+        security = securityTests.check;
+      };
 
       # Machine-readable results: `nix eval .#gpuEval.x86_64-linux --json | jq`
       gpuEval.${system} = gpuTests.results;
+      securityEval.${system} = securityTests.results;
     };
 }
