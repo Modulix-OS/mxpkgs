@@ -1,4 +1,4 @@
-{ pkgs, lib, config, modulesPath, ... }:
+{ pkgs, lib, config, ... }:
 
 let
   cfg = config.mx.bootloader;
@@ -8,56 +8,8 @@ let
     logo = cfg.splash.logo;
     watermarkVerticalAlignment = cfg.splash.logoPosition;
   };
-  efiLabel = "ModulixOS";
-  limineUpstream = "${modulesPath}/system/boot/loader/limine";
-  replaceChecked =
-    from: to: text:
-    let
-      patched = builtins.replaceStrings [ from ] [ to ] text;
-    in
-    if patched == text then
-      throw "mx.bootloader: upstream Limine module no longer contains ${from}"
-    else
-      patched;
-  replaceAny =
-    alts: text:
-    let
-      patched = builtins.replaceStrings (map (a: a.from) alts) (map (a: a.to) alts) text;
-    in
-    if patched == text then
-      throw "mx.bootloader: upstream Limine module matches none of ${
-        lib.concatMapStringsSep ", " (a: a.from) alts
-      }"
-    else
-      patched;
-  limineInstaller = builtins.toFile "limine-install.py" (
-    replaceAny
-      [
-        # nixpkgs <= 26.05: compact single-quoted argv list
-        {
-          from = "'-L', 'Limine',";
-          to = "'-L', '${efiLabel}',";
-        }
-        # nixpkgs >= 26.11: black-formatted, one argv entry per line
-        {
-          from = "\"Limine\",";
-          to = "\"${efiLabel}\",";
-        }
-      ]
-      (replaceChecked "{4})\\*? Limine" "{4})\\*? ${efiLabel}"
-        (builtins.readFile "${limineUpstream}/limine-install.py")
-      )
-  );
-  limineModule = builtins.toFile "limine.nix" (
-    replaceChecked "src = ./limine-install.py;"
-      "src = ${builtins.unsafeDiscardStringContext limineInstaller};"
-      (builtins.readFile "${limineUpstream}/limine.nix")
-  );
 in
 {
-  disabledModules = [ "system/boot/loader/limine/limine.nix" ];
-  imports = [ limineModule ];
-
   options.mx.bootloader = {
     enable = lib.mkOption {
       type = lib.types.bool;
