@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, modulesPath, ... }:
 
 let
   cfg = config.mx.bootloader;
@@ -8,8 +8,33 @@ let
     logo = cfg.splash.logo;
     watermarkVerticalAlignment = cfg.splash.logoPosition;
   };
+  efiLabel = "ModulixOS";
+  limineUpstream = "${modulesPath}/system/boot/loader/limine";
+  replaceChecked =
+    from: to: text:
+    let
+      patched = builtins.replaceStrings [ from ] [ to ] text;
+    in
+    if patched == text then
+      throw "mx.bootloader: upstream Limine module no longer contains ${from}"
+    else
+      patched;
+  limineInstaller = builtins.toFile "limine-install.py" (
+    replaceChecked "'-L', 'Limine'," "'-L', '${efiLabel}',"
+      (replaceChecked "{4})\\*? Limine" "{4})\\*? ${efiLabel}"
+        (builtins.readFile "${limineUpstream}/limine-install.py")
+      )
+  );
+  limineModule = builtins.toFile "limine.nix" (
+    replaceChecked "src = ./limine-install.py;"
+      "src = ${builtins.unsafeDiscardStringContext limineInstaller};"
+      (builtins.readFile "${limineUpstream}/limine.nix")
+  );
 in
 {
+  disabledModules = [ "system/boot/loader/limine/limine.nix" ];
+  imports = [ limineModule ];
+
   options.mx.bootloader = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -20,6 +45,61 @@ in
       type = lib.types.bool;
       default = false;
       description = "Enable secure boot";
+    };
+    extraEntries = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              example = "Windows Boot Manager";
+              description = ''
+                Label shown for this entry in the Limine menu. It must contain
+                neither a newline nor a slash: Limine reads `/` as the entry
+                separator and `//` as a sub-entry marker.
+              '';
+            };
+            efiPath = lib.mkOption {
+              type = lib.types.str;
+              example = "/EFI/Microsoft/Boot/bootmgfw.efi";
+              description = ''
+                Absolute path of the EFI executable to chainload, relative to
+                the root of the EFI system partition holding it.
+              '';
+            };
+            esp = lib.mkOption {
+              type = lib.types.nullOr lib.types.str;
+              default = null;
+              example = "49eaf743-20fe-44fa-b9fe-b0944153ac72";
+              description = ''
+                GPT partition GUID (`PARTUUID`) of the EFI system partition
+                holding `efiPath`, for an operating system installed on another
+                EFI partition. `null` means `efiPath` lives on the partition
+                Limine itself booted from.
+
+                The filesystem UUID of a FAT partition (`D950-99F7`) does not
+                work here: Limine's `guid()` resolver parses 128-bit GUIDs.
+              '';
+            };
+          };
+        }
+      );
+      default = [ ];
+      example = [
+        {
+          name = "Windows Boot Manager";
+          efiPath = "/EFI/Microsoft/Boot/bootmgfw.efi";
+          esp = "49eaf743-20fe-44fa-b9fe-b0944153ac72";
+        }
+      ];
+      description = ''
+        Boot entries for the other operating systems installed on the machine,
+        chainloaded by Limine. Written by `mx-init` from what it detected on
+        the EFI system partitions, and replaced wholesale on every redetection.
+
+        A non-empty list also raises the menu timeout from 1 to 5 seconds: a
+        menu nobody can reach is of no use on a dual-boot machine.
+      '';
     };
     splash = {
       enable = lib.mkOption {
@@ -82,6 +162,13 @@ in
             quiet: yes
             remember_last_entry: no
           '';
+          extraEntries = lib.concatMapStrings (e: ''
+            /${e.name}
+                protocol: efi_chainload
+                image_path: ${
+                  if e.esp == null then "boot()" else "guid(${e.esp})"
+                }:${e.efiPath}
+          '') cfg.extraEntries;
           style = lib.mkIf cfg.splash.enable {
             wallpapers = [ cfg.splash.image ];
             wallpaperStyle = lib.mkMxDefault "stretched";
@@ -92,7 +179,7 @@ in
           };
         };
 
-        boot.loader.timeout = lib.mkMxDefault 1;
+        boot.loader.timeout = lib.mkMxDefault (if cfg.extraEntries == [ ] then 1 else 5);
         boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault false;
       }
     )
