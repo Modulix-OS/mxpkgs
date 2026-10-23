@@ -149,12 +149,24 @@ in
     system.activationScripts.steamConfigInject = {
       text = ''
         for user in /home/*; do
+          [ -d "$user" ] || continue
+          name="$(basename "$user")"
+          getent passwd "$name" >/dev/null || continue
+
           steam_path="$user/.local/share/Steam"
           config_path="$steam_path/config"
           config_file="$config_path/config.vdf"
-          mkdir -p "$config_path"
+
+          runuser -u "$name" -- mkdir -p "$config_path" || continue
+
+          for d in "$user/.local" "$user/.local/share"; do
+            if [ -d "$d" ] && [ "$(stat -c %u "$d")" = 0 ]; then
+              chown "$name":users "$d"
+            fi
+          done
+
           if [ ! -f "$config_file" ]; then
-            cat > "$config_file" <<EOF
+            runuser -u "$name" -- tee "$config_file" >/dev/null <<EOF
         "InstallConfigStore"
         {
         "Software"
@@ -182,7 +194,7 @@ in
         }
         }
         EOF
-            chown -R $(basename "$user"):users "$steam_path"
+            chown -R "$name":users "$steam_path"
           fi
         done
       '';
