@@ -103,23 +103,48 @@ Only meaningful when `dedicated.vendor = "nvidia"`.
 | `mx.hardware.gpu.nvidia.nvidiaBusId` | `null \| string` | `null` | PRIME bus id of the NVIDIA card, NixOS format: `"PCI:1:0:0"`. |
 | `mx.hardware.gpu.nvidia.intelBusId` | `null \| string` | `null` | PRIME bus id of the Intel iGPU, e.g. `"PCI:0:2:0"`. |
 | `mx.hardware.gpu.nvidia.amdBusId` | `null \| string` | `null` | PRIME bus id of the AMD iGPU. |
-| `mx.hardware.gpu.nvidia.experimental-power-management` | `bool` | `false` | Enables `powerManagement.finegrained` (ignored on legacy drivers). |
+| `mx.hardware.gpu.nvidia.experimental-power-management` | `bool` | `false` | Enables `powerManagement.finegrained` (ignored on legacy drivers, requires PRIME). |
+
+### PRIME is driven by the bus ids, and by nothing else
+
+PRIME is on when, and only when, `nvidiaBusId` **and** one of `intelBusId` /
+`amdBusId` are set. With the bus ids left at `null` the module turns
+`hardware.nvidia.prime.{offload,sync,reverseSync}.enable` off at the mx default
+priority (900), which overrides the `mkOverride 990` that
+`nixos-hardware.nixosModules.common-gpu-nvidia-prime` applies when a machine
+module pulls it in. A desktop therefore evaluates even when the generated
+`hardware-configuration.nix` imports a PRIME module by mistake, instead of
+failing on the nixpkgs assertion *When NVIDIA PRIME is enabled, the GPU bus IDs
+must be configured*.
+
+The override is a default, not a `mkForce`: a host that really wants PRIME
+without the mx options can still set `hardware.nvidia.prime.offload.enable`
+explicitly.
 
 ### Assertions to respect
 
 - `intelBusId` and `amdBusId` are mutually exclusive.
-- On a laptop with `disable = false`, setting `nvidiaBusId` requires one of
+- With `disable = false`, setting `nvidiaBusId` requires one of
   `intelBusId` / `amdBusId`.
+- Setting `intelBusId` or `amdBusId` requires `nvidiaBusId`.
 - `disable = true` requires `mx.hardware.laptop = true`.
 - `intelBusId` requires `integrated.vendor = "intel"`.
 - `amdBusId` requires `integrated.vendor = "amd"`.
+- `experimental-power-management = true` requires PRIME to be configured, since
+  nixpkgs only accepts `powerManagement.finegrained` alongside offload.
 
 Bus id format differs from `pciAddr`: `lspci` prints `01:00.0`, NixOS wants
 `PCI:1:0:0` (decimal, colon-separated, no leading zeros).
 
 ## 6. Examples
 
-### Desktop, single AMD card
+### Desktop, single card
+
+No bus id is involved: PRIME pairs a discrete GPU with an integrated one, so a
+desktop leaves `mx.hardware.gpu.nvidia.*BusId` at `null` whatever its card is.
+An NVIDIA desktop is the same shape as the AMD one below, with
+`vendor = "nvidia"` and its own `generation`.
+
 
 ```nix
 mx.hardware.gpu.dedicated = {

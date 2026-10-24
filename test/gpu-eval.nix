@@ -14,6 +14,14 @@
 let
   # mkForce, spelled out so this file needs no module-system lib in scope at the call site.
   ov = v: { _type = "override"; priority = 50; content = v; };
+  ovAt = p: v: { _type = "override"; priority = p; content = v; };
+
+  nhPrime = { config, lib, ... }: {
+    hardware.nvidia.prime.offload = {
+      enable = ovAt 990 true;
+      enableOffloadCmd = lib.mkIf config.hardware.nvidia.prime.offload.enable true;
+    };
+  };
 
   cfgOf = mod: (baseSystem.extendModules { modules = [ mod ]; }).config;
 
@@ -30,6 +38,9 @@ let
   hasRocmTree = c: lib.any (lib.hasInfix "/opt/rocm") c.systemd.tmpfiles.rules;
   bits32 = c: c.hardware.graphics.enable32Bit;
   switcheroo = c: c.services.switcherooControl.enable;
+  prime = c: c.hardware.nvidia.prime;
+  nvAsserts = c: map (a: a.message)
+    (lib.filter (a: !a.assertion && lib.hasPrefix "mx.hardware.gpu.nvidia:" a.message) c.assertions);
 
   # ---- scenarios -----------------------------------------------------------
   c = {
@@ -55,6 +66,20 @@ let
     nvidiaOffload    = cfgOf (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
     amdOffload       = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; compute = { enable = true; nvidiaOffloadEnv.enable = true; }; });
     hybridAmdAmd     = cfgOf (gpu { dedicated = { vendor = ov "amd"; generation = "rdna3"; }; integrated = { vendor = "amd"; generation = "rdna3"; }; });
+
+    nvidiaNhPrime = cfgOf { imports = [ (gpu { dedicated = { vendor = ov "nvidia"; generation = "ampere"; }; }) nhPrime ]; };
+
+    hybridPrime = cfgOf {
+      imports = [
+        (gpu {
+          dedicated = { vendor = ov "nvidia"; generation = "ampere"; };
+          integrated = { vendor = "intel"; generation = "tigerlake"; };
+          nvidia = { nvidiaBusId = "PCI:1:0:0"; intelBusId = "PCI:0:2:0"; };
+        })
+        nhPrime
+        { mx.hardware.laptop = true; }
+      ];
+    };
   };
 
   # Slot layout of a scenario, fed to the pure lib.mxGpu* helpers.
@@ -78,6 +103,14 @@ let
     nvOffload = evar cc "__NV_PRIME_RENDER_OFFLOAD";
     glxVendor = evar cc "__GLX_VENDOR_LIBRARY_NAME";
     switcheroo = switcheroo cc;
+    prime = {
+      offload = (prime cc).offload.enable;
+      offloadCmd = (prime cc).offload.enableOffloadCmd;
+      nvidiaBusId = (prime cc).nvidiaBusId;
+      intelBusId = (prime cc).intelBusId;
+      amdgpuBusId = (prime cc).amdgpuBusId;
+    };
+    nvAsserts = nvAsserts cc;
     pkgs = names cc;
   }) c;
 
@@ -206,6 +239,21 @@ let
     (expect "hybridIntel.switcheroo"   (switcheroo c.hybridIntel) true)
     (expect "amd.noSwitcheroo"         (switcheroo c.amd) false)
     (expect "igpuOnly.noSwitcheroo"    (switcheroo c.igpuOnly) false)
+
+    (expect "nvidia.primeOff"          (prime c.nvidia).offload.enable false)
+    (expect "nvidia.noBusId"           (prime c.nvidia).nvidiaBusId "")
+    (expect "nvidia.asserts"           (nvAsserts c.nvidia) [])
+    (expect "nvidiaNhPrime.primeOff"   (prime c.nvidiaNhPrime).offload.enable false)
+    (expect "nvidiaNhPrime.noCmd"      (prime c.nvidiaNhPrime).offload.enableOffloadCmd false)
+    (expect "nvidiaNhPrime.noBusId"    (prime c.nvidiaNhPrime).nvidiaBusId "")
+    (expect "nvidiaNhPrime.asserts"    (nvAsserts c.nvidiaNhPrime) [])
+
+    (expect "hybridPrime.primeOn"      (prime c.hybridPrime).offload.enable true)
+    (expect "hybridPrime.cmd"          (prime c.hybridPrime).offload.enableOffloadCmd true)
+    (expect "hybridPrime.nvidiaBusId"  (prime c.hybridPrime).nvidiaBusId "PCI:1:0:0")
+    (expect "hybridPrime.intelBusId"   (prime c.hybridPrime).intelBusId "PCI:0:2:0")
+    (expect "hybridPrime.amdBusId"     (prime c.hybridPrime).amdgpuBusId "")
+    (expect "hybridPrime.asserts"      (nvAsserts c.hybridPrime) [])
   ];
 
   allOk = lib.all (x: x == true) checks;

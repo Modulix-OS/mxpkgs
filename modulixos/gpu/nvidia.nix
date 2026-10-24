@@ -13,6 +13,9 @@ let
 
   legacyDriver = legacy-390 || legacy-470 || legacy-580;
 
+  primeConfigured =
+    cfg.nvidiaBusId != null && (cfg.intelBusId != null || cfg.amdBusId != null);
+
   gamesEnabled = config.mx.programs.games.enable;
 
   nvidiaUnstablePackages = config.boot.kernelPackages.callPackage
@@ -36,14 +39,43 @@ in
     intelBusId = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
+      example = "PCI:0:2:0";
+      description = ''
+        Bus id of the Intel integrated GPU, in the `PCI:bus:device:function` form
+        NixOS expects: the `lspci` address with bus and device in decimal and
+        without leading zeros, so `00:02.0` becomes `PCI:0:2:0`.
+
+        Setting it together with `nvidiaBusId` is what turns NVIDIA PRIME on.
+        Left null, PRIME stays off even when an imported `nixos-hardware` module
+        asks for it.
+      '';
     };
     nvidiaBusId = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
+      example = "PCI:1:0:0";
+      description = ''
+        Bus id of the dedicated NVIDIA GPU, in the `PCI:bus:device:function` form
+        NixOS expects: the `lspci` address with bus and device in decimal and
+        without leading zeros, so `01:00.0` becomes `PCI:1:0:0`.
+
+        Only meaningful alongside `intelBusId` or `amdBusId`: PRIME pairs a
+        dedicated GPU with an integrated one, so setting it alone is an error.
+      '';
     };
     amdBusId = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
+      example = "PCI:5:0:0";
+      description = ''
+        Bus id of the AMD integrated GPU, in the `PCI:bus:device:function` form
+        NixOS expects: the `lspci` address with bus and device in decimal and
+        without leading zeros, so `05:00.0` becomes `PCI:5:0:0`.
+
+        Setting it together with `nvidiaBusId` is what turns NVIDIA PRIME on.
+        Left null, PRIME stays off even when an imported `nixos-hardware` module
+        asks for it.
+      '';
     };
     experimental-power-management = lib.mkOption {
       type = lib.types.bool;
@@ -60,8 +92,16 @@ in
           message = "mx.hardware.gpu.nvidia: intelBusId and amdBusId cannot both be set";
         }
         {
-          assertion = (isLaptop && !cfg.disable && cfg.nvidiaBusId != null) -> (cfg.intelBusId != null || cfg.amdBusId != null);
+          assertion = (!cfg.disable && cfg.nvidiaBusId != null) -> (cfg.intelBusId != null || cfg.amdBusId != null);
           message = "mx.hardware.gpu.nvidia: nvidiaBusId requires intelBusId or amdBusId for PRIME";
+        }
+        {
+          assertion = (cfg.intelBusId != null || cfg.amdBusId != null) -> cfg.nvidiaBusId != null;
+          message = "mx.hardware.gpu.nvidia: intelBusId/amdBusId requires nvidiaBusId for PRIME";
+        }
+        {
+          assertion = cfg.experimental-power-management -> primeConfigured;
+          message = "mx.hardware.gpu.nvidia: experimental-power-management sets hardware.nvidia.powerManagement.finegrained, which NixOS only accepts with PRIME offload; set nvidiaBusId plus intelBusId or amdBusId (hybrid laptop), or leave it off";
         }
         {
           assertion = cfg.disable -> isLaptop;
@@ -102,14 +142,20 @@ in
               nvidiaLatestDriver
             );
           open = lib.mkMxDefault (!legacyDriver);
-          prime = {
-            intelBusId = lib.mkMxDefault (lib.optionalString (cfg.intelBusId != null) cfg.intelBusId);
-            nvidiaBusId = lib.mkMxDefault (lib.optionalString (cfg.nvidiaBusId != null) cfg.nvidiaBusId);
-            amdgpuBusId = lib.mkMxDefault (lib.optionalString (cfg.amdBusId != null) cfg.amdBusId);
-          };
+          prime = lib.mkMerge [
+            (lib.mkIf (cfg.intelBusId != null) { intelBusId = lib.mkMxDefault cfg.intelBusId; })
+            (lib.mkIf (cfg.nvidiaBusId != null) { nvidiaBusId = lib.mkMxDefault cfg.nvidiaBusId; })
+            (lib.mkIf (cfg.amdBusId != null) { amdgpuBusId = lib.mkMxDefault cfg.amdBusId; })
+            (lib.mkIf (!primeConfigured) {
+              offload.enable = lib.mkMxDefault false;
+              offload.enableOffloadCmd = lib.mkMxDefault false;
+              sync.enable = lib.mkMxDefault false;
+              reverseSync.enable = lib.mkMxDefault false;
+            })
+          ];
           dynamicBoost.enable = isLaptop && !legacyDriver;
           powerManagement.enable = lib.mkMxDefault true;
-          powerManagement.finegrained = lib.mkMxDefault (!legacyDriver && cfg.experimental-power-management);
+          powerManagement.finegrained = lib.mkMxDefault (!legacyDriver && cfg.experimental-power-management && primeConfigured);
         };
 
         systemd.services.nvidia-suspend.enable = lib.mkMxDefault true;
