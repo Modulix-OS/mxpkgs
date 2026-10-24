@@ -128,6 +128,7 @@ in
               click-method = "areas";
               disable-while-typing = true;
             };
+            "org/gnome/shell/extensions/blur-my-shell".settings-version = lib.gvariant.mkInt32 2;
             "org/gnome/shell/extensions/blur-my-shell/panel".blur = false;
             "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
               blur = true;
@@ -165,6 +166,11 @@ in
               show-show-apps-button = true;
               show-trash = true;
               transparency-mode = "DEFAULT";
+            };
+            "org/gnome/shell/extensions/ding" = {
+              show-home = false;
+              show-trash = false;
+              show-volumes = false;
             };
             "org/gnome/shell/extensions/quick-settings-audio-panel" = {
               create-mpris-controllers = false;
