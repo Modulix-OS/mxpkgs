@@ -260,6 +260,7 @@
     "flathub_id": "com.teamviewer.TeamViewer",
     "nix_info": "teamviewer",
     "name": "TeamViewer",
+    "icon_name": "teamviewer",
     "summary": "TeamViewer — use this computer from somewhere else",
     "keyword": ["teamviewer", "remote", "support", "access"]
   },
