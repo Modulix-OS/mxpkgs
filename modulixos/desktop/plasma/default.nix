@@ -41,7 +41,7 @@ in
           kate
           qrca
           khelpcenter
-        ] ++ lib.optional (!cfg.core-app) [
+        ] ++ lib.optionals (!cfg.core-app) [
           gwenview
           okular
           dolphin

@@ -303,8 +303,8 @@
     "path": "services/printing",
     "name": "Printing",
     "icon_name": "printer",
-    "summary": "Printing — print your documents",
-    "keyword": ["print", "printer", "cups"]
+    "summary": "Printing — print your documents and scan with your printer",
+    "keyword": ["print", "printer", "cups", "scan", "scanner", "sane"]
   },
   "services.sim-hardware": {
     "path": "services/sim-hardware",

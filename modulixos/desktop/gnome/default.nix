@@ -65,11 +65,8 @@ in
               nautilus
               decibels
               loupe
-              cups
-              simple-scan
               gnome-shell-extensions
               showtime
-              decibels
           ];
       }
     )

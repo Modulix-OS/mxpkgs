@@ -55,7 +55,14 @@ in
           LLMNR = lib.mkMxDefault "no";
         };
 
-        services.avahi.enable = lib.mkForce false;
+        services.avahi.publish = {
+          enable = lib.mkForce false;
+          addresses = lib.mkForce false;
+          domain = lib.mkForce false;
+          hinfo = lib.mkForce false;
+          userServices = lib.mkForce false;
+          workstation = lib.mkForce false;
+        };
       })
     ]
   );

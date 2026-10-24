@@ -8,6 +8,11 @@
 let
   cfg = config.mx.services.printer;
   normalUser = import ../../../lib/normal-user.nix { inherit config; };
+  scanFrontend =
+    if config.mx.desktop == "plasma" then
+      [ pkgs.kdePackages.skanpage ]
+    else
+      lib.optional (config.mx.desktop != "cli") pkgs.simple-scan;
 in
 {
   options.mx.services.printer = {
@@ -25,6 +30,7 @@ in
       printing = {
         enable = true;
         startWhenNeeded = lib.mkMxDefault true;
+        browsed.enable = lib.mkMxDefault false;
         drivers = with pkgs; [
           # Brother BrGenML1 CUPS wrapper driver
           brgenml1cupswrapper
@@ -41,16 +47,12 @@ in
           # Ghostscript and cups printer drivers
           gutenprint
 
-          # Some additional CUPS drivers including Canon drivers
-          gutenprint-bin
-
           # HP
           hplip
 
           # Epson
           epson-escpr2
           epson-escpr
-          epkowa # Scanner
 
           # Samsung
           samsung-unified-linux-driver
@@ -58,16 +60,14 @@ in
         ];
       };
 
+      ipp-usb.enable = lib.mkMxDefault true;
+
       avahi = {
         enable = true;
         nssmdns4 = lib.mkMxDefault true;
+        nssmdns6 = lib.mkMxDefault true;
         openFirewall = lib.mkMxDefault true;
       };
-
-      udev.packages = with pkgs; [
-        sane-airscan
-        utsushi
-      ];
     };
 
     hardware.sane = {
@@ -76,10 +76,13 @@ in
         sane-airscan
         epkowa
         utsushi
+        hplip
       ];
     };
 
     programs.system-config-printer.enable = true;
+
+    environment.systemPackages = scanFrontend;
 
     users.groups.scanner.members = cfg.users;
     users.groups.lp.members = cfg.users;

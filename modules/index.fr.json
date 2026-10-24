@@ -224,8 +224,8 @@
   },
   "services.printer": {
     "name": "Impression",
-    "summary": "Impression — imprimer vos documents",
-    "keyword": ["imprimer", "imprimante", "cups"]
+    "summary": "Impression — imprimer vos documents et numériser avec votre imprimante",
+    "keyword": ["imprimer", "imprimante", "cups", "numériser", "scanner", "sane"]
   },
   "services.sim-hardware": {
     "name": "Matériel de simulation",
