@@ -2,7 +2,7 @@
   "programs.games": {
     "path": "programs/games",
     "name": "Gaming",
-    "icon_name": "applications-games",
+    "icon_name": "preferences-desktop-gaming",
     "summary": "Everything needed to play games: Steam, Lutris, Heroic and UMU",
     "keyword": ["game", "gaming", "play"],
     "modules": [
