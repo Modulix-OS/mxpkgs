@@ -72,7 +72,7 @@ in
         chainloaded by Limine. Written by `mx-init` from what it detected on
         the EFI system partitions, and replaced wholesale on every redetection.
 
-        A non-empty list also raises the menu timeout from 1 to 5 seconds: a
+        A non-empty list also raises the menu timeout from 1 to 10 seconds: a
         menu nobody can reach is of no use on a dual-boot machine.
       '';
     };
@@ -154,7 +154,7 @@ in
           };
         };
 
-        boot.loader.timeout = lib.mkMxDefault (if cfg.extraEntries == [ ] then 1 else 5);
+        boot.loader.timeout = lib.mkMxDefault (if cfg.extraEntries == [ ] then 1 else 10);
         boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault false;
       }
     )
