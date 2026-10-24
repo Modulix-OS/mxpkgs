@@ -1,0 +1,4 @@
+{
+  "description": "Pilotes d'imprimantes Samsung : le pilote unifié Samsung et SpliX pour le protocole QPDL, qui pilote aussi les modèles Dell et Xerox rebadgés. Impression uniquement.",
+  "keyword": ["samsung", "splix", "qpdl", "xpress", "ml", "clx", "dell", "xerox"]
+}

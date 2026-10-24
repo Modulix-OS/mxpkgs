@@ -15,6 +15,14 @@ let
       lib.optional (config.mx.desktop != "cli") pkgs.simple-scan;
 in
 {
+  imports = [
+    ./brother
+    ./canon
+    ./epson
+    ./hp
+    ./samsung
+  ];
+
   options.mx.services.printer = {
     enable = lib.mkEnableOption "Enable printer services";
 
@@ -31,33 +39,7 @@ in
         enable = true;
         startWhenNeeded = lib.mkMxDefault true;
         browsed.enable = lib.mkMxDefault false;
-        drivers = with pkgs; [
-          # Brother BrGenML1 CUPS wrapper driver
-          brgenml1cupswrapper
-
-          # Brother BrGenML1 LPR driver
-          brgenml1lpr
-
-          # Brother laser printers
-          brlaser
-
-          # Canon Pixma series
-          cnijfilter2
-
-          # Ghostscript and cups printer drivers
-          gutenprint
-
-          # HP
-          hplip
-
-          # Epson
-          epson-escpr2
-          epson-escpr
-
-          # Samsung
-          samsung-unified-linux-driver
-          splix
-        ];
+        drivers = [ pkgs.gutenprint ];
       };
 
       ipp-usb.enable = lib.mkMxDefault true;
@@ -72,12 +54,7 @@ in
 
     hardware.sane = {
       enable = true;
-      extraBackends = with pkgs; [
-        sane-airscan
-        epkowa
-        utsushi
-        hplip
-      ];
+      extraBackends = [ pkgs.sane-airscan ];
     };
 
     programs.system-config-printer.enable = true;

@@ -1,0 +1,4 @@
+{
+  "description": "Pilotes d'imprimantes Brother : brlaser pour la gamme laser et le wrapper BrGenML1 pour les modèles monochromes génériques. Impression uniquement, les scanners Brother ne sont pas pris en charge.",
+  "keyword": ["brother", "brlaser", "brgenml1", "hl", "dcp", "mfc", "laser"]
+}

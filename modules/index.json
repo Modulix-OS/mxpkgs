@@ -303,8 +303,50 @@
     "path": "services/printing",
     "name": "Printing",
     "icon_name": "printer",
-    "summary": "Printing — print your documents and scan with your printer",
-    "keyword": ["print", "printer", "cups", "scan", "scanner", "sane"]
+    "summary": "Printing — print your documents and scan with your printer, driverless (IPP Everywhere, AirPrint, eSCL)",
+    "keyword": ["print", "printer", "cups", "scan", "scanner", "sane", "ipp", "airprint"],
+    "modules": [
+      "services.printer.brother",
+      "services.printer.canon",
+      "services.printer.epson",
+      "services.printer.hp",
+      "services.printer.samsung"
+    ]
+  },
+  "services.printer.brother": {
+    "path": "services/printing/brother",
+    "name": "Brother printers",
+    "icon_name": "printer",
+    "summary": "Brother printers — brlaser and BrGenML1 drivers, printing only",
+    "keyword": ["brother", "brlaser", "brgenml1", "hl", "dcp", "mfc", "printer"]
+  },
+  "services.printer.canon": {
+    "path": "services/printing/canon",
+    "name": "Canon printers",
+    "icon_name": "printer",
+    "summary": "Canon printers — cnijfilter2 driver for the Pixma series, printing only",
+    "keyword": ["canon", "pixma", "maxify", "cnijfilter", "printer"]
+  },
+  "services.printer.epson": {
+    "path": "services/printing/epson",
+    "name": "Epson printers and scanners",
+    "icon_name": "printer",
+    "summary": "Epson printers and scanners — ESC/P-R filters plus the epkowa and utsushi scanner backends",
+    "keyword": ["epson", "escpr", "epkowa", "utsushi", "ecotank", "workforce", "perfection", "scanner"]
+  },
+  "services.printer.hp": {
+    "path": "services/printing/hp",
+    "name": "HP printers and all-in-ones",
+    "icon_name": "printer",
+    "summary": "HP printers and all-in-ones — HPLIP driver and the hpaio scanner backend",
+    "keyword": ["hp", "hplip", "hpaio", "deskjet", "envy", "officejet", "laserjet", "scanner"]
+  },
+  "services.printer.samsung": {
+    "path": "services/printing/samsung",
+    "name": "Samsung printers",
+    "icon_name": "printer",
+    "summary": "Samsung printers — unified driver and SpliX (QPDL), also for rebadged Dell and Xerox models",
+    "keyword": ["samsung", "splix", "qpdl", "xpress", "clx", "dell", "xerox", "printer"]
   },
   "services.sim-hardware": {
     "path": "services/sim-hardware",

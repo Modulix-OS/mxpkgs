@@ -1,4 +1,4 @@
 {
-  "description": "Imprimer vos documents sur une imprimante branchée à cet ordinateur ou partagée sur le réseau.",
-  "keyword": ["imprimer", "imprimante", "cups", "numériser"]
+  "description": "Imprimer vos documents sur une imprimante branchée à cet ordinateur ou partagée sur le réseau, et numériser avec une imprimante multifonction. Prend en charge les imprimantes et scanners sans pilote (IPP Everywhere, AirPrint, eSCL) ; les pilotes des modèles plus anciens sont installés par les modules dédiés à chaque constructeur.",
+  "keyword": ["imprimer", "imprimante", "cups", "numériser", "scanner", "sane", "ipp", "airprint"]
 }

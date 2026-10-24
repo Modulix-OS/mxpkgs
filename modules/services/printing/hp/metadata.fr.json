@@ -1,0 +1,4 @@
+{
+  "description": "HPLIP, le pilote HP pour les imprimantes Deskjet, Envy, Officejet et LaserJet, ainsi que le backend hpaio qui permet de numériser avec une multifonction HP. Utile seulement si votre modèle HP ne fonctionne pas sans pilote.",
+  "keyword": ["hp", "hewlett-packard", "hplip", "hpaio", "deskjet", "envy", "officejet", "laserjet"]
+}

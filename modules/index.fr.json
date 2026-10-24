@@ -224,8 +224,33 @@
   },
   "services.printer": {
     "name": "Impression",
-    "summary": "Impression — imprimer vos documents et numériser avec votre imprimante",
-    "keyword": ["imprimer", "imprimante", "cups", "numériser", "scanner", "sane"]
+    "summary": "Impression — imprimer vos documents et numériser avec votre imprimante, sans pilote (IPP Everywhere, AirPrint, eSCL)",
+    "keyword": ["imprimer", "imprimante", "cups", "numériser", "scanner", "sane", "ipp", "airprint"]
+  },
+  "services.printer.brother": {
+    "name": "Imprimantes Brother",
+    "summary": "Imprimantes Brother — pilotes brlaser et BrGenML1, impression uniquement",
+    "keyword": ["brother", "brlaser", "brgenml1", "hl", "dcp", "mfc", "imprimante"]
+  },
+  "services.printer.canon": {
+    "name": "Imprimantes Canon",
+    "summary": "Imprimantes Canon — pilote cnijfilter2 pour la gamme Pixma, impression uniquement",
+    "keyword": ["canon", "pixma", "maxify", "cnijfilter", "imprimante"]
+  },
+  "services.printer.epson": {
+    "name": "Imprimantes et scanners Epson",
+    "summary": "Imprimantes et scanners Epson — filtres ESC/P-R et backends de numérisation epkowa et utsushi",
+    "keyword": ["epson", "escpr", "epkowa", "utsushi", "ecotank", "workforce", "perfection", "scanner"]
+  },
+  "services.printer.hp": {
+    "name": "Imprimantes et multifonctions HP",
+    "summary": "Imprimantes et multifonctions HP — pilote HPLIP et backend de numérisation hpaio",
+    "keyword": ["hp", "hplip", "hpaio", "deskjet", "envy", "officejet", "laserjet", "scanner"]
+  },
+  "services.printer.samsung": {
+    "name": "Imprimantes Samsung",
+    "summary": "Imprimantes Samsung — pilote unifié et SpliX (QPDL), aussi pour les modèles Dell et Xerox rebadgés",
+    "keyword": ["samsung", "splix", "qpdl", "xpress", "clx", "dell", "xerox", "imprimante"]
   },
   "services.sim-hardware": {
     "name": "Matériel de simulation",

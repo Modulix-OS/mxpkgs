@@ -1,0 +1,4 @@
+{
+  "description": "HPLIP, the HP driver for Deskjet, Envy, Officejet and LaserJet printers, plus the hpaio backend that makes HP all-in-ones scan. Only needed if your HP model does not work driverless.",
+  "keyword": ["hp", "hewlett-packard", "hplip", "hpaio", "deskjet", "envy", "officejet", "laserjet"]
+}

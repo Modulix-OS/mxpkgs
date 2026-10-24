@@ -1,0 +1,4 @@
+{
+  "description": "Brother printer drivers: brlaser for the laser range and the BrGenML1 wrapper for the generic monochrome models. Printing only, Brother scanners are not covered.",
+  "keyword": ["brother", "brlaser", "brgenml1", "hl", "dcp", "mfc", "laser"]
+}

@@ -1,4 +1,4 @@
 {
-  "description": "Print your documents on a printer plugged into this computer or shared on the network.",
-  "keyword": ["print", "printer", "cups", "scan"]
+  "description": "Print your documents on a printer plugged into this computer or shared on the network, and scan with an all-in-one. Covers driverless printers and scanners (IPP Everywhere, AirPrint, eSCL); drivers for older models are installed by the dedicated manufacturer modules.",
+  "keyword": ["print", "printer", "cups", "scan", "scanner", "sane", "ipp", "airprint"]
 }

@@ -1,0 +1,4 @@
+{
+  "description": "Epson drivers: the ESC/P-R filters for Expression, EcoTank and WorkForce printers, plus the epkowa and utsushi backends for Epson scanners and all-in-ones.",
+  "keyword": ["epson", "escpr", "epkowa", "utsushi", "ecotank", "expression", "workforce", "perfection"]
+}
