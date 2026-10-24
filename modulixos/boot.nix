@@ -72,8 +72,11 @@ in
         chainloaded by Limine. Written by `mx-init` from what it detected on
         the EFI system partitions, and replaced wholesale on every redetection.
 
-        A non-empty list also raises the menu timeout from 1 to 10 seconds: a
-        menu nobody can reach is of no use on a dual-boot machine.
+        A non-empty list also raises the menu timeout from 1 to 5 seconds and
+        drops Limine's `quiet` mode: a menu nobody can reach is of no use on a
+        dual-boot machine, and `quiet` keeps Limine from ever initialising its
+        terminal, so the menu stays hidden behind the firmware logo until a key
+        is pressed.
       '';
     };
     splash = {
@@ -133,10 +136,10 @@ in
             };
           };
 
-          extraConfig = ''
-            quiet: yes
-            remember_last_entry: no
-          '';
+          extraConfig = lib.concatStringsSep "\n" (
+            lib.optional (cfg.extraEntries == [ ]) "quiet: yes"
+            ++ [ "remember_last_entry: no" ]
+          );
           extraEntries = lib.concatMapStrings (e: ''
             /${e.name}
                 protocol: efi_chainload
@@ -154,7 +157,7 @@ in
           };
         };
 
-        boot.loader.timeout = lib.mkMxDefault (if cfg.extraEntries == [ ] then 1 else 10);
+        boot.loader.timeout = lib.mkMxDefault (if cfg.extraEntries == [ ] then 1 else 5);
         boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault false;
       }
     )
