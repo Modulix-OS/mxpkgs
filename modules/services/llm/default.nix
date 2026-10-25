@@ -136,7 +136,7 @@ in
     mx.hardware.gpu.compute.rocmStack.enable = lib.mkIf hasRocmStack true;
 
     environment.systemPackages = lib.mkIf cfg.enableNewelle [
-      pkgs-unstable.newelle
+      pkgs.newelle
     ];
 
     services.open-webui = {
