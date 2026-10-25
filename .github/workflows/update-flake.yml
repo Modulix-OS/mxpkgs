@@ -45,10 +45,11 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate flake
-        # Narrow this if it is too heavy on the runner, e.g.
-        #   nix flake check --no-build
-        # or build only the system you ship:
-        #   nix build .#nixosConfigurations.<host>.config.system.build.toplevel
+        # Must stay a *building* check: `checks.<system>.gnome-shell-app-folder-order-patch`
+        # is what proves the gnome-shell patch in
+        # modulixos/desktop/gnome/patches/ still applies to the bumped nixpkgs.
+        # A `--no-build` run only evaluates, so a patch that stopped applying
+        # would pass the gate and get auto-merged, breaking every rebuild.
         run: nix flake check
 
   # Merge the open flake-update PR once it is >7 days old, its check is green,

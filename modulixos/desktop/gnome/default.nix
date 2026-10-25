@@ -14,6 +14,7 @@ in
       ./numlock.nix
       ./trash.nix
       ./gnome-software.nix
+      ./app-folder-order.nix
       ./custom.nix
     ];
 

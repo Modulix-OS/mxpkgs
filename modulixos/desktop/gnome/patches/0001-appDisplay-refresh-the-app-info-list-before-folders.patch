@@ -1,0 +1,59 @@
+Subject: [PATCH] appDisplay: refresh the app info list before the folder views
+
+AppDisplay._redisplay() reloads every folder view before calling
+super._redisplay(), and AppDisplay._loadApps() -- reached from there -- is
+the only writer of this._appInfoList. FolderView._loadApps() matches its
+`categories` key against that same list, through
+AppDisplay.getAppInfos(), so a folder view always filters the app list of
+the *previous* redisplay.
+
+An application installed while the session is running is therefore claimed
+by no folder on the first pass: it is appended to the root grid instead,
+and only filed into its folder on the next redisplay -- the next install,
+or the next session. Hoist the refresh into its own method and call it at
+the top of AppDisplay._redisplay(), before the folder views reload.
+
+_loadApps() has exactly one caller (BaseAppView._redisplay) and is always
+reached through the patched method, and both fields the filter reads are
+set in the BaseAppView constructor, so the earlier call is safe.
+
+Upstream: https://gitlab.gnome.org/GNOME/gnome-shell (still present on main)
+--- a/js/ui/appDisplay.js
++++ b/js/ui/appDisplay.js
+@@ -1375,6 +1375,15 @@
+     }
+ 
+     _redisplay() {
++        // FolderView._loadApps() matches its `categories` against
++        // AppDisplay.getAppInfos(), so the installed-app list has to be
++        // refreshed before the folder views reload. Refreshing it below, in
++        // super._redisplay() -> _loadApps(), is one pass too late: a freshly
++        // installed application is matched against the previous pass's list,
++        // so no folder claims it and it lands on the root grid until the next
++        // redisplay.
++        this._refreshAppInfoList();
++
+         this._folderIcons.forEach(icon => {
+             icon.view._redisplay();
+         });
+@@ -1487,8 +1496,7 @@
+         return aPosition - bPosition;
+     }
+ 
+-    _loadApps() {
+-        const appIcons = [];
++    _refreshAppInfoList() {
+         this._appInfoList = Shell.AppSystem.get_default().get_installed().filter(appInfo => {
+             try {
+                 appInfo.get_id(); // catch invalid file encodings
+@@ -1498,6 +1506,10 @@
+             return !this._appFavorites.isFavorite(appInfo.get_id()) &&
+                 this._parentalControlsManager.shouldShowApp(appInfo);
+         });
++    }
++
++    _loadApps() {
++        const appIcons = [];
+ 
+         const apps = this._appInfoList.map(app => app.get_id());
+ 
