@@ -190,6 +190,11 @@
     "summary": "TeamViewer — utiliser cet ordinateur à distance",
     "keyword": ["teamviewer", "distant", "assistance", "accès"]
   },
+  "programs.utilities.flatseal": {
+    "name": "Flatseal",
+    "summary": "Flatseal — examiner et modifier ce que les applications Flatpak ont le droit de faire",
+    "keyword": ["flatseal", "flatpak", "permission", "bac à sable", "confidentialité"]
+  },
   "programs.utilities.web-browser.firefox": {
     "name": "Firefox",
     "summary": "Firefox — naviguer sur le Web, avec décodage vidéo matériel et recherche GNOME",

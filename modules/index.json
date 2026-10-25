@@ -264,6 +264,13 @@
     "summary": "TeamViewer — use this computer from somewhere else",
     "keyword": ["teamviewer", "remote", "support", "access"]
   },
+  "programs.utilities.flatseal": {
+    "path": "programs/utilities/flatseal",
+    "flathub_id": "com.github.tchx84.Flatseal",
+    "name": "Flatseal",
+    "summary": "Flatseal — review and change what Flatpak apps are allowed to do",
+    "keyword": ["flatseal", "flatpak", "permission", "sandbox", "privacy"]
+  },
   "programs.utilities.web-browser.firefox": {
     "path": "programs/utilities/web-browser/firefox",
     "flathub_id": "org.mozilla.firefox",

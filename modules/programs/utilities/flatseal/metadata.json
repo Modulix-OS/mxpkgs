@@ -1,0 +1,4 @@
+{
+  "description": "Flatseal shows what each Flatpak application is allowed to reach — files, camera, microphone, network — and lets you grant or revoke those permissions one by one.",
+  "keyword": ["flatseal", "flatpak", "permission", "sandbox", "privacy"]
+}

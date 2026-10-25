@@ -1,0 +1,4 @@
+{
+  "description": "Flatseal montre ce que chaque application Flatpak a le droit d'atteindre — fichiers, caméra, micro, réseau — et permet d'accorder ou de retirer ces permissions une par une.",
+  "keyword": ["flatseal", "flatpak", "permission", "bac à sable", "confidentialité"]
+}

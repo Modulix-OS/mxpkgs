@@ -16,8 +16,17 @@ in
     ];
 
     systemd.services.flatpak-repo = {
+      description = "Register the Flathub remote";
       wantedBy = [ "multi-user.target" ];
+      requires = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
       path = [ pkgs.flatpak ];
+      serviceConfig = {
+        Type = "oneshot";
+        Restart = "on-failure";
+        RestartSec = "30s";
+      };
       script = ''
         flatpak remote-add --if-not-exists flathub ${flathubRepo}
       '';
