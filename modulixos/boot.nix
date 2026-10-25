@@ -164,7 +164,6 @@ in
     {
       boot = {
         kernelPackages = lib.mkDefault pkgs.linuxPackages;
-        initrd.verbose = lib.mkMxDefault false;
         tmp.useTmpfs = lib.mkMxDefault true;
 
         kernelParams = [
@@ -178,16 +177,12 @@ in
         ];
         consoleLogLevel = lib.mkMxDefault 3;
 
-        initrd.systemd.enable = lib.mkDefault true;
         plymouth = {
           enable = lib.mkMxDefault (!config.mx.mode.server.enable);
           logo = lib.mkIf cfg.splash.enable (lib.mkMxDefault cfg.splash.logo);
           theme = lib.mkIf cfg.splash.enable (lib.mkMxDefault "modulix");
           themePackages = lib.mkIf cfg.splash.enable [ plymouthTheme ];
         };
-
-        initrd.systemd.tpm2.enable = true;
-        initrd.systemd.services.systemd-udev-settle.enable = lib.mkForce false;
       };
 
       # Fastest boot
