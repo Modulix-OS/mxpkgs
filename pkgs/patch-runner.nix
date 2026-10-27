@@ -11,8 +11,7 @@ pkgs.writeShellScript "patch-runner" ''
   applied=0
   if [ -f "$state" ]; then
     applied=$(cat "$state")
-  fi
-  if [ "$applied" -lt "$CURRENT_VERSION" ]; then
+  else
     applied=$CURRENT_VERSION
   fi
 
