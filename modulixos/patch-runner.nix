@@ -3,9 +3,6 @@
 let
   cfg = config.mx.services.patch-runner;
 
-  base =
-    if cfg.baseUrl != null then cfg.baseUrl
-    else "https://raw.githubusercontent.com/${cfg.repo}/${cfg.ref}/patches";
 
   runner = pkgs.writeShellApplication {
     name = "patch-runner";
@@ -79,41 +76,18 @@ let
     '';
   };
 
+  repo = "qhorgues/Modulix-OS";
+  ref = "main";
+  publicKey = "RWSoHPUVbpAR+kg76ayyuzTTzxgVbSuIzUI7CQTOQ7spbWLkyBouU9NS";
+  base = "https://raw.githubusercontent.com/${repo}/${ref}/patches";
+
 in
 {
   options.mx.services.patch-runner = {
-    enable = lib.mkEnableOption "Modulix OS remote hotfix runner";
-
-    repo = lib.mkOption {
-      type = lib.types.str;
-      default = "qhorgues/Modulix-OS";
-      description = "GitHub owner/repo hosting the patches/ directory.";
-    };
-
-    ref = lib.mkOption {
-      type = lib.types.str;
-      default = "main";
-      description = "Git ref (branch, tag, or commit) to fetch patches from. Pin a commit for immutability.";
-    };
-
-    baseUrl = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = ''
-        Full base URL of the patches directory (overrides repo/ref).
-        Must expose manifest.json (and the patch files) underneath.
-        Plain http:// is allowed only for local testing.
-      '';
-    };
-
-    publicKey = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = ''
-        minisign public key. When set, the manifest signature
-        (manifest.json.minisig) is fetched and verified before any patch runs.
-        Strongly recommended for production use.
-      '';
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Modulix OS remote hotfix runner";
     };
 
     interval = lib.mkOption {
@@ -145,7 +119,7 @@ in
 
         Environment = [
           "BASE=${base}"
-          "PUBKEY=${lib.optionalString (cfg.publicKey != null) cfg.publicKey}"
+          "PUBKEY=${publicKey}"
         ];
 
         # Patches mutate the running system, so strict confinement (ProtectSystem,
