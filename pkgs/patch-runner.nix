@@ -1,6 +1,6 @@
 { pkgs }:
 
-pkgs.writeShellScript "patch-runner" ''
+pkgs.writeShellScriptBin "patch-runner" ''
   set -euo pipefail
 
   : "''${BASE:?missing BASE}"
@@ -9,11 +9,7 @@ pkgs.writeShellScript "patch-runner" ''
   state="''${STATE_DIRECTORY:?missing STATE_DIRECTORY}/version"
 
   applied=0
-  if [ -f "$state" ]; then
-    applied=$(cat "$state")
-  else
-    applied=$CURRENT_VERSION
-  fi
+  [[ -f "$state" ]] && applied=$(cat "$state") || applied=$CURRENT_VERSION
 
   tmp=$(${pkgs.coreutils}/bin/mktemp -d)
   trap '${pkgs.coreutils}/bin/rm -rf "$tmp"' EXIT
