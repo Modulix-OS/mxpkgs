@@ -10,7 +10,7 @@ let
   ref = "main";
   publicKey = "RWSoHPUVbpAR+kg76ayyuzTTzxgVbSuIzUI7CQTOQ7spbWLkyBouU9NS";
   base = "https://raw.githubusercontent.com/${repo}/refs/heads/${ref}/patches";
-  current_version = 1;
+  current_version = 2;
 
 in
 {
@@ -41,8 +41,17 @@ in
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
 
+      restartIfChanged = false;
+      stopIfChanged = false;
+
       serviceConfig = {
         Type = "oneshot";
+        ExecCondition = "${pkgs.writeShellScript "only-at-boot" ''
+          case "$(${pkgs.systemd}/bin/systemctl is-system-running || true)" in
+            initializing|starting) exit 0 ;;
+            *) exit 1 ;;
+          esac
+        ''}";
         ExecStart = "${runner}";
         User = "root";
         StateDirectory = "patch-runner";

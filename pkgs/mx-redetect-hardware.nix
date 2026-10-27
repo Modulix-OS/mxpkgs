@@ -16,7 +16,7 @@ let
       -h|--help)
         echo "usage: mx-redetect-hardware"
         echo
-        echo "Re-detect the machine hardware, rewrite the mx.hardware.* options"
+        echo "Re-detect the machine hardware, rewrite the mx.hardware.* options and hardware config"
         echo "and rebuild the system with them."
         echo
         echo "Requires administrator authentication from an active local session."

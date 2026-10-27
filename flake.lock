@@ -188,16 +188,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1793109845,
-        "narHash": "sha256-xQHKqQG/ua75xGMrx4NOtxSq8rUpaSPfKGOlPIkyfFY=",
+        "lastModified": 1793123452,
+        "narHash": "sha256-U7fnpti2twWyHsAME3QfPQjV+CE7COHuFwI6j5MFgiA=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "d8e3fa05efbf331d9cb4e90d68fef072664c87e4",
+        "rev": "60dabb2123a84625f3ff94913635ac26ecc2f4e6",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.1",
+        "ref": "v1.0.2",
         "repo": "modulix-core-utils",
         "type": "github"
       }
@@ -211,16 +211,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1793109845,
-        "narHash": "sha256-xQHKqQG/ua75xGMrx4NOtxSq8rUpaSPfKGOlPIkyfFY=",
+        "lastModified": 1793123452,
+        "narHash": "sha256-U7fnpti2twWyHsAME3QfPQjV+CE7COHuFwI6j5MFgiA=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "d8e3fa05efbf331d9cb4e90d68fef072664c87e4",
+        "rev": "60dabb2123a84625f3ff94913635ac26ecc2f4e6",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.1",
+        "ref": "v1.0.2",
         "repo": "modulix-core-utils",
         "type": "github"
       }
@@ -232,16 +232,16 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793110085,
-        "narHash": "sha256-RA183uUnHOlN5pLswqxVI/jT9hE1bRgzUWestB4cQWU=",
+        "lastModified": 1793123500,
+        "narHash": "sha256-O+n8t0tcao8d17pQkLQtq3qCeB0Bab8UJZcUPRd2WbY=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "54fae111e07fe225a0b3b483abd28965a5dd38ab",
+        "rev": "14de814dc10ce9c83e2d3254403ec0125927b247",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.1",
+        "ref": "v1.0.2",
         "repo": "modulix-daemon",
         "type": "github"
       }
