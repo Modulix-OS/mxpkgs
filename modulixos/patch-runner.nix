@@ -39,6 +39,10 @@ in
       description = "Modulix OS remote hotfix runner";
       after = [ "network-online.target" ];
 
+      path = with self.packages.${pkgs.stdenv.hostPlatform.system}; [
+        mx-redetect-hardware # Patch 0002
+      ];
+
       restartIfChanged = false;
       stopIfChanged = false;
 
