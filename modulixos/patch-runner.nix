@@ -76,10 +76,10 @@ let
     '';
   };
 
-  repo = "qhorgues/Modulix-OS";
+  repo = "Modulix-OS/mxpkgs";
   ref = "main";
   publicKey = "RWSoHPUVbpAR+kg76ayyuzTTzxgVbSuIzUI7CQTOQ7spbWLkyBouU9NS";
-  base = "https://raw.githubusercontent.com/${repo}/${ref}/patches";
+  base = "https://raw.githubusercontent.com/${repo}/refs/heads/${ref}/patches";
 
 in
 {
