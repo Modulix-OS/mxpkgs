@@ -38,21 +38,16 @@ in
     systemd.services.patch-runner = {
       description = "Modulix OS remote hotfix runner";
       after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      wantedBy = [ "multi-user.target" ];
 
       restartIfChanged = false;
       stopIfChanged = false;
 
       serviceConfig = {
         Type = "oneshot";
-        ExecCondition = "${pkgs.writeShellScript "only-at-boot" ''
-          case "$(${pkgs.systemd}/bin/systemctl is-system-running || true)" in
-            initializing|starting) exit 0 ;;
-            *) exit 1 ;;
-          esac
-        ''}";
         ExecStart = "${runner}";
+        Restart = "on-failure";
+        RestartSec = "60s";
+        StartLimitBurst = 5;
         User = "root";
         StateDirectory = "patch-runner";
         StateDirectoryMode = "0700";
@@ -86,16 +81,11 @@ in
       description = "Periodic Modulix OS hotfix check";
       wantedBy = [ "timers.target" ];
       timerConfig = {
+        OnBootSec = "2min";          # remplace le démarrage via multi-user.target
         OnCalendar = cfg.interval;
         Persistent = true;
         RandomizedDelaySec = 600;
       };
-    };
-
-    system.activationScripts.patchRunnerTrigger = lib.mkIf cfg.runOnActivation {
-      text = ''
-        ${config.systemd.package}/bin/systemctl start --no-block patch-runner.service || true
-      '';
     };
   };
 }
