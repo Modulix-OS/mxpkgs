@@ -122,6 +122,7 @@
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
         gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
         mx-firefox-search-provider = pkgs.callPackage ./pkgs/mx-firefox-search-provider.nix { };
+        patch-runner = import ./pkgs/patch-runner.nix { inherit pkgs; };
       }
     );
 
