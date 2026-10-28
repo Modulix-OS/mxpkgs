@@ -1,7 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "nixpkgs-unstable";
     home-manager = {
         url = "github:nix-community/home-manager/release-26.05";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -12,12 +12,12 @@
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
-    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.0.2";
+    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.0.3";
 
     gnome-software-plugin.url = "github:Modulix-OS/gnome-software-plugin/v1.0.0";
 
     modulix-core-utils = {
-      url = "github:Modulix-OS/modulix-core-utils/v1.0.2";
+      url = "github:Modulix-OS/modulix-core-utils/v1.0.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
