@@ -70,6 +70,7 @@ in
       profiles = {
         gdm.databases = [{
           settings = gdmLogoSettings // {
+              "org/gnome/mutter".experimental-features = [ "scale-monitor-framebuffer" ];
               "org/gnome/settings-daemon/plugins/color" = {
                   night-light-enabled = true;
               };
