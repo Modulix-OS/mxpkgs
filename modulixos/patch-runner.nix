@@ -38,20 +38,24 @@ in
     systemd.services.patch-runner = {
       description = "Modulix OS remote hotfix runner";
       after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
 
       path = with self.packages.${pkgs.stdenv.hostPlatform.system}; [
-        mx-redetect-hardware # Patch 0002
+      ] ++ [
+        pkgs.systemd
       ];
 
       restartIfChanged = false;
       stopIfChanged = false;
 
+      startLimitBurst = 5;
+      startLimitIntervalSec = 900;
+
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${runner}";
+        ExecStart = "${runner}/bin/patch-runner";
         Restart = "on-failure";
         RestartSec = "60s";
-        StartLimitBurst = 5;
         User = "root";
         StateDirectory = "patch-runner";
         StateDirectoryMode = "0700";
@@ -72,6 +76,8 @@ in
         ProtectHostname = true;
         RestrictSUIDSGID = true;
         RestrictRealtime = true;
+        NoNewPrivileges = true;
+        ProtectHome = true;
         RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" "AF_NETLINK" ];
         LockPersonality = true;
         SystemCallArchitectures = "native";
@@ -85,7 +91,7 @@ in
       description = "Periodic Modulix OS hotfix check";
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnBootSec = "2min";          # remplace le démarrage via multi-user.target
+        OnBootSec = "2min";
         OnCalendar = cfg.interval;
         Persistent = true;
         RandomizedDelaySec = 600;

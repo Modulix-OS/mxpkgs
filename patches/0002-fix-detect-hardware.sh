@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 set -euo pipefail
-mx-redetect-hardware
+busctl --system --timeout=3600 call org.modulix.Daemon /org/modulix/Daemon org.modulix.Daemon UpdateHardware
