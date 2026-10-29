@@ -118,9 +118,11 @@
         mx-ue5 = import ./pkgs/mx-ue5.nix { inherit pkgs; };
         modulix-logo = pkgs.callPackage ./pkgs/modulix-logo.nix { };
         modulix-icon = pkgs.callPackage ./pkgs/modulix-icon.nix { };
-        modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix { };
+        modulix-plymouth-theme = pkgs.callPackage ./pkgs/modulix-plymouth-theme.nix {
+          logo = ./assets/modulix-logo.png;
+        };
         gnome-rounded-blur = pkgs.callPackage ./pkgs/gnome-rounded-blur.nix {};
-        gnomeExtensions.hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
+        gnome-shell-extension-hanabi = pkgs.callPackage ./pkgs/hanabi.nix {};
         mx-firefox-search-provider = pkgs.callPackage ./pkgs/mx-firefox-search-provider.nix { };
         patch-runner = import ./pkgs/patch-runner.nix { inherit pkgs; };
       }

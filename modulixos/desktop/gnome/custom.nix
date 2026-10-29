@@ -2,7 +2,7 @@
 let
   cfg = config.mx.gnome;
 
-  hanabi = self.packages.${pkgs.stdenv.hostPlatform.system}.gnomeExtensions.hanabi;
+  hanabi = self.packages.${pkgs.stdenv.hostPlatform.system}.gnome-shell-extension-hanabi;
 
   deEnabled = config.mx.desktop == "gnome";
   gnome-rounded-blur = pkgs.callPackage ../../../pkgs/gnome-rounded-blur.nix { };
