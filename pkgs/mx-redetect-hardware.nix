@@ -62,7 +62,7 @@ let
           call org.modulix.Daemon /org/modulix/Daemon \
                org.modulix.Store1 RebootRequired 2>/dev/null); then
       if [ "$(printf '%s' "$boot" | ${jq} -r '.data[0]')" = "true" ]; then
-        echo -e "$YELLOW Reboot required: $(printf '%s' "$boot" | ${jq} -r '.data[1] | join(", ")')$NC"
+        echo -e "$YELLOW Reboot required to finish applying the new hardware configuration$NC"
       fi
     fi
   '';
