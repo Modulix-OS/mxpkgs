@@ -111,12 +111,34 @@ Two ways, both honoured by the workflow:
 
 ### Secret
 
-`FLAKE_BOT_TOKEN` — fine-grained PAT on this repository:
+`FLAKE_BOT_TOKEN` — fine-grained PAT, *Resource owner* `Modulix-OS`, *Repository
+access* limited to `Modulix-OS/mxpkgs`:
 
 | Permission | Level |
 |---|---|
 | Contents | Read and write |
 | Pull requests | Read and write |
+
+Added under *Settings → Secrets and variables → Actions*. The name is
+case-sensitive.
+
+A user PAT is structural here, not a convenience: `GITHUB_TOKEN` never triggers
+workflows, so a promotion PR opened with it would never start the `check` job — the
+green-check gate in `promote` could never be satisfied — and the fast-forward push
+to `main` would never chain into `backmerge-futures.yml`.
+
+Two things that bite:
+
+- **Organisation approval.** A fine-grained PAT aimed at an org-owned repository has
+  to be approved by the org unless `Modulix-OS` enabled default access
+  (*Org settings → Personal access tokens → Settings*). A token left `pending`
+  exists but every request is refused, which shows up as a 403 rather than a missing
+  secret. Approve it under *Pending requests*, or fall back to a **classic PAT** with
+  the `repo` + `workflow` scopes, which needs no approval.
+- **Expiry.** GitHub warns by email beforehand, but on expiry day the CI breaks again
+  with `Error: Input required and not supplied: token` -- `actions/checkout` reads
+  its `token` input as required, so an unset or expired-and-removed secret renders
+  as an empty string.
 
 Its owner must sit in the **branch-protection bypass allowlist** of `main`,
 otherwise the fast-forward push in `promote` is rejected. `testing` must either be
@@ -125,10 +147,13 @@ to it directly.
 
 ### Repository settings
 
-- *Settings → General*: default branch is `main`.
+- *Settings → General*: default branch is `main`. `schedule` and
+  `workflow_dispatch` only ever read the workflow file from the default branch, so
+  the cron does not arm until the workflows live on `main`.
 - *Settings → General → Pull Requests*: keep **Allow merge commits** enabled so an
   early manual merge from the UI stays consistent with the model. Do **not**
-  restrict the repo to squash-only.
+  restrict the repo to squash-only — a squash would put a commit on `main` that is
+  absent from `testing` and permanently break the fast-forward gate.
 - *Settings → Branches → `main`*: `check` is a good required status check.
 
 ## Knobs
