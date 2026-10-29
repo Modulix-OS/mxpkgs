@@ -145,16 +145,16 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1792947037,
-        "narHash": "sha256-IWWaowg15RB7WTnD+MhdQSa6gVyPJ1FdxUElIZc6/NQ=",
+        "lastModified": 1793292731,
+        "narHash": "sha256-UDJ71DkZj58gNeQzJDaE8xb/AhXYGQd1siXiF9fMqFA=",
         "owner": "Modulix-OS",
         "repo": "gnome-software-plugin",
-        "rev": "722671555d800c58dc36c906cbf2a5601828e806",
+        "rev": "3b7fa547e6c2092c25267d506eb9af7f589931df",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.0",
+        "ref": "v1.0.1",
         "repo": "gnome-software-plugin",
         "type": "github"
       }
@@ -188,16 +188,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1793191487,
-        "narHash": "sha256-MHagf1LqgmhBZG7nQxhiAKtN6FQd+VpYSUgXgAYEq68=",
+        "lastModified": 1793280042,
+        "narHash": "sha256-QI7WSfL2JIbuPa786TTZbgwlA/UQjat0ljRiNOEWzNI=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "d6859e835f78fbb5af4c2bdae03dabde8a59b721",
+        "rev": "ee36c1530c6a8a190b35cd50fdb6159e38d09657",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.3",
+        "ref": "v1.1.1",
         "repo": "modulix-core-utils",
         "type": "github"
       }
@@ -211,16 +211,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1793191487,
-        "narHash": "sha256-MHagf1LqgmhBZG7nQxhiAKtN6FQd+VpYSUgXgAYEq68=",
+        "lastModified": 1793280042,
+        "narHash": "sha256-QI7WSfL2JIbuPa786TTZbgwlA/UQjat0ljRiNOEWzNI=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "d6859e835f78fbb5af4c2bdae03dabde8a59b721",
+        "rev": "ee36c1530c6a8a190b35cd50fdb6159e38d09657",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.3",
+        "ref": "v1.1.1",
         "repo": "modulix-core-utils",
         "type": "github"
       }
@@ -232,16 +232,16 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793200863,
-        "narHash": "sha256-ePV/gGYbMEE4OV8G3fivqzUY2xDk8ssi9lu9oTbQHi4=",
+        "lastModified": 1793281822,
+        "narHash": "sha256-dLRZq2EkE+xL8bneQE/GETfdGJTxWdp1BlkZ/MuVm28=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "e999d630a63c4e631cae41a8df2cc79ee17d6898",
+        "rev": "27c69265732e18620b27630a7f2a3460c6eaa0d0",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.0.3",
+        "ref": "v1.1.0",
         "repo": "modulix-daemon",
         "type": "github"
       }
@@ -307,11 +307,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1792773339,
-        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
+        "lastModified": 1793110635,
+        "narHash": "sha256-dhoW6VgFWlaodSY5jrBn+CF2FLmaUvDVgM7+C7T2+NM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
+        "rev": "31ecbaca1bdefa45dffc409f0250bd8039ea0010",
         "type": "github"
       },
       "original": {
