@@ -1,0 +1,91 @@
+name: Back-merge main into futures
+
+# Every time `main` moves -- the scheduled fast-forward from `update-flake.yml`,
+# an early manual merge of the promotion PR, or any other merge into `main` --
+# the same content is merged into `futures`.
+#
+# `flake.lock` is branch-local on `futures`: that branch pins
+# `nixpkgs.follows = "nixpkgs-unstable"` in flake.nix, so its lock resolves to
+# entirely different store paths. The merge therefore always keeps `futures`'s own
+# lock and never takes `main`'s.
+#
+# `futures` is the unstable lane, so the merge is pushed straight to it: no PR,
+# no `nix flake check` gate. Any conflict outside `flake.lock` aborts the merge
+# and fails the run for a human to resolve.
+#
+# Auth: the fine-grained PAT `FLAKE_BOT_TOKEN` (Contents: RW). A push made with a
+# user PAT does trigger workflows, which is what chains this run off the
+# promotion fast-forward.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: backmerge-futures
+  cancel-in-progress: false
+
+env:
+  SRC_BRANCH: main
+  DST_BRANCH: futures
+  LOCK_FILE: flake.lock
+
+jobs:
+  backmerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.DST_BRANCH }}
+          fetch-depth: 0
+          token: ${{ secrets.FLAKE_BOT_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into futures, keeping futures' flake.lock
+        run: |
+          set -euo pipefail
+
+          git fetch --no-tags origin \
+            "+refs/heads/$SRC_BRANCH:refs/remotes/origin/$SRC_BRANCH" \
+            "+refs/heads/$DST_BRANCH:refs/remotes/origin/$DST_BRANCH"
+
+          if git merge-base --is-ancestor "origin/$SRC_BRANCH" "origin/$DST_BRANCH"; then
+            echo "origin/$DST_BRANCH already contains origin/$SRC_BRANCH; nothing to back-merge."
+            exit 0
+          fi
+
+          git checkout -B "$DST_BRANCH" "origin/$DST_BRANCH"
+
+          # A `flake.lock` conflict is expected on every single merge, so it is not
+          # treated as a failure: the lock is restored from HEAD (the pre-merge
+          # `futures` tip) whether the merge conflicted or silently took main's.
+          if ! git merge --no-ff --no-commit "origin/$SRC_BRANCH"; then
+            echo "Merge reported conflicts; resolving $LOCK_FILE and inspecting the rest."
+          fi
+
+          git checkout HEAD -- "$LOCK_FILE"
+          git add -- "$LOCK_FILE"
+
+          UNRESOLVED=$(git diff --name-only --diff-filter=U)
+          if [ -n "$UNRESOLVED" ]; then
+            echo "Unresolved conflicts outside $LOCK_FILE:"
+            echo "$UNRESOLVED"
+            git merge --abort
+            exit 1
+          fi
+
+          if [ ! -f .git/MERGE_HEAD ]; then
+            echo "Merge produced no commit to make; nothing to push."
+            exit 0
+          fi
+
+          git commit -m "chore: merge $SRC_BRANCH into $DST_BRANCH (keep $DST_BRANCH $LOCK_FILE)"
+          git push origin "HEAD:$DST_BRANCH"

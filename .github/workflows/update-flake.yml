@@ -1,38 +1,47 @@
 name: Update Flake Lock
 
-# Daily `nix flake update` proposed as a PR on the fixed branch `flake-update`,
-# validated by `nix flake check`, and auto-merged ~1 week after it was opened.
-# Only `flake.lock` is ever merged.
+# Daily `nix flake update` committed straight to `testing` once `nix flake check`
+# is green, then `testing` is promoted to `main` through a PR that auto-merges
+# 48h after it was opened. `testing` is the soak branch: it carries the lock bump
+# *and* any other change, and `main` trails it by 48h.
 #
-# `master` is protected (PR + 1 approval required). A bot cannot approve its own
-# PR, so the scheduled merge bypasses the approval with `gh pr merge --admin`;
-# the real safety gate is the green `nix flake check` + the 7-day soak, both
-# enforced in the merge step below.
+# Promotion is a fast-forward push, never a squash: a squash would create a commit
+# on `main` that does not exist on `testing`, `main` would stop being an ancestor of
+# `testing`, and every later cycle would abort on the topology gate below.
 #
 # All git/gh auth uses the fine-grained PAT `FLAKE_BOT_TOKEN`
 # (repo Contents: RW + Pull requests: RW). The PAT's user must be in the
-# branch-protection bypass allowlist for `--admin` to succeed.
+# branch-protection bypass allowlist of `main` for the fast-forward to succeed.
 
 on:
   schedule:
+    # 2am UTC. GitHub cron has no DST handling, so this is 3am Paris in winter
+    # and 4am Paris in summer.
     - cron: "0 2 * * *"
   workflow_dispatch:
+    inputs:
+      force_promote:
+        description: "Promote testing -> main without waiting for the 48h soak"
+        type: boolean
+        default: false
   pull_request:
-    branches: [master]
-    paths: ["flake.lock"]
+    branches: [main]
 
 concurrency:
   # Per-PR for checks; a single shared "maintenance" lane for schedule/dispatch
-  # so merge/propose never run concurrently with themselves.
+  # so promote/update never run concurrently with themselves.
   group: flake-update-${{ github.event.pull_request.number || 'maintenance' }}
   cancel-in-progress: false
 
 env:
-  FLAKE_BRANCH: flake-update
+  SRC_BRANCH: testing
+  DST_BRANCH: main
+  SOAK_HOURS: 48
 
 jobs:
-  # Validation gate: runs on every PR that changes flake.lock (incl. the bot's).
-  # Publishes a status check named "check" that the merge step requires.
+  # Validation gate: runs on every PR targeting `main`, which in practice is the
+  # bot's `testing` -> `main` promotion PR. Publishes a status check named "check"
+  # that the promote step requires by name.
   check:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -52,9 +61,9 @@ jobs:
         # would pass the gate and get auto-merged, breaking every rebuild.
         run: nix flake check
 
-  # Merge the open flake-update PR once it is >7 days old, its check is green,
-  # and it touches only flake.lock. Runs first so `propose` sees a fresh master.
-  merge:
+  # Fast-forward `main` onto `testing` once the promotion PR is older than the
+  # soak window and its check is green. Runs first so `update` sees a fresh `main`.
+  promote:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -64,6 +73,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
+          ref: ${{ env.DST_BRANCH }}
           fetch-depth: 0
           token: ${{ secrets.FLAKE_BOT_TOKEN }}
 
@@ -72,21 +82,42 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge aged flake.lock PR (>7d, green check, flake.lock only)
+      - name: Fetch both branches
+        # actions/checkout only guarantees the checked-out ref; the gates below
+        # compare remote-tracking refs, so fetch them explicitly.
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin \
+            "+refs/heads/$SRC_BRANCH:refs/remotes/origin/$SRC_BRANCH" \
+            "+refs/heads/$DST_BRANCH:refs/remotes/origin/$DST_BRANCH"
+
+      - name: Promote testing -> main (aged PR, green check, fast-forward only)
         env:
           GH_TOKEN: ${{ secrets.FLAKE_BOT_TOKEN }}
+          FORCE_PROMOTE: ${{ inputs.force_promote }}
         run: |
           set -euo pipefail
 
-          CUTOFF=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
-          PR=$(gh pr list \
-                 --state open \
-                 --head "$FLAKE_BRANCH" \
-                 --json number,createdAt \
-                 --jq "[ .[] | select(.createdAt < \"$CUTOFF\") ] | .[0].number // empty")
+          if [ "${FORCE_PROMOTE:-false}" = "true" ]; then
+            echo "force_promote requested: skipping the ${SOAK_HOURS}h age gate."
+            PR=$(gh pr list \
+                   --state open \
+                   --head "$SRC_BRANCH" \
+                   --base "$DST_BRANCH" \
+                   --json number \
+                   --jq '.[0].number // empty')
+          else
+            CUTOFF=$(date -u -d "$SOAK_HOURS hours ago" +%Y-%m-%dT%H:%M:%SZ)
+            PR=$(gh pr list \
+                   --state open \
+                   --head "$SRC_BRANCH" \
+                   --base "$DST_BRANCH" \
+                   --json number,createdAt \
+                   --jq "[ .[] | select(.createdAt < \"$CUTOFF\") ] | .[0].number // empty")
+          fi
 
           if [ -z "$PR" ]; then
-            echo "No flake-update PR older than 7 days. Nothing to merge."
+            echo "No $SRC_BRANCH -> $DST_BRANCH PR eligible for promotion. Nothing to do."
             exit 0
           fi
 
@@ -94,36 +125,42 @@ jobs:
           CONCL=$(gh pr view "$PR" --json statusCheckRollup \
                     --jq '[.statusCheckRollup[]? | select(.name? == "check")] | last | .conclusion // "PENDING"')
           if [ "$CONCL" != "SUCCESS" ]; then
-            echo "flake check not green for PR #$PR (conclusion=$CONCL); not merging."
+            echo "flake check not green for PR #$PR (conclusion=$CONCL); not promoting."
             exit 0
           fi
 
-          # Gate 2: refuse to merge anything that touches more than flake.lock.
-          FILES=$(gh pr view "$PR" --json files --jq '[.files[].path] | join(",")')
-          if [ "$FILES" != "flake.lock" ]; then
-            echo "PR #$PR touches more than flake.lock ($FILES); aborting."
+          # Gate 2: the promotion must be a fast-forward. If `main` is not an
+          # ancestor of `testing`, the branches diverged and a human has to sort
+          # it out -- merging here would silently rewrite the 48h-lead invariant.
+          if ! git merge-base --is-ancestor "origin/$DST_BRANCH" "origin/$SRC_BRANCH"; then
+            echo "origin/$DST_BRANCH is not an ancestor of origin/$SRC_BRANCH: branches diverged."
+            echo "Refusing to promote. Reconcile the branches manually."
             exit 1
           fi
 
-          echo "Merging PR #$PR (check=green, age>7d, flake.lock only)"
-          gh pr merge "$PR" \
-            --squash \
-            --delete-branch \
-            --admin \
-            --subject "chore: update flake.lock"
+          if [ "$(git rev-parse "origin/$DST_BRANCH")" = "$(git rev-parse "origin/$SRC_BRANCH")" ]; then
+            echo "origin/$DST_BRANCH already equals origin/$SRC_BRANCH; nothing to promote."
+            exit 0
+          fi
 
-  # Open the next PR if the lock changed and no flake-update PR is currently open.
-  propose:
+          echo "Fast-forwarding $DST_BRANCH to $SRC_BRANCH (PR #$PR, check=green)"
+          git push origin "origin/$SRC_BRANCH:refs/heads/$DST_BRANCH"
+          # GitHub closes the PR as "merged" on its own once the head commits
+          # become reachable from the base branch.
+
+  # Bump flake.lock on `testing`, then open the promotion PR if one is due.
+  update:
     if: github.event_name != 'pull_request'
-    needs: merge
+    needs: promote
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Checkout repository
+      - name: Checkout testing
         uses: actions/checkout@v6
         with:
+          ref: ${{ env.SRC_BRANCH }}
           fetch-depth: 0
           token: ${{ secrets.FLAKE_BOT_TOKEN }}
 
@@ -139,33 +176,65 @@ jobs:
       - name: Update flake.lock
         run: nix flake update
 
-      - name: Open PR if lock changed and none open
+      - name: Validate the bumped flake
+        # Blocking on purpose: a broken lock must never reach `testing`. Failing
+        # here leaves `testing` untouched and surfaces as a red workflow run.
+        run: nix flake check
+
+      - name: Commit the bump to testing
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet flake.lock; then
+            echo "flake.lock unchanged. Nothing to commit."
+            exit 0
+          fi
+
+          git add flake.lock
+          git commit -m "chore: update flake.lock"
+
+          # `testing` is a live branch: never force-push it. Rebase onto whatever
+          # landed while `nix flake check` was running, then retry.
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:$SRC_BRANCH"; then
+              echo "Pushed flake.lock bump to $SRC_BRANCH (attempt $attempt)."
+              exit 0
+            fi
+            echo "Push rejected on attempt $attempt; rebasing onto origin/$SRC_BRANCH."
+            git pull --rebase origin "$SRC_BRANCH"
+          done
+
+          echo "Could not push the flake.lock bump to $SRC_BRANCH after 3 attempts."
+          exit 1
+
+      - name: Open the promotion PR if one is due
         env:
           GH_TOKEN: ${{ secrets.FLAKE_BOT_TOKEN }}
         run: |
           set -euo pipefail
 
-          if git diff --quiet flake.lock; then
-            echo "flake.lock unchanged. Nothing to propose."
+          git fetch --no-tags origin \\
+            "+refs/heads/$SRC_BRANCH:refs/remotes/origin/$SRC_BRANCH" \\
+            "+refs/heads/$DST_BRANCH:refs/remotes/origin/$DST_BRANCH"
+
+          AHEAD=$(git rev-list --count "origin/$DST_BRANCH..origin/$SRC_BRANCH")
+          if [ "$AHEAD" -eq 0 ]; then
+            echo "origin/$SRC_BRANCH is not ahead of origin/$DST_BRANCH. Nothing to promote."
             exit 0
           fi
 
-          # One PR at a time: if one is already open, leave it to age toward merge.
+          # One promotion PR at a time: an open one keeps aging toward its merge
+          # and picks up every later push to `testing` on its own.
           EXISTING=$(gh pr list \
                        --state open \
-                       --head "$FLAKE_BRANCH" \
+                       --head "$SRC_BRANCH" \
+                       --base "$DST_BRANCH" \
                        --json number \
                        --jq '.[0].number // empty')
           if [ -n "$EXISTING" ]; then
-            echo "PR #$EXISTING already open for $FLAKE_BRANCH; skipping."
+            echo "PR #$EXISTING already open for $SRC_BRANCH -> $DST_BRANCH; skipping."
             exit 0
           fi
-
-          # Producer guarantee: only flake.lock can ever enter the branch.
-          git checkout -B "$FLAKE_BRANCH"
-          git add flake.lock
-          git commit -m "chore: update flake.lock"
-          git push --force origin "$FLAKE_BRANCH"
 
           gh label create "dependencies" \
             --description "Pull requests that update a dependency file" \
@@ -174,9 +243,30 @@ jobs:
             --description "Automated pull requests" \
             --color "34d058" || true
 
+          # Built with printf rather than a heredoc: a heredoc terminator cannot
+          # be indented, and an unindented line would close this YAML block scalar.
+          printf '%s\n' \
+            "Automated promotion of \`$SRC_BRANCH\` onto \`$DST_BRANCH\`." \
+            "" \
+            "\`$SRC_BRANCH\` is the soak branch and runs ${SOAK_HOURS}h ahead of \`$DST_BRANCH\`." \
+            "This PR carries everything \`$SRC_BRANCH\` accumulated -- the daily" \
+            "\`flake.lock\` bump and any other change -- and keeps picking up later" \
+            "pushes to \`$SRC_BRANCH\`." \
+            "" \
+            "It is fast-forwarded onto \`$DST_BRANCH\` ${SOAK_HOURS}h after it was opened," \
+            "provided the \`check\` job is green. Merge it earlier by hand, or re-run the" \
+            "workflow with \`force_promote\`, to promote right away." \
+            "" \
+            "To reject an update:" \
+            "" \
+            "- push a revert onto \`$SRC_BRANCH\` -- the PR follows the branch head, so the" \
+            "  revert neutralises the bad change without closing the PR, or" \
+            "- close this PR to cancel the promotion entirely." \
+            > "$RUNNER_TEMP/pr-body.md"
+
           gh pr create \
-            --base master \
-            --head "$FLAKE_BRANCH" \
-            --title "Automatic flake.lock update" \
-            --body "Automated \`nix flake update\`, validated by \`nix flake check\`. Auto-merged ~1 week after opening once the check is green (only \`flake.lock\` is merged). Close this PR to reject the update." \
+            --base "$DST_BRANCH" \
+            --head "$SRC_BRANCH" \
+            --title "Promote testing to main" \
+            --body-file "$RUNNER_TEMP/pr-body.md" \
             --label "dependencies,automated"
