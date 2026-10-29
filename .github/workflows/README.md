@@ -1,160 +1,176 @@
-# CI/CD for automatic flake.lock updates
+# Automated branch plumbing
 
-This repository contains CI/CD configurations for GitHub and GitLab that automatically update your NixOS configuration's `flake.lock` with a **24-hour delayed commit**.
+- `.github/workflows/update-flake.yml` keeps `flake.lock` fresh and moves `testing`
+  onto `main` with a 48-hour lag.
+- `.github/workflows/backmerge-futures.yml` mirrors every merge into `main` onto
+  `futures`, keeping that branch's own `flake.lock`.
 
-## 🎯 How it works
+## Branch model
 
-1. **Daily update**: CI runs automatically every day
-2. **PR/MR creation**: A Pull Request (GitHub) or Merge Request (GitLab) is created with the changes
-3. **24h review period**: You have 24 hours to review the changes
-4. **Automatic merge**: After 24h, if the PR/MR is still open, it's automatically merged to master
-
-## 📋 GitHub Actions Setup
-
-### Installation
-
-1. Copy the `.github/workflows/update-flake.yml` file to your repository
-
-2. The workflow requires the following permissions (already configured in the file):
-   - `contents: write` - to push changes
-   - `pull-requests: write` - to create and merge PRs
-
-3. Ensure GitHub Actions has the necessary permissions:
-   - Go to **Settings** > **Actions** > **General**
-   - Under "Workflow permissions", select **"Read and write permissions"**
-   - Check **"Allow GitHub Actions to create and approve pull requests"**
-
-### Execution
-
-- **Automatic**: Daily at 2 AM UTC (configurable in the cron)
-- **Manual**: Via the "Actions" tab > "Update Flake Lock" > "Run workflow"
-
-## 📋 GitLab CI Setup
-
-### Installation
-
-1. Copy the `.gitlab-ci.yml` file to the root of your repository
-
-2. Create an **Access Token**:
-   - Go to **Settings** > **Access Tokens**
-   - Create a token with the scopes:
-     - `api`
-     - `write_repository`
-   - Copy the generated token
-
-3. Add the token to CI/CD variables:
-   - Go to **Settings** > **CI/CD** > **Variables**
-   - Add a variable:
-     - **Key**: `CI_PUSH_TOKEN`
-     - **Value**: your token
-     - **Type**: Variable
-     - **Flags**: Masked (recommended)
-
-4. Create a **Pipeline Schedule**:
-   - Go to **CI/CD** > **Schedules**
-   - Click "New schedule"
-   - **Description**: "Update flake.lock daily"
-   - **Interval Pattern**: Custom `0 2 * * *` (daily at 2 AM UTC)
-   - **Target branch**: master
-   - Save
-
-### Execution
-
-- **Automatic**: According to the configured schedule
-- **Manual**: Via **CI/CD** > **Pipelines** > **Run pipeline**
-
-## 🔧 Customization
-
-### Change execution time
-
-**GitHub**: Modify the cron in `.github/workflows/update-flake.yml`:
-```yaml
-schedule:
-  - cron: '0 14 * * *'  # 2 PM UTC instead of 2 AM
+```
+futures (unstable) → dev → testing → main
 ```
 
-**GitLab**: Modify the interval pattern in the schedule via GitLab interface
+`testing` is the soak branch. It carries the daily `flake.lock` bump **and** every
+other change being tried out. `main` is `testing` with 48 hours of delay — nothing
+reaches `main` that has not spent 48 hours on `testing` first.
 
-### Change delay before merge
+`futures` is the unstable lane: same tree as `main`, but with
+`nixpkgs.follows = "nixpkgs-unstable"` and therefore its own `flake.lock`. It is
+kept in sync by a back-merge whenever `main` moves.
 
-Modify the `24 hours ago` / `86400` value in the files:
+## Daily cycle (02:00 UTC)
 
-**GitHub**:
-```bash
-CUTOFF_DATE=$(date -u -d '48 hours ago' --iso-8601=seconds)  # 48h instead of 24h
-```
+Two jobs run in order on `schedule` and `workflow_dispatch`.
 
-**GitLab**:
-```bash
-CUTOFF_TIME=$((CURRENT_TIME - 172800))  # 172800 = 48h in seconds
-```
+### 1. `promote` — `testing` → `main`
 
-### Change target branch
+1. Look for an open PR `testing` → `main`.
+2. Age gate: the PR must be older than 48 h (`SOAK_HOURS`). Skipped when the
+   workflow is dispatched with `force_promote: true`.
+3. Check gate: the `check` status on the PR head must be `SUCCESS`.
+4. Topology gate: `main` must be an ancestor of `testing`. If the branches
+   diverged the job **fails** rather than merging — reconcile by hand.
+5. Fast-forward: `git push origin origin/testing:refs/heads/main`.
+   GitHub then closes the PR as *merged* on its own.
 
-Replace `master` with your main branch (`main`, etc.) in the configuration files.
+The promotion is deliberately a fast-forward, never a squash. A squash would put a
+commit on `main` that does not exist on `testing`; `main` would stop being an
+ancestor of `testing` and step 4 would abort every subsequent cycle. Fast-forward
+keeps `main` a strict prefix of `testing`, which *is* the definition of the
+48-hour lead.
 
-## 🛡️ Security
+### 2. `update` — bump `flake.lock` on `testing`
 
-- PRs/MRs are created on a separate branch
-- You can manually close a PR/MR to cancel the update
-- The 24h delay allows you to test changes before merge
-- Update branches are automatically deleted after merge
+Runs after `promote` (`needs: promote`) so the new PR is cut against a fresh `main`.
 
-### 🔒 Safety Checks
+1. Check out `testing`.
+2. `nix flake update`.
+3. `nix flake check` — **blocking**. A broken lock never reaches `testing`; the
+   workflow run just goes red.
+4. If `flake.lock` changed: commit and push to `testing`. Never force-pushed —
+   on rejection the step rebases onto `origin/testing` and retries, up to 3 times.
+5. If `testing` is ahead of `main` and no promotion PR is open, open one
+   (`--base main --head testing`, labels `dependencies,automated`).
 
-The auto-merge process includes **multiple safety checks** to ensure only legitimate flake.lock updates are merged:
+Only one promotion PR exists at a time. An open PR keeps aging toward its merge and
+automatically picks up every later push to `testing`, so the effective promotion
+cadence is one every 48 h while `flake.lock` moves daily.
 
-**GitHub Actions checks:**
-1. ✅ Label verification: PR must have `automated` label
-2. ✅ Branch name verification: Must start with `flake-update-`
-3. ✅ Title verification: Must be "🔄 Automatic flake.lock update"
-4. ✅ Author verification: Must be created by `github-actions[bot]`
-5. ✅ File changes verification: Only `flake.lock` must be changed
-6. ✅ Age verification: PR must be at least 24h old
-7. ✅ Mergeable status: PR must be in mergeable state
+### `check` — validation job
 
-**GitLab CI checks:**
-1. ✅ Label verification: MR must have `automated` label
-2. ✅ Branch name verification: Must start with `flake-update-`
-3. ✅ Title verification: Must be "🔄 Automatic flake.lock update"
-4. ✅ Timestamp verification: Must have valid creation timestamp in description
-5. ✅ File changes verification: Only `flake.lock` must be changed
-6. ✅ Age verification: MR must be at least 24h old
-7. ✅ Mergeable status: MR must be in mergeable state
+Runs on every `pull_request` targeting `main`, which in practice means the
+promotion PR. It is the status check the `promote` gate reads by name.
 
-**If any of these checks fail, the PR/MR will be skipped and will NOT be merged automatically.**
+`nix flake check` must stay a **building** check — never `--no-build`.
+`checks.<system>.gnome-shell-app-folder-order-patch` (see `flake.nix`) is what
+proves the gnome-shell patch in `modulixos/desktop/gnome/patches/` still applies
+to the bumped nixpkgs. A `--no-build` run only evaluates, so a patch that stopped
+applying would pass the gate and break every rebuild.
 
-## 📊 Monitoring
+## Back-merge into `futures`
 
-### GitHub
-- Check the **Actions** tab to see execution history
-- Created PRs have the `automated` label
+`.github/workflows/backmerge-futures.yml` runs on every push to `main` — the
+scheduled fast-forward above, an early manual merge of the promotion PR, or any
+other merge into `main` — and on `workflow_dispatch`.
 
-### GitLab
-- Check **CI/CD** > **Pipelines** for history
-- Created MRs have the `automated` label
+It merges `main` into `futures` and **always keeps `futures`'s own `flake.lock`**.
+`futures` pins `nixpkgs.follows = "nixpkgs-unstable"` in its `flake.nix`, so its
+lock resolves to completely different store paths; taking `main`'s lock would
+undo the whole point of the branch. A `flake.lock` conflict therefore happens on
+every single merge and is not an error — the lock is restored from the pre-merge
+`futures` tip and staged.
 
-## 🐛 Troubleshooting
+Behaviour:
 
-### GitHub: "Resource not accessible by integration"
-→ Check workflow permissions in Settings > Actions > General
+| Situation | Result |
+|---|---|
+| `futures` already contains `main` | no-op, exit 0 |
+| Conflict on `flake.lock` only | resolved to `futures`'s lock, merge commit pushed |
+| Conflict anywhere else | `git merge --abort`, job **fails** — resolve by hand |
 
-### GitLab: "401 Unauthorized"
-→ Verify that the `CI_PUSH_TOKEN` token is properly configured with correct scopes
+`futures` is the unstable lane, so the merge commit is pushed straight to it: no
+PR, and no `nix flake check` gate. Note that `futures`'s own `flake.lock` is never
+bumped automatically; refresh it by hand when you want a newer `nixpkgs-unstable`.
 
-### PRs/MRs are not being merged automatically
-→ Check the `auto-merge` job logs for errors
+`dev` sits between `futures` and `testing` in the branch chain and is **not**
+back-merged by any workflow.
 
-### Nix: "experimental features"
-→ Commands automatically use `--experimental-features 'nix-command flakes'`
+## Rejecting an update
 
-## 💡 Tips
+Two ways, both honoured by the workflow:
 
-1. **Test manually first**: Run the workflow manually to verify it works
-2. **Monitor first executions**: Make sure updates are working correctly
-3. **Configure notifications**: GitHub/GitLab can notify you when PRs/MRs are created
-4. **Adjust the delay**: 24h is a good default, but adapt to your needs
+- **Push a revert onto `testing`.** The PR tracks the branch head, so the revert
+  neutralises the bad change inside the open PR without closing it. The rest of
+  `testing` still promotes on schedule.
+- **Close the PR.** The promotion is cancelled. The next daily run reopens a PR
+  from whatever `testing` looks like then — so remove the offending commit from
+  `testing` too, otherwise it comes back.
 
-## 📝 License
+## Required configuration
 
-These scripts are provided as-is. Use at your own risk.
+### Secret
+
+`FLAKE_BOT_TOKEN` — fine-grained PAT on this repository:
+
+| Permission | Level |
+|---|---|
+| Contents | Read and write |
+| Pull requests | Read and write |
+
+Its owner must sit in the **branch-protection bypass allowlist** of `main`,
+otherwise the fast-forward push in `promote` is rejected. `testing` must either be
+unprotected or list the same user in its bypass allowlist, since `update` pushes
+to it directly.
+
+### Repository settings
+
+- *Settings → General*: default branch is `main`.
+- *Settings → General → Pull Requests*: keep **Allow merge commits** enabled so an
+  early manual merge from the UI stays consistent with the model. Do **not**
+  restrict the repo to squash-only.
+- *Settings → Branches → `main`*: `check` is a good required status check.
+
+## Knobs
+
+| What | Where |
+|---|---|
+| Schedule | `on.schedule.cron`, currently `0 2 * * *` (02:00 UTC = 03:00 Paris in winter, 04:00 in summer — GitHub cron has no DST handling) |
+| Soak window | `env.SOAK_HOURS`, currently `48` |
+| Branches | `env.SRC_BRANCH` / `env.DST_BRANCH` |
+
+## Manual runs
+
+*Actions → Update Flake Lock → Run workflow*:
+
+- `force_promote: false` — normal cycle, honours the 48 h gate.
+- `force_promote: true` — promotes the open PR immediately (check gate and
+  topology gate still apply).
+
+## Troubleshooting
+
+**`promote` fails with "branches diverged"**
+`main` is no longer an ancestor of `testing`, usually because something was merged
+into `main` directly or `testing` was rewritten. Fix the topology by hand
+(`git merge main` into `testing`, or reset `main` onto `testing`) before the next run.
+
+**`promote` logs "flake check not green"**
+The promotion PR's `check` job is red or still running. Nothing is merged; the next
+run retries.
+
+**`update` fails on `nix flake check`**
+The upstream bump genuinely breaks the build. `testing` is untouched. Investigate
+the failing derivation — often the gnome-shell patch no longer applies.
+
+**`update` fails after 3 push attempts**
+Concurrent writes to `testing` that conflict on `flake.lock`. Resolve manually,
+then re-dispatch.
+
+**"Resource not accessible by integration"**
+`FLAKE_BOT_TOKEN` is missing, expired, or lacks Contents/Pull requests write.
+
+## Other workflows
+
+`patches-manifest.yml` verifies that `patches/manifest.json` stays in sync with the
+patch files. It only verifies, never commits, so it cannot invalidate the detached
+minisign signature.
