@@ -12,7 +12,7 @@
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
-    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.1.0";
+    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.1.1";
 
     gnome-software-plugin.url = "github:Modulix-OS/gnome-software-plugin/v1.0.1";
 

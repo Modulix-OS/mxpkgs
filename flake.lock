@@ -232,16 +232,16 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793281822,
-        "narHash": "sha256-dLRZq2EkE+xL8bneQE/GETfdGJTxWdp1BlkZ/MuVm28=",
+        "lastModified": 1793288814,
+        "narHash": "sha256-In9S7McMnZj8G8N6Ijod70W1+ZQK38UyZ5tgLnRAEig=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "27c69265732e18620b27630a7f2a3460c6eaa0d0",
+        "rev": "ef4b626edaacbafbd573f76628c1c28d92766fe6",
         "type": "github"
       },
       "original": {
         "owner": "Modulix-OS",
-        "ref": "v1.1.0",
+        "ref": "v1.1.1",
         "repo": "modulix-daemon",
         "type": "github"
       }
