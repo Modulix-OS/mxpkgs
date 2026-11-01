@@ -211,11 +211,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793446656,
-        "narHash": "sha256-AAlvvSZb7uTmrDMWuGUGft20SeXnCmzb+XCiG2Yq4jg=",
+        "lastModified": 1793447366,
+        "narHash": "sha256-9TczFkSSy3Ek9HsCjpcAlVVTM/2x2EC0kwK56wBSs1Y=",
         "owner": "Modulix-OS",
         "repo": "modulix-core-utils",
-        "rev": "7213a1c5a25bd447603c72935dbf1c87d26193c7",
+        "rev": "d4acf31f4f3ed44145ad7f1469d0998fd79786ca",
         "type": "github"
       },
       "original": {
@@ -232,11 +232,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793447492,
-        "narHash": "sha256-IvLprf1GD19enAEaA37OLIfGkoVU5F0vtRbsF9sbLLQ=",
+        "lastModified": 1793531055,
+        "narHash": "sha256-XEzndWKvKv8VwDGs95orSm1ThB11nGp+mTFdfkueL5k=",
         "owner": "Modulix-OS",
         "repo": "modulix-daemon",
-        "rev": "842fa188327f74f69eb46c735bb315541e618ceb",
+        "rev": "305888e31c3f518004426665b6a3184f9d38f6cb",
         "type": "github"
       },
       "original": {
