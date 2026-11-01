@@ -15,7 +15,7 @@
     ./dns.nix
     ./cache.nix
     ./patch-runner.nix
-    ./package-fix.nix
+    ./gsettings-schemas.nix
     ./modulix-daemon
 
     # Desktop only
