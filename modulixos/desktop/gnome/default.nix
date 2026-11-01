@@ -63,7 +63,6 @@ in
               gnome-disk-utility
               gnome-console
               gnome-text-editor
-              nautilus
               decibels
               loupe
               gnome-shell-extensions
