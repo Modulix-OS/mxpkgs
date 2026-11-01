@@ -51,6 +51,7 @@
     mx-list-generations
     mx-switch-generation
     mx-redetect-hardware
+    mx-sbctl
   ];
 
   nix.settings = {

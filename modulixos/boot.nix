@@ -161,6 +161,9 @@ in
         boot.loader.efi.canTouchEfiVariables = lib.mkMxDefault false;
       }
     )
+    (lib.mkIf (cfg.enable && cfg.secureBoot.enable) {
+      environment.systemPackages = [ config.boot.loader.limine.secureBoot.sbctl ];
+    })
     {
       boot = {
         kernelPackages = lib.mkDefault pkgs.linuxPackages;
