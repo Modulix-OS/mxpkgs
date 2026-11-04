@@ -44,8 +44,6 @@ in
         ] ++ lib.optionals (!cfg.core-app) [
           gwenview
           okular
-          dolphin
-          dolphin-plugins
           spectacle
           plasma-keyboard
           qtvirtualkeyboard
