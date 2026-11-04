@@ -12,12 +12,12 @@
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
-    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.0.3";
+    modulix-daemon.url = "github:Modulix-OS/modulix-daemon/v1.1.2";
 
-    gnome-software-plugin.url = "github:Modulix-OS/gnome-software-plugin/v1.0.0";
+    gnome-software-plugin.url = "github:Modulix-OS/gnome-software-plugin/v1.0.1";
 
     modulix-core-utils = {
-      url = "github:Modulix-OS/modulix-core-utils/v1.0.3";
+      url = "github:Modulix-OS/modulix-core-utils/v1.1.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -113,6 +113,7 @@
         mx-switch-generation = import ./pkgs/mx-switch-generation.nix { inherit pkgs; };
         mx-diff-update = import ./pkgs/mx-diff-update.nix { inherit pkgs; };
         mx-redetect-hardware = import ./pkgs/mx-redetect-hardware.nix { inherit pkgs; };
+        mx-sbctl = import ./pkgs/mx-sbctl.nix { inherit pkgs; };
         mx-mp4-to-mov = import ./pkgs/mx-mp4-to-mov.nix { inherit pkgs; };
         mx-ubuntu-box = import ./pkgs/mx-ubuntu-box.nix { inherit pkgs; };
         mx-ue5 = import ./pkgs/mx-ue5.nix { inherit pkgs; };

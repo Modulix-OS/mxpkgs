@@ -15,7 +15,7 @@
     ./dns.nix
     ./cache.nix
     ./patch-runner.nix
-    ./package-fix.nix
+    ./gsettings-schemas.nix
     ./modulix-daemon
 
     # Desktop only
@@ -51,6 +51,7 @@
     mx-list-generations
     mx-switch-generation
     mx-redetect-hardware
+    mx-sbctl
   ];
 
   nix.settings = {
