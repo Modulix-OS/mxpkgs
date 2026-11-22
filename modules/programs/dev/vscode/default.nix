@@ -9,7 +9,7 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.vscode;
+      default = pkgs.vscode-fhs;
       defaultText = lib.literalExpression "pkgs.vscode-fhs";
       description = ''
         Visual Studio Code package to install. The FHS variant is the default
