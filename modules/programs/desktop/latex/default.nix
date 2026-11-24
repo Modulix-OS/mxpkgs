@@ -28,8 +28,8 @@ in
       defaultText = lib.literalExpression "pkgs.texstudio";
       description = ''
         LaTeX editor installed alongside the distribution; null to install
-        none. pkgs.texstudio already carries the GSettings schemas it needs to
-        start outside its own desktop, see modulixos/package-fix.nix.
+        none. The GSettings schemas the editor needs outside its own desktop
+        come from the session, see modulixos/gsettings-schemas.nix.
       '';
     };
   };
